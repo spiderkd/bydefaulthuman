@@ -3,11 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { cn } from "@/lib/utils";
-import {
-  getRoughOptions,
-  stableSeed,
-  type CrumbleTheme,
-} from "@/lib/rough";
+import { getRoughOptions, stableSeed, type CrumbleTheme } from "@/lib/rough";
 // registry components are standalone — default to pencil theme
 
 export interface ToggleProps {

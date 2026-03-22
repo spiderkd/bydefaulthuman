@@ -1,15 +1,16 @@
+import { CrumbleNavbar } from "@/components/nav/CrumbleNavbar";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: (
-      <span className="font-[family-name:var(--font-display)] text-xl font-bold">
-        crumble
-      </span>
-    ),
+    component: <CrumbleNavbar />,
   },
   links: [
     { text: "Docs", url: "/docs", active: "nested-url" },
-    { text: "Components", url: "/docs/components/button", active: "nested-url" },
+    {
+      text: "Components",
+      url: "/docs/components/button",
+      active: "nested-url",
+    },
   ],
 };

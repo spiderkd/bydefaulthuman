@@ -5,6 +5,7 @@ description: A hand-drawn pie or donut chart with hachure-filled slices and d3-s
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
 import { PieChart } from "@/components/ui/pie-chart"
+import { PieChartSourcesDemo } from "@/components/demos/pie-chart-demo"
 
 <PreviewContainer
   componentName="pie-chart"
@@ -43,9 +44,9 @@ npx shadcn add https://crumble.dev/r/pie-chart.json
   code={`<PieChart
   donut
   data={[
-    { label: "Completed", value: 68 },
+    { label: "Completed",   value: 68 },
     { label: "In progress", value: 22 },
-    { label: "Pending", value: 10 },
+    { label: "Pending",     value: 10 },
   ]}
 />`}
 >
@@ -86,10 +87,12 @@ npx shadcn add https://crumble.dev/r/pie-chart.json
 
 ## Custom value format
 
+`formatValue` must come from a client component — it cannot be an inline arrow function in MDX.
+
 <PreviewContainer
   componentName="pie-chart"
   code={`<PieChart
-  formatValue={(v, total) => \`\${v}k\`}
+  formatValue={(v) => \`\${v}k\`}
   data={[
     { label: "Direct",   value: 120 },
     { label: "Organic",  value: 85 },
@@ -97,16 +100,7 @@ npx shadcn add https://crumble.dev/r/pie-chart.json
   ]}
 />`}
 >
-  <div className="w-full max-w-sm">
-    <PieChart
-      formatValue={(v) => `${v}k`}
-      data={[
-        { label: "Direct",   value: 120 },
-        { label: "Organic",  value: 85 },
-        { label: "Referral", value: 45 },
-      ]}
-    />
-  </div>
+  <PieChartSourcesDemo />
 </PreviewContainer>
 
 ## Themes

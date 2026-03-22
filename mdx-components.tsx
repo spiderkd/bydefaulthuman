@@ -5,7 +5,7 @@ import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { createGenerator } from "fumadocs-typescript";
 import { AutoTypeTable } from "fumadocs-typescript/ui";
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
-import { Button } from "@/registry/new-york/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,19 +13,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card";
-import { Input } from "@/registry/new-york/ui/input";
-import { Textarea } from "@/registry/new-york/ui/textarea";
-import { Checkbox } from "@/registry/new-york/ui/checkbox";
-import { RadioGroup } from "@/registry/new-york/ui/radio";
-import { Select } from "@/registry/new-york/ui/select";
-import { Slider } from "@/registry/new-york/ui/slider";
-import { Toggle } from "@/registry/new-york/ui/toggle";
-import { RoughHighlight } from "@/registry/new-york/primitives/rough-highlight";
-import { RoughLine } from "@/registry/new-york/primitives/rough-line";
-import { RoughRect } from "@/registry/new-york/primitives/rough-rect";
-import { RoughCircle } from "@/registry/new-york/primitives/rough-circle";
-import { RoughArrow } from "@/registry/new-york/primitives/rough-arrow";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup } from "@/components/ui/radio";
+import { Select } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Toggle } from "@/components/ui/toggle";
+import { RoughHighlight } from "@/components/primitives/rough-highlight";
+import { RoughLine } from "@/components/primitives/rough-line";
+import { RoughRect } from "@/components/primitives/rough-rect";
+import { RoughCircle } from "@/components/primitives/rough-circle";
+import { RoughArrow } from "@/components/primitives/rough-arrow";
 
 const generator = createGenerator();
 

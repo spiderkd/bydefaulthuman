@@ -3,8 +3,8 @@ title: Slider
 description: A hand-drawn range slider with a sketchy track and circle thumb.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Slider } from "@/components/ui/slider"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Slider } from "@/components/ui/slider";
 
 <PreviewContainer
   componentName="slider"
@@ -17,12 +17,6 @@ import { Slider } from "@/components/ui/slider"
   </div>
 </PreviewContainer>
 
-## Installation
-
-```bash
-npx shadcn add https://crumble.dev/r/slider.json
-```
-
 ## Custom range and format
 
 <PreviewContainer
@@ -32,17 +26,11 @@ npx shadcn add https://crumble.dev/r/slider.json
   min={0}
   max={500}
   defaultValue={150}
-  formatValue={(v) => \`$\${v}\`}
-/>`}
+/>\n\n<p className="mt-2 text-right text-sm text-muted-foreground">$150</p>`}
 >
   <div className="w-full max-w-xs">
-    <Slider
-      label="Price"
-      min={0}
-      max={500}
-      defaultValue={150}
-      formatValue={(v) => `$${v}`}
-    />
+    <Slider label="Price" min={0} max={500} defaultValue={150} />
+    <p className="mt-2 text-right text-sm text-muted-foreground">$150</p>
   </div>
 </PreviewContainer>
 
@@ -54,20 +42,5 @@ npx shadcn add https://crumble.dev/r/slider.json
 >
   <div className="w-full max-w-xs">
     <Slider label="Opacity" defaultValue={70} showValue={false} />
-  </div>
-</PreviewContainer>
-
-## Themes
-
-<PreviewContainer
-  componentName="slider"
-  code={`<Slider label="Pencil" defaultValue={50} theme="pencil" />
-<Slider label="Ink"    defaultValue={50} theme="ink" />
-<Slider label="Crayon" defaultValue={50} theme="crayon" />`}
->
-  <div className="flex w-full max-w-xs flex-col gap-5">
-    <Slider label="Pencil" defaultValue={50} theme="pencil" />
-    <Slider label="Ink"    defaultValue={50} theme="ink" />
-    <Slider label="Crayon" defaultValue={50} theme="crayon" />
   </div>
 </PreviewContainer>

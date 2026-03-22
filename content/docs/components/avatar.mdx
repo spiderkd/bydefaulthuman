@@ -4,21 +4,15 @@ description: A hand-drawn circle border around a profile image or initials fallb
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"
+import { Avatar, AvatarGroup } from "@/components/ui/avatar"
 
 <PreviewContainer
   componentName="avatar"
-  code={`import { Avatar, AvatarImage, AvatarFallback } from '@/components/crumble/ui/avatar'
+  code={`import { Avatar } from '@/components/crumble/ui/avatar'
 
-<Avatar>
-  <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
-  <AvatarFallback>SC</AvatarFallback>
-</Avatar>`}
+<Avatar fallback="SC" />`}
 >
-  <Avatar>
-    <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
-    <AvatarFallback>SC</AvatarFallback>
-  </Avatar>
+  <Avatar fallback="SC" />
 </PreviewContainer>
 
 ## Installation
@@ -27,68 +21,72 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/u
 npx shadcn add https://crumble.dev/r/avatar.json
 ```
 
-## Fallback initials
+## With image
 
 <PreviewContainer
   componentName="avatar"
-  code={`<Avatar>
-  <AvatarFallback>AB</AvatarFallback>
-</Avatar>`}
+  code={`<Avatar src="https://github.com/shadcn.png" fallback="SC" />`}
 >
-  <Avatar>
-    <AvatarFallback>AB</AvatarFallback>
-  </Avatar>
+  <Avatar src="https://github.com/shadcn.png" fallback="SC" />
 </PreviewContainer>
 
 ## Sizes
 
 <PreviewContainer
   componentName="avatar"
-  code={`<Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
-<Avatar size="md"><AvatarFallback>MD</AvatarFallback></Avatar>
-<Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
-<Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>`}
+  code={`<Avatar fallback="SM" size={32} />
+<Avatar fallback="MD" size={40} />
+<Avatar fallback="LG" size={56} />
+<Avatar fallback="XL" size={72} />`}
 >
   <div className="flex items-end gap-3">
-    <Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
-    <Avatar size="md"><AvatarFallback>MD</AvatarFallback></Avatar>
-    <Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
-    <Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>
+    <Avatar fallback="SM" size={32} />
+    <Avatar fallback="MD" size={40} />
+    <Avatar fallback="LG" size={56} />
+    <Avatar fallback="XL" size={72} />
   </div>
 </PreviewContainer>
 
 ## Stacked group
 
+`AvatarGroup` takes an `avatars` array of props objects and a `max` count. Extra avatars show as a `+N` overflow badge.
+
 <PreviewContainer
   componentName="avatar"
-  code={`<AvatarGroup max={3}>
-  <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
-  <Avatar><AvatarFallback>CD</AvatarFallback></Avatar>
-  <Avatar><AvatarFallback>EF</AvatarFallback></Avatar>
-  <Avatar><AvatarFallback>GH</AvatarFallback></Avatar>
-  <Avatar><AvatarFallback>IJ</AvatarFallback></Avatar>
-</AvatarGroup>`}
+  code={`<AvatarGroup
+  max={3}
+  avatars={[
+    { fallback: "AB" },
+    { fallback: "CD" },
+    { fallback: "EF" },
+    { fallback: "GH" },
+    { fallback: "IJ" },
+  ]}
+/>`}
 >
-  <AvatarGroup max={3}>
-    <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
-    <Avatar><AvatarFallback>CD</AvatarFallback></Avatar>
-    <Avatar><AvatarFallback>EF</AvatarFallback></Avatar>
-    <Avatar><AvatarFallback>GH</AvatarFallback></Avatar>
-    <Avatar><AvatarFallback>IJ</AvatarFallback></Avatar>
-  </AvatarGroup>
+  <AvatarGroup
+    max={3}
+    avatars={[
+      { fallback: "AB" },
+      { fallback: "CD" },
+      { fallback: "EF" },
+      { fallback: "GH" },
+      { fallback: "IJ" },
+    ]}
+  />
 </PreviewContainer>
 
 ## Themes
 
 <PreviewContainer
   componentName="avatar"
-  code={`<Avatar theme="pencil"><AvatarFallback>P</AvatarFallback></Avatar>
-<Avatar theme="ink"><AvatarFallback>I</AvatarFallback></Avatar>
-<Avatar theme="crayon"><AvatarFallback>C</AvatarFallback></Avatar>`}
+  code={`<Avatar fallback="P" theme="pencil" />
+<Avatar fallback="I" theme="ink" />
+<Avatar fallback="C" theme="crayon" />`}
 >
   <div className="flex gap-3">
-    <Avatar theme="pencil"><AvatarFallback>P</AvatarFallback></Avatar>
-    <Avatar theme="ink"><AvatarFallback>I</AvatarFallback></Avatar>
-    <Avatar theme="crayon"><AvatarFallback>C</AvatarFallback></Avatar>
+    <Avatar fallback="P" theme="pencil" />
+    <Avatar fallback="I" theme="ink" />
+    <Avatar fallback="C" theme="crayon" />
   </div>
 </PreviewContainer>

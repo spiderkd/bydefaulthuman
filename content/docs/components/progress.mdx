@@ -3,8 +3,9 @@ title: Progress
 description: A hand-drawn progress bar with animated hachure fill.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Progress } from "@/components/ui/progress"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Progress } from "@/components/ui/progress";
+import { ProgressStorageDemo } from "@/components/demos/progress-demo";
 
 <PreviewContainer
   componentName="progress"
@@ -36,6 +37,8 @@ npx shadcn add https://crumble.dev/r/progress.json
 
 ## Custom format
 
+Use `formatValue` to control how the displayed value is rendered. Pass it from a client component to avoid the server/client serialization boundary.
+
 <PreviewContainer
   componentName="progress"
   code={`<Progress
@@ -46,15 +49,7 @@ npx shadcn add https://crumble.dev/r/progress.json
   formatValue={(v) => \`\${v.toFixed(1)} GB\`}
 />`}
 >
-  <div className="w-full max-w-sm">
-    <Progress
-      label="Storage"
-      value={3.2}
-      max={5}
-      showValue
-      formatValue={(v) => `${v.toFixed(1)} GB`}
-    />
-  </div>
+  <ProgressStorageDemo />
 </PreviewContainer>
 
 ## Themes
@@ -62,12 +57,12 @@ npx shadcn add https://crumble.dev/r/progress.json
 <PreviewContainer
   componentName="progress"
   code={`<Progress label="Pencil" value={55} theme="pencil" />
-<Progress label="Ink" value={55} theme="ink" />
+<Progress label="Ink"    value={55} theme="ink" />
 <Progress label="Crayon" value={55} theme="crayon" />`}
 >
   <div className="flex w-full max-w-sm flex-col gap-4">
     <Progress label="Pencil" value={55} theme="pencil" />
-    <Progress label="Ink"    value={55} theme="ink" />
+    <Progress label="Ink" value={55} theme="ink" />
     <Progress label="Crayon" value={55} theme="crayon" />
   </div>
 </PreviewContainer>

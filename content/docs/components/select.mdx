@@ -1,10 +1,10 @@
 ---
 title: Select
-description: A fully custom hand-drawn select with rough chevron, hover-filled options, and keyboard navigation.
+description: A hand-drawn select dropdown with a rough chevron indicator.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Select } from "@/components/ui/select"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Select } from "@/components/ui/select";
 
 <PreviewContainer
   componentName="select"
@@ -14,9 +14,9 @@ import { Select } from "@/components/ui/select"
   label="Framework"
   placeholder="Choose one..."
   options={[
-    { value: 'next',   label: 'Next.js' },
-    { value: 'remix',  label: 'Remix' },
-    { value: 'astro',  label: 'Astro' },
+    { value: 'next', label: 'Next.js' },
+    { value: 'remix', label: 'Remix' },
+    { value: 'astro', label: 'Astro' },
   ]}
 />`}
 >
@@ -25,19 +25,13 @@ import { Select } from "@/components/ui/select"
       label="Framework"
       placeholder="Choose one..."
       options={[
-        { value: "next",  label: "Next.js" },
+        { value: "next", label: "Next.js" },
         { value: "remix", label: "Remix" },
         { value: "astro", label: "Astro" },
       ]}
     />
   </div>
 </PreviewContainer>
-
-## Installation
-
-```bash
-npx shadcn add https://crumble.dev/r/select.json
-```
 
 ## Error state
 
@@ -47,10 +41,7 @@ npx shadcn add https://crumble.dev/r/select.json
   label="Country"
   placeholder="Select a country"
   error="Please select a country"
-  options={[
-    { value: 'in', label: 'India' },
-    { value: 'us', label: 'United States' },
-  ]}
+  options={[{ value: 'in', label: 'India' }, { value: 'us', label: 'United States' }]}
 />`}
 >
   <div className="w-full max-w-xs">
@@ -61,70 +52,6 @@ npx shadcn add https://crumble.dev/r/select.json
       options={[
         { value: "in", label: "India" },
         { value: "us", label: "United States" },
-      ]}
-    />
-  </div>
-</PreviewContainer>
-
-## With disabled options
-
-<PreviewContainer
-  componentName="select"
-  code={`<Select
-  label="Plan"
-  placeholder="Select a plan"
-  options={[
-    { value: 'free', label: 'Free' },
-    { value: 'pro',  label: 'Pro' },
-    { value: 'enterprise', label: 'Enterprise', disabled: true },
-  ]}
-/>`}
->
-  <div className="w-full max-w-xs">
-    <Select
-      label="Plan"
-      placeholder="Select a plan"
-      options={[
-        { value: "free",       label: "Free" },
-        { value: "pro",        label: "Pro" },
-        { value: "enterprise", label: "Enterprise", disabled: true },
-      ]}
-    />
-  </div>
-</PreviewContainer>
-
-## Disabled
-
-<PreviewContainer
-  componentName="select"
-  code={`<Select
-  label="Locked"
-  placeholder="No options"
-  disabled
-  options={[]}
-/>`}
->
-  <div className="w-full max-w-xs">
-    <Select label="Locked" placeholder="No options" disabled options={[]} />
-  </div>
-</PreviewContainer>
-
-## Themes
-
-<PreviewContainer
-  componentName="select"
-  code={`<Select theme="crayon" label="Crayon" placeholder="Pick one" options={[
-  { value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' },
-]} />`}
->
-  <div className="w-full max-w-xs">
-    <Select
-      theme="crayon"
-      label="Crayon"
-      placeholder="Pick one"
-      options={[
-        { value: "a", label: "Option A" },
-        { value: "b", label: "Option B" },
       ]}
     />
   </div>
