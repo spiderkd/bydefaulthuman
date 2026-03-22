@@ -1,0 +1,68 @@
+---
+title: Table
+description: A data table where row separators are hand-drawn rough lines instead of CSS borders.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+
+<PreviewContainer
+  componentName="table"
+  code={`import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/crumble/ui/table'
+
+<Table>
+  <TableHeader>
+    <TableRow index={0}>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Role</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow index={1}>
+      <TableCell>Alice</TableCell>
+      <TableCell>Active</TableCell>
+      <TableCell>Admin</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>`}
+>
+  <Table>
+    <TableHeader>
+      <TableRow index={0}>
+        <TableHead>Name</TableHead>
+        <TableHead>Status</TableHead>
+        <TableHead>Role</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow index={1}>
+        <TableCell>Alice Chen</TableCell>
+        <TableCell><Badge variant="success">Active</Badge></TableCell>
+        <TableCell>Admin</TableCell>
+      </TableRow>
+      <TableRow index={2}>
+        <TableCell>Bob Marsh</TableCell>
+        <TableCell><Badge variant="outline">Inactive</Badge></TableCell>
+        <TableCell>Editor</TableCell>
+      </TableRow>
+      <TableRow index={3}>
+        <TableCell>Carol Dana</TableCell>
+        <TableCell><Badge variant="success">Active</Badge></TableCell>
+        <TableCell>Viewer</TableCell>
+      </TableRow>
+    </TableBody>
+    <TableCaption>Team members</TableCaption>
+  </Table>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/table.json
+```
+
+## Notes
+
+Each `TableRow` receives an `index` prop — this is used as the seed for the rough separator line so each row's line is consistently wobbly but stable across renders. Pass sequential integers starting from 0.

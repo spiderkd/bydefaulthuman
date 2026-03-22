@@ -1,15 +1,26 @@
-
 import Link from "next/link";
-import { Button } from "@/registry/new-york/ui/button";
-import { Card } from "@/registry/new-york/ui/card";
-import { RoughHighlight } from "@/registry/new-york/primitives/rough-highlight";
-import { RoughLine } from "@/registry/new-york/primitives/rough-line";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { RoughHighlight } from "@/components/primitives/rough-highlight";
+import { RoughLine } from "@/components/primitives/rough-line";
 
 const componentPreviews = [
-  { name: "Button", slug: "button", desc: "Wobbly border, hover redraw, three variants" },
-  { name: "Card", slug: "card", desc: "Stacked paper effect, resizes with content" },
+  {
+    name: "Button",
+    slug: "button",
+    desc: "Wobbly border, hover redraw, three variants",
+  },
+  {
+    name: "Card",
+    slug: "card",
+    desc: "Stacked paper effect, resizes with content",
+  },
   { name: "Input", slug: "input", desc: "Box or underline style, focus state" },
-  { name: "Textarea", slug: "textarea", desc: "Auto-grow, rough border on focus" },
+  {
+    name: "Textarea",
+    slug: "textarea",
+    desc: "Auto-grow, rough border on focus",
+  },
   { name: "Checkbox", slug: "checkbox", desc: "Rough tick mark, hover redraw" },
   { name: "Radio", slug: "radio", desc: "Filled inner circle when selected" },
   { name: "Select", slug: "select", desc: "Hand-drawn chevron indicator" },
@@ -28,15 +39,20 @@ export default function Page() {
         <h1 className="mb-6 max-w-2xl text-[clamp(40px,7vw,72px)] leading-[1.1] font-medium">
           UI that looks{" "}
           <span className="font-[family-name:var(--font-display)] italic">
-            <RoughHighlight type="highlight" color="#fbbf24" opacity={0.35} animate>
+            <RoughHighlight
+              type="highlight"
+              color="#fbbf24"
+              opacity={0.35}
+              animate
+            >
               hand-drawn
             </RoughHighlight>
           </span>
         </h1>
 
         <p className="mb-10 max-w-md text-lg leading-relaxed text-muted-foreground">
-          Wobbly, sketchy React components built on Rough.js. One command installs.
-          You own the code.
+          Wobbly, sketchy React components built on Rough.js. One command
+          installs. You own the code.
         </p>
 
         <div className="mb-16 flex flex-wrap items-center justify-center gap-3">
@@ -44,7 +60,9 @@ export default function Page() {
             <Button size="lg">Get started</Button>
           </Link>
           <Link href="/docs/components/button">
-            <Button size="lg" variant="ghost">Browse components</Button>
+            <Button size="lg" variant="ghost">
+              Browse components
+            </Button>
           </Link>
         </div>
 
@@ -65,10 +83,18 @@ export default function Page() {
         </p>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
           {componentPreviews.map((item) => (
-            <Link key={item.slug} href={`/docs/components/${item.slug}`} className="no-underline">
+            <Link
+              key={item.slug}
+              href={`/docs/components/${item.slug}`}
+              className="no-underline"
+            >
               <Card padding={20} className="h-full cursor-pointer">
-                <p className="mb-1 text-[13px] font-medium text-foreground">{item.name}</p>
-                <p className="text-[12px] leading-relaxed text-muted-foreground">{item.desc}</p>
+                <p className="mb-1 text-[13px] font-medium text-foreground">
+                  {item.name}
+                </p>
+                <p className="text-[12px] leading-relaxed text-muted-foreground">
+                  {item.desc}
+                </p>
               </Card>
             </Link>
           ))}
@@ -80,14 +106,18 @@ export default function Page() {
           <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             three themes
           </p>
-          <h2 className="mb-3 text-3xl font-medium text-foreground">one prop away</h2>
+          <h2 className="mb-3 text-3xl font-medium text-foreground">
+            one prop away
+          </h2>
           <p className="mb-12 text-base leading-relaxed text-muted-foreground">
             Switch between pencil, ink, and crayon, or set it globally once.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
             {(["pencil", "ink", "crayon"] as const).map((theme) => (
               <div key={theme} className="flex flex-col items-center gap-2">
-                <Button theme={theme} size="lg">{theme}</Button>
+                <Button theme={theme} size="lg">
+                  {theme}
+                </Button>
                 <span className="text-[11px] uppercase tracking-widest text-muted-foreground">
                   {theme}
                 </span>

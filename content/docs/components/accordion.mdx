@@ -1,0 +1,78 @@
+---
+title: Accordion
+description: Collapsible sections with rough chevrons and hand-drawn separators.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "components/ui/accordion";
+
+<PreviewContainer
+  componentName="accordion"
+  code={`import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/crumble/ui/accordion'
+
+<Accordion>
+  <AccordionItem value="a">
+    <AccordionTrigger value="a">What is crumble?</AccordionTrigger>
+    <AccordionContent value="a">
+      A hand-drawn React component library built on Rough.js.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>`}
+>
+  <div className="w-full max-w-sm">
+    <Accordion defaultValue="a">
+      <AccordionItem value="a">
+        <AccordionTrigger value="a">What is crumble?</AccordionTrigger>
+        <AccordionContent value="a">A hand-drawn React component library built on Rough.js.</AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="b">
+        <AccordionTrigger value="b">Does it need a provider?</AccordionTrigger>
+        <AccordionContent value="b">No — components work standalone. Wrap in CrumbleProvider for theme switching.</AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="c" isLast>
+        <AccordionTrigger value="c">Which themes are available?</AccordionTrigger>
+        <AccordionContent value="c">Pencil, ink, and crayon — each with distinct roughness and stroke settings.</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/accordion.json
+```
+
+## Multiple open
+
+<PreviewContainer
+  componentName="accordion"
+  code={`<Accordion multiple defaultValue={["x", "y"]}>
+  <AccordionItem value="x">
+    <AccordionTrigger value="x">First</AccordionTrigger>
+    <AccordionContent value="x">Open by default</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="y" isLast>
+    <AccordionTrigger value="y">Second</AccordionTrigger>
+    <AccordionContent value="y">Also open by default</AccordionContent>
+  </AccordionItem>
+</Accordion>`}
+>
+  <div className="w-full max-w-sm">
+    <Accordion multiple defaultValue={["x", "y"]}>
+      <AccordionItem value="x">
+        <AccordionTrigger value="x">First</AccordionTrigger>
+        <AccordionContent value="x">Open by default.</AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="y" isLast>
+        <AccordionTrigger value="y">Second</AccordionTrigger>
+        <AccordionContent value="y">Also open by default.</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  </div>
+</PreviewContainer>

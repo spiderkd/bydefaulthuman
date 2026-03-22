@@ -4,7 +4,7 @@ description: A hand-drawn checkbox with a rough tick mark.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Checkbox } from "@/registry/new-york/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox"
 
 <PreviewContainer
   componentName="checkbox"
@@ -35,5 +35,40 @@ npx shadcn add https://crumble.dev/r/checkbox.json
     <Checkbox label="Checked" defaultChecked />
     <Checkbox label="Disabled" disabled />
     <Checkbox label="Disabled checked" disabled defaultChecked />
+  </div>
+</PreviewContainer>
+
+## Controlled
+
+<PreviewContainer
+  componentName="checkbox"
+  code={`import { useState } from 'react'
+
+function Demo() {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Checkbox
+      label={checked ? "On" : "Off"}
+      checked={checked}
+      onChange={setChecked}
+    />
+  )
+}`}
+>
+  <Checkbox label="Toggle me" defaultChecked={false} />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="checkbox"
+  code={`<Checkbox label="Pencil" theme="pencil" defaultChecked />
+<Checkbox label="Ink"    theme="ink"    defaultChecked />
+<Checkbox label="Crayon" theme="crayon" defaultChecked />`}
+>
+  <div className="flex flex-col gap-3">
+    <Checkbox label="Pencil" theme="pencil" defaultChecked />
+    <Checkbox label="Ink"    theme="ink"    defaultChecked />
+    <Checkbox label="Crayon" theme="crayon" defaultChecked />
   </div>
 </PreviewContainer>

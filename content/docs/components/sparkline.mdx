@@ -1,0 +1,108 @@
+---
+title: Sparkline
+description: An inline mini chart that drops naturally into text and table cells.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Sparkline } from "@/components/ui/sparkline"
+
+<PreviewContainer
+  componentName="sparkline"
+  code={`import { Sparkline } from '@/components/crumble/ui/sparkline'
+
+<Sparkline data={[40, 55, 45, 60, 50, 70, 65, 80]} />`}
+>
+  <Sparkline data={[40, 55, 45, 60, 50, 70, 65, 80]} />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npm install d3-shape d3-scale
+npx shadcn add https://crumble.dev/r/sparkline.json
+```
+
+## Types
+
+<PreviewContainer
+  componentName="sparkline"
+  code={`<Sparkline type="line" data={[30, 55, 45, 70, 60, 80]} />
+<Sparkline type="area" data={[30, 55, 45, 70, 60, 80]} />
+<Sparkline type="bar"  data={[30, 55, 45, 70, 60, 80]} />`}
+>
+  <div className="flex flex-col gap-4">
+    <div className="flex items-center gap-3 text-sm">
+      <span className="w-10 text-muted-foreground">Line</span>
+      <Sparkline type="line" data={[30, 55, 45, 70, 60, 80]} />
+    </div>
+    <div className="flex items-center gap-3 text-sm">
+      <span className="w-10 text-muted-foreground">Area</span>
+      <Sparkline type="area" data={[30, 55, 45, 70, 60, 80]} />
+    </div>
+    <div className="flex items-center gap-3 text-sm">
+      <span className="w-10 text-muted-foreground">Bar</span>
+      <Sparkline type="bar" data={[30, 55, 45, 70, 60, 80]} />
+    </div>
+  </div>
+</PreviewContainer>
+
+## Inline in text
+
+<PreviewContainer
+  componentName="sparkline"
+  code={`<p>
+  Revenue is up{" "}
+  <Sparkline
+    data={[40, 45, 42, 55, 60, 58, 72]}
+    color="oklch(0.5 0.15 145)"
+    width={60}
+    height={20}
+  />{" "}
+  this quarter.
+</p>`}
+>
+  <p className="text-sm">
+    Revenue is up{" "}
+    <Sparkline
+      data={[40, 45, 42, 55, 60, 58, 72]}
+      color="oklch(0.5 0.15 145)"
+      width={60}
+      height={20}
+    />{" "}
+    this quarter.
+  </p>
+</PreviewContainer>
+
+## Custom color and size
+
+<PreviewContainer
+  componentName="sparkline"
+  code={`<Sparkline
+  data={[80, 70, 75, 60, 65, 50, 45]}
+  color="oklch(0.6 0.22 25)"
+  width={120}
+  height={40}
+/>`}
+>
+  <Sparkline
+    data={[80, 70, 75, 60, 65, 50, 45]}
+    color="oklch(0.6 0.22 25)"
+    width={120}
+    height={40}
+  />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="sparkline"
+  code={`<Sparkline theme="pencil" data={[30, 50, 40, 65, 55, 75]} />
+<Sparkline theme="ink"    data={[30, 50, 40, 65, 55, 75]} />
+<Sparkline theme="crayon" data={[30, 50, 40, 65, 55, 75]} />`}
+>
+  <div className="flex flex-col gap-3">
+    <Sparkline theme="pencil" data={[30, 50, 40, 65, 55, 75]} />
+    <Sparkline theme="ink"    data={[30, 50, 40, 65, 55, 75]} />
+    <Sparkline theme="crayon" data={[30, 50, 40, 65, 55, 75]} />
+  </div>
+</PreviewContainer>

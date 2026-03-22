@@ -1,10 +1,10 @@
 ---
 title: Toggle
-description: A hand-drawn toggle switch with a sliding thumb.
+description: A hand-drawn toggle switch with a sliding circle thumb.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Toggle } from "@/registry/new-york/ui/toggle"
+import { Toggle } from "@/components/ui/toggle"
 
 <PreviewContainer
   componentName="toggle"
@@ -14,6 +14,12 @@ import { Toggle } from "@/registry/new-york/ui/toggle"
 >
   <Toggle label="Notifications" />
 </PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/toggle.json
+```
 
 ## States
 
@@ -29,5 +35,29 @@ import { Toggle } from "@/registry/new-york/ui/toggle"
     <Toggle label="On by default" defaultChecked />
     <Toggle label="Disabled off" disabled />
     <Toggle label="Disabled on" disabled defaultChecked />
+  </div>
+</PreviewContainer>
+
+## Without label
+
+<PreviewContainer
+  componentName="toggle"
+  code={`<Toggle />`}
+>
+  <Toggle />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="toggle"
+  code={`<Toggle label="Pencil" theme="pencil" defaultChecked />
+<Toggle label="Ink"    theme="ink"    defaultChecked />
+<Toggle label="Crayon" theme="crayon" defaultChecked />`}
+>
+  <div className="flex flex-col gap-3">
+    <Toggle label="Pencil" theme="pencil" defaultChecked />
+    <Toggle label="Ink"    theme="ink"    defaultChecked />
+    <Toggle label="Crayon" theme="crayon" defaultChecked />
   </div>
 </PreviewContainer>

@@ -1,0 +1,88 @@
+---
+title: Bar Chart
+description: A hand-drawn bar chart with hachure-filled bars and animated mount.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { BarChart } from "@/components/ui/bar-chart"
+
+<PreviewContainer
+  componentName="bar-chart"
+  code={`import { BarChart } from '@/components/crumble/ui/bar-chart'
+
+<BarChart
+  data={[
+    { label: "Mon", value: 40 },
+    { label: "Tue", value: 65 },
+    { label: "Wed", value: 55 },
+    { label: "Thu", value: 80 },
+    { label: "Fri", value: 70 },
+  ]}
+/>`}
+>
+  <div className="w-full">
+    <BarChart
+      data={[
+        { label: "Mon", value: 40 },
+        { label: "Tue", value: 65 },
+        { label: "Wed", value: 55 },
+        { label: "Thu", value: 80 },
+        { label: "Fri", value: 70 },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/bar-chart.json
+```
+
+## Custom colors per bar
+
+<PreviewContainer
+  componentName="bar-chart"
+  code={`<BarChart
+  data={[
+    { label: "Q1", value: 120, color: "oklch(0.6 0.18 260)" },
+    { label: "Q2", value: 180, color: "oklch(0.6 0.16 145)" },
+    { label: "Q3", value: 150, color: "oklch(0.65 0.18 55)" },
+    { label: "Q4", value: 210, color: "oklch(0.62 0.22 25)" },
+  ]}
+  formatValue={(v) => \`$\${v}k\`}
+  axisLabel="Quarterly revenue"
+/>`}
+>
+  <div className="w-full">
+    <BarChart
+      data={[
+        { label: "Q1", value: 120, color: "oklch(0.6 0.18 260)" },
+        { label: "Q2", value: 180, color: "oklch(0.6 0.16 145)" },
+        { label: "Q3", value: 150, color: "oklch(0.65 0.18 55)" },
+        { label: "Q4", value: 210, color: "oklch(0.62 0.22 25)" },
+      ]}
+      formatValue={(v) => `$${v}k`}
+      axisLabel="Quarterly revenue"
+    />
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="bar-chart"
+  code={`<BarChart theme="crayon" data={[
+  { label: "A", value: 30 }, { label: "B", value: 60 },
+  { label: "C", value: 45 }, { label: "D", value: 75 },
+]} />`}
+>
+  <div className="w-full">
+    <BarChart theme="crayon" data={[
+      { label: "A", value: 30 },
+      { label: "B", value: 60 },
+      { label: "C", value: 45 },
+      { label: "D", value: 75 },
+    ]} />
+  </div>
+</PreviewContainer>

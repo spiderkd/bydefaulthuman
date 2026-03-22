@@ -4,7 +4,7 @@ description: A hand-drawn text input with box or underline style.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Input } from "@/registry/new-york/ui/input"
+import { Input } from "@/components/ui/input"
 
 <PreviewContainer
   componentName="input"
@@ -44,5 +44,31 @@ npx shadcn add https://crumble.dev/r/input.json
 >
   <div className="w-full max-w-xs">
     <Input label="Email" placeholder="you@example.com" error="Invalid email address" />
+  </div>
+</PreviewContainer>
+
+## Disabled
+
+<PreviewContainer
+  componentName="input"
+  code={`<Input label="Locked field" placeholder="Read only" disabled />`}
+>
+  <div className="w-full max-w-xs">
+    <Input label="Locked field" placeholder="Read only" disabled />
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="input"
+  code={`<Input label="Pencil" placeholder="pencil" theme="pencil" />
+<Input label="Ink"    placeholder="ink"    theme="ink" />
+<Input label="Crayon" placeholder="crayon" theme="crayon" />`}
+>
+  <div className="flex w-full max-w-xs flex-col gap-5">
+    <Input label="Pencil" placeholder="pencil" theme="pencil" />
+    <Input label="Ink"    placeholder="ink"    theme="ink" />
+    <Input label="Crayon" placeholder="crayon" theme="crayon" />
   </div>
 </PreviewContainer>

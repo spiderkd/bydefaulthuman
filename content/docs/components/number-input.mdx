@@ -1,0 +1,57 @@
+---
+title: Number Input
+description: A hand-drawn number input with rough increment and decrement buttons.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { NumberInput } from "@/components/ui/number-input"
+
+<PreviewContainer
+  componentName="number-input"
+  code={`import { NumberInput } from '@/components/crumble/ui/number-input'
+
+<NumberInput label="Quantity" defaultValue={1} min={0} />`}
+>
+  <div className="w-full max-w-xs">
+    <NumberInput label="Quantity" defaultValue={1} min={0} />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/number-input.json
+```
+
+## Min, max and step
+
+<PreviewContainer
+  componentName="number-input"
+  code={`<NumberInput label="Rating" defaultValue={5} min={1} max={10} step={1} />`}
+>
+  <div className="w-full max-w-xs">
+    <NumberInput label="Rating" defaultValue={5} min={1} max={10} step={1} />
+  </div>
+</PreviewContainer>
+
+## Error state
+
+<PreviewContainer
+  componentName="number-input"
+  code={`<NumberInput label="Age" defaultValue={0} error="Must be at least 18" />`}
+>
+  <div className="w-full max-w-xs">
+    <NumberInput label="Age" defaultValue={0} error="Must be at least 18" />
+  </div>
+</PreviewContainer>
+
+## Disabled
+
+<PreviewContainer
+  componentName="number-input"
+  code={`<NumberInput label="Locked" defaultValue={42} disabled />`}
+>
+  <div className="w-full max-w-xs">
+    <NumberInput label="Locked" defaultValue={42} disabled />
+  </div>
+</PreviewContainer>

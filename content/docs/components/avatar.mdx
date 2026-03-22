@@ -1,0 +1,94 @@
+---
+title: Avatar
+description: A hand-drawn circle border around a profile image or initials fallback.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"
+
+<PreviewContainer
+  componentName="avatar"
+  code={`import { Avatar, AvatarImage, AvatarFallback } from '@/components/crumble/ui/avatar'
+
+<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
+  <AvatarFallback>SC</AvatarFallback>
+</Avatar>`}
+>
+  <Avatar>
+    <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
+    <AvatarFallback>SC</AvatarFallback>
+  </Avatar>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/avatar.json
+```
+
+## Fallback initials
+
+<PreviewContainer
+  componentName="avatar"
+  code={`<Avatar>
+  <AvatarFallback>AB</AvatarFallback>
+</Avatar>`}
+>
+  <Avatar>
+    <AvatarFallback>AB</AvatarFallback>
+  </Avatar>
+</PreviewContainer>
+
+## Sizes
+
+<PreviewContainer
+  componentName="avatar"
+  code={`<Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
+<Avatar size="md"><AvatarFallback>MD</AvatarFallback></Avatar>
+<Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
+<Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>`}
+>
+  <div className="flex items-end gap-3">
+    <Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
+    <Avatar size="md"><AvatarFallback>MD</AvatarFallback></Avatar>
+    <Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
+    <Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>
+  </div>
+</PreviewContainer>
+
+## Stacked group
+
+<PreviewContainer
+  componentName="avatar"
+  code={`<AvatarGroup max={3}>
+  <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>CD</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>EF</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>GH</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>IJ</AvatarFallback></Avatar>
+</AvatarGroup>`}
+>
+  <AvatarGroup max={3}>
+    <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
+    <Avatar><AvatarFallback>CD</AvatarFallback></Avatar>
+    <Avatar><AvatarFallback>EF</AvatarFallback></Avatar>
+    <Avatar><AvatarFallback>GH</AvatarFallback></Avatar>
+    <Avatar><AvatarFallback>IJ</AvatarFallback></Avatar>
+  </AvatarGroup>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="avatar"
+  code={`<Avatar theme="pencil"><AvatarFallback>P</AvatarFallback></Avatar>
+<Avatar theme="ink"><AvatarFallback>I</AvatarFallback></Avatar>
+<Avatar theme="crayon"><AvatarFallback>C</AvatarFallback></Avatar>`}
+>
+  <div className="flex gap-3">
+    <Avatar theme="pencil"><AvatarFallback>P</AvatarFallback></Avatar>
+    <Avatar theme="ink"><AvatarFallback>I</AvatarFallback></Avatar>
+    <Avatar theme="crayon"><AvatarFallback>C</AvatarFallback></Avatar>
+  </div>
+</PreviewContainer>

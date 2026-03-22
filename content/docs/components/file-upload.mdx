@@ -1,0 +1,65 @@
+---
+title: File Upload
+description: A hand-drawn dropzone that becomes more expressive when a file is dragged over it.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { FileUpload } from "@/components/ui/file-upload"
+
+<PreviewContainer
+  componentName="file-upload"
+  code={`import { FileUpload } from '@/components/crumble/ui/file-upload'
+
+<FileUpload />`}
+>
+  <div className="w-full max-w-sm">
+    <FileUpload />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/file-upload.json
+```
+
+## With hint and accept
+
+<PreviewContainer
+  componentName="file-upload"
+  code={`<FileUpload
+  label="Drop images here or click to browse"
+  hint="PNG, JPG up to 5 MB"
+  accept="image/*"
+/>`}
+>
+  <div className="w-full max-w-sm">
+    <FileUpload
+      label="Drop images here or click to browse"
+      hint="PNG, JPG up to 5 MB"
+      accept="image/*"
+    />
+  </div>
+</PreviewContainer>
+
+## Multiple files
+
+<PreviewContainer
+  componentName="file-upload"
+  code={`<FileUpload multiple hint="Select multiple files" />`}
+>
+  <div className="w-full max-w-sm">
+    <FileUpload multiple hint="Select multiple files" />
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="file-upload"
+  code={`<FileUpload theme="crayon" label="Drop here" />`}
+>
+  <div className="w-full max-w-sm">
+    <FileUpload theme="crayon" label="Drop here" />
+  </div>
+</PreviewContainer>

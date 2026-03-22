@@ -1,0 +1,70 @@
+---
+title: Rating
+description: A hand-drawn star rating with hover fill and hachure.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Rating } from "@/components/ui/rating"
+
+<PreviewContainer
+  componentName="rating"
+  code={`import { Rating } from '@/components/crumble/ui/rating'
+
+<Rating defaultValue={3} />`}
+>
+  <Rating defaultValue={3} />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/rating.json
+```
+
+## Sizes
+
+<PreviewContainer
+  componentName="rating"
+  code={`<Rating defaultValue={3} size={16} />
+<Rating defaultValue={3} size={24} />
+<Rating defaultValue={3} size={36} />`}
+>
+  <div className="flex flex-col gap-3">
+    <Rating defaultValue={3} size={16} />
+    <Rating defaultValue={3} size={24} />
+    <Rating defaultValue={3} size={36} />
+  </div>
+</PreviewContainer>
+
+## Read only
+
+<PreviewContainer
+  componentName="rating"
+  code={`<Rating value={4} readOnly />`}
+>
+  <Rating value={4} readOnly />
+</PreviewContainer>
+
+## Disabled
+
+<PreviewContainer
+  componentName="rating"
+  code={`<Rating defaultValue={2} disabled />`}
+>
+  <Rating defaultValue={2} disabled />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="rating"
+  code={`<Rating defaultValue={3} theme="pencil" />
+<Rating defaultValue={3} theme="ink" />
+<Rating defaultValue={3} theme="crayon" />`}
+>
+  <div className="flex flex-col gap-3">
+    <Rating defaultValue={3} theme="pencil" />
+    <Rating defaultValue={3} theme="ink" />
+    <Rating defaultValue={3} theme="crayon" />
+  </div>
+</PreviewContainer>

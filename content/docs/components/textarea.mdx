@@ -1,10 +1,10 @@
 ---
 title: Textarea
-description: A hand-drawn textarea with optional auto-grow.
+description: A hand-drawn textarea with optional auto-grow and resize support.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Textarea } from "@/registry/new-york/ui/textarea"
+import { Textarea } from "@/components/ui/textarea"
 
 <PreviewContainer
   componentName="textarea"
@@ -25,6 +25,8 @@ npx shadcn add https://crumble.dev/r/textarea.json
 
 ## Auto-grow
 
+The textarea expands as you type. The SVG border tracks the height via `ResizeObserver`.
+
 <PreviewContainer
   componentName="textarea"
   code={`<Textarea label="Notes" placeholder="Starts small, grows as you type..." autoGrow />`}
@@ -42,5 +44,31 @@ npx shadcn add https://crumble.dev/r/textarea.json
 >
   <div className="w-full max-w-xs">
     <Textarea label="Message" error="Message is required" />
+  </div>
+</PreviewContainer>
+
+## Disabled
+
+<PreviewContainer
+  componentName="textarea"
+  code={`<Textarea label="Locked" placeholder="Cannot edit" disabled />`}
+>
+  <div className="w-full max-w-xs">
+    <Textarea label="Locked" placeholder="Cannot edit" disabled />
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="textarea"
+  code={`<Textarea label="Pencil" placeholder="pencil" theme="pencil" />
+<Textarea label="Ink"    placeholder="ink"    theme="ink" />
+<Textarea label="Crayon" placeholder="crayon" theme="crayon" />`}
+>
+  <div className="flex w-full max-w-xs flex-col gap-5">
+    <Textarea label="Pencil" placeholder="pencil" theme="pencil" />
+    <Textarea label="Ink"    placeholder="ink"    theme="ink" />
+    <Textarea label="Crayon" placeholder="crayon" theme="crayon" />
   </div>
 </PreviewContainer>

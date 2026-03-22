@@ -1,0 +1,58 @@
+---
+title: Stat Card
+description: A hand-drawn card preset for dashboard metrics with an optional trend arrow.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { StatCard } from "@/components/ui/stat-card"
+
+<PreviewContainer
+  componentName="stat-card"
+  code={`import { StatCard } from '@/components/crumble/ui/stat-card'
+
+<StatCard label="Revenue" value="$12,400" trend="up" trendLabel="+8% this week" />`}
+>
+  <StatCard label="Revenue" value="$12,400" trend="up" trendLabel="+8% this week" />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/stat-card.json
+```
+
+## Trends
+
+<PreviewContainer
+  componentName="stat-card"
+  code={`<StatCard label="Users"    value="2,840" trend="up"   trendLabel="+12%" />
+<StatCard label="Churn"    value="3.2%"  trend="down" trendLabel="-0.4%" />
+<StatCard label="Sessions" value="18.5k" trend="flat" trendLabel="no change" />`}
+>
+  <div className="flex flex-wrap gap-4">
+    <StatCard label="Users"    value="2,840" trend="up"   trendLabel="+12%" />
+    <StatCard label="Churn"    value="3.2%"  trend="down" trendLabel="-0.4%" />
+    <StatCard label="Sessions" value="18.5k" trend="flat" trendLabel="no change" />
+  </div>
+</PreviewContainer>
+
+## With description
+
+<PreviewContainer
+  componentName="stat-card"
+  code={`<StatCard
+  label="Monthly active users"
+  value="9,210"
+  trend="up"
+  trendLabel="+5%"
+  description="vs last month"
+/>`}
+>
+  <StatCard
+    label="Monthly active users"
+    value="9,210"
+    trend="up"
+    trendLabel="+5%"
+    description="vs last month"
+  />
+</PreviewContainer>

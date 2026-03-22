@@ -1,0 +1,11 @@
+{
+  "title": "Components",
+  "pages": [
+    "button", "card", "input", "textarea", "checkbox", "radio", "select", "slider", "toggle",
+    "badge", "progress", "separator", "avatar", "tooltip", "skeleton",
+    "rating", "number-input", "otp-input", "file-upload", "combobox",
+    "tabs", "accordion", "dialog", "drawer", "table",
+    "timeline", "stat-card", "bar-chart", "line-chart", "pie-chart",
+    "sparkline", "sticky-note", "notebook", "annotation"
+  ]
+}

@@ -1,0 +1,79 @@
+---
+title: Drawer
+description: A panel that slides in from any edge with a rough line on the exposed side.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { DrawerDemo, DrawerSidesDemo } from "@/components/demos/drawer-demo";
+
+<PreviewContainer
+  componentName="drawer"
+  code={`import { useState } from 'react'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerBody, DrawerFooter } from '@/components/crumble/ui/drawer'
+import { Button } from '@/components/crumble/ui/button'
+
+function Demo() {
+const [open, setOpen] = useState(false)
+return (
+
+<>
+<Button onClick={() => setOpen(true)}>Open drawer</Button>
+<Drawer open={open} onOpenChange={setOpen}>
+<DrawerContent open={open}>
+<DrawerHeader>
+<DrawerTitle>Settings</DrawerTitle>
+</DrawerHeader>
+<DrawerBody>Content goes here.</DrawerBody>
+<DrawerFooter>
+<Button variant="ghost" onClick={() => setOpen(false)}>Close</Button>
+</DrawerFooter>
+</DrawerContent>
+</Drawer>
+</>
+)
+}`}
+
+>
+
+  <DrawerDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/drawer.json
+```
+
+## Sides
+
+The rough line is drawn only on the single exposed edge — left, right (default), top, or bottom.
+
+<PreviewContainer
+  componentName="drawer"
+  code={`<Drawer open={open} onOpenChange={setOpen} side="left">
+  <DrawerContent open={open}>...</DrawerContent>
+</Drawer>`}
+>
+  <DrawerSidesDemo />
+</PreviewContainer>
+
+## Size
+
+Control width (left/right) or height (top/bottom) with the `size` prop — any CSS value.
+
+```tsx
+<Drawer side="right">
+  <DrawerContent size="480px">...</DrawerContent>
+</Drawer>
+```
+
+## Themes
+
+<PreviewContainer
+  componentName="drawer"
+  code={`<Drawer open={open} onOpenChange={setOpen} theme="crayon">
+  <DrawerContent open={open}>...</DrawerContent>
+</Drawer>`}
+>
+  <DrawerDemo theme="crayon" />
+</PreviewContainer>

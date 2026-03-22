@@ -1,0 +1,59 @@
+---
+title: Timeline
+description: A vertical event list with rough circle nodes and connecting lines.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Timeline, TimelineItem } from "@/components/ui/timeline"
+
+<PreviewContainer
+  componentName="timeline"
+  code={`import { Timeline, TimelineItem } from '@/components/crumble/ui/timeline'
+
+<Timeline>
+  <TimelineItem title="Order placed"    status="complete" time="9:00 AM" />
+  <TimelineItem title="Processing"      status="complete" time="9:15 AM" />
+  <TimelineItem title="Out for delivery" status="active"  time="11:30 AM" />
+  <TimelineItem title="Delivered"       status="pending"  isLast />
+</Timeline>`}
+>
+  <div className="w-full max-w-xs">
+    <Timeline>
+      <TimelineItem title="Order placed"     status="complete" time="9:00 AM"  description="Payment confirmed." />
+      <TimelineItem title="Processing"       status="complete" time="9:15 AM"  description="Items picked and packed." />
+      <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" description="Your driver is on the way." />
+      <TimelineItem title="Delivered"        status="pending"  isLast />
+    </Timeline>
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/timeline.json
+```
+
+## Statuses
+
+- `complete` — filled hachure circle with a tick
+- `active` — outlined circle with filled inner dot
+- `pending` — empty outlined circle
+
+## Themes
+
+<PreviewContainer
+  componentName="timeline"
+  code={`<Timeline theme="crayon">
+  <TimelineItem title="Step one" status="complete" />
+  <TimelineItem title="Step two" status="active" />
+  <TimelineItem title="Step three" status="pending" isLast />
+</Timeline>`}
+>
+  <div className="w-full max-w-xs">
+    <Timeline theme="crayon">
+      <TimelineItem title="Step one"   status="complete" />
+      <TimelineItem title="Step two"   status="active" />
+      <TimelineItem title="Step three" status="pending" isLast />
+    </Timeline>
+  </div>
+</PreviewContainer>

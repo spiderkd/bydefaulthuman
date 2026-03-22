@@ -1,0 +1,55 @@
+---
+title: OTP Input
+description: A row of hand-drawn single-character boxes for one-time passwords.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { OtpInput } from "@/components/ui/otp-input"
+
+<PreviewContainer
+  componentName="otp-input"
+  code={`import { OtpInput } from '@/components/crumble/ui/otp-input'
+
+<OtpInput length={6} />`}
+>
+  <OtpInput length={6} />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/otp-input.json
+```
+
+## PIN mask
+
+<PreviewContainer
+  componentName="otp-input"
+  code={`<OtpInput length={4} mask />`}
+>
+  <OtpInput length={4} mask />
+</PreviewContainer>
+
+## Short code
+
+<PreviewContainer
+  componentName="otp-input"
+  code={`<OtpInput length={4} />`}
+>
+  <OtpInput length={4} />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="otp-input"
+  code={`<OtpInput length={4} theme="pencil" />
+<OtpInput length={4} theme="ink" />
+<OtpInput length={4} theme="crayon" />`}
+>
+  <div className="flex flex-col gap-4">
+    <OtpInput length={4} theme="pencil" />
+    <OtpInput length={4} theme="ink" />
+    <OtpInput length={4} theme="crayon" />
+  </div>
+</PreviewContainer>

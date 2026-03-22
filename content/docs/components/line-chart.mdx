@@ -1,0 +1,72 @@
+---
+title: Line Chart
+description: A hand-drawn line chart with Catmull-Rom curves and animated draw-on.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { LineChart } from "@/components/ui/line-chart"
+
+<PreviewContainer
+  componentName="line-chart"
+  code={`import { LineChart } from '@/components/crumble/ui/line-chart'
+
+<LineChart
+  labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+  series={[{ id: "revenue", label: "Revenue", data: [40, 65, 55, 80, 70, 90] }]}
+/>`}
+>
+  <div className="w-full">
+    <LineChart
+      labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+      series={[{ id: "revenue", label: "Revenue", data: [40, 65, 55, 80, 70, 90] }]}
+    />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/line-chart.json
+```
+
+## Multiple series
+
+<PreviewContainer
+  componentName="line-chart"
+  code={`<LineChart
+  labels={["Mon", "Tue", "Wed", "Thu", "Fri"]}
+  series={[
+    { id: "visits",    label: "Visits",    data: [120, 180, 150, 210, 190], color: "oklch(0.6 0.18 260)" },
+    { id: "signups",   label: "Sign-ups",  data: [20,  35,  28,  42,  38],  color: "oklch(0.6 0.16 145)" },
+  ]}
+/>`}
+>
+  <div className="w-full">
+    <LineChart
+      labels={["Mon", "Tue", "Wed", "Thu", "Fri"]}
+      series={[
+        { id: "visits",  label: "Visits",   data: [120, 180, 150, 210, 190], color: "oklch(0.6 0.18 260)" },
+        { id: "signups", label: "Sign-ups", data: [20,  35,  28,  42,  38],  color: "oklch(0.6 0.16 145)" },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Without dots
+
+<PreviewContainer
+  componentName="line-chart"
+  code={`<LineChart
+  showDots={false}
+  labels={["W1","W2","W3","W4","W5","W6","W7","W8"]}
+  series={[{ id: "s", label: "Score", data: [60, 55, 70, 65, 80, 75, 85, 90] }]}
+/>`}
+>
+  <div className="w-full">
+    <LineChart
+      showDots={false}
+      labels={["W1","W2","W3","W4","W5","W6","W7","W8"]}
+      series={[{ id: "s", label: "Score", data: [60, 55, 70, 65, 80, 75, 85, 90] }]}
+    />
+  </div>
+</PreviewContainer>

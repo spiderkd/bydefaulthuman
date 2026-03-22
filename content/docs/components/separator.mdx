@@ -1,0 +1,67 @@
+---
+title: Separator
+description: A hand-drawn horizontal or vertical divider line.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Separator } from "@/components/ui/separator"
+
+<PreviewContainer
+  componentName="separator"
+  code={`import { Separator } from '@/components/crumble/ui/separator'
+
+<Separator />`}
+>
+  <div className="w-full max-w-sm py-4">
+    <Separator />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/separator.json
+```
+
+## With label
+
+<PreviewContainer
+  componentName="separator"
+  code={`<Separator label="OR" />`}
+>
+  <div className="w-full max-w-sm py-4">
+    <Separator label="OR" />
+  </div>
+</PreviewContainer>
+
+## Vertical
+
+<PreviewContainer
+  componentName="separator"
+  code={`<div className="flex h-8 items-center gap-4">
+  <span>Left</span>
+  <Separator orientation="vertical" />
+  <span>Right</span>
+</div>`}
+>
+  <div className="flex h-8 items-center gap-4 text-sm">
+    <span>Left</span>
+    <Separator orientation="vertical" />
+    <span>Right</span>
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="separator"
+  code={`<Separator theme="pencil" />
+<Separator theme="ink" />
+<Separator theme="crayon" />`}
+>
+  <div className="flex w-full max-w-sm flex-col gap-4 py-2">
+    <Separator theme="pencil" />
+    <Separator theme="ink" />
+    <Separator theme="crayon" />
+  </div>
+</PreviewContainer>

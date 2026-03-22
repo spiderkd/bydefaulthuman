@@ -4,7 +4,7 @@ description: Hand-drawn radio buttons with a filled inner circle when selected.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { RadioGroup } from "@/registry/new-york/ui/radio"
+import { RadioGroup } from "@/components/ui/radio"
 
 <PreviewContainer
   componentName="radio"
@@ -14,8 +14,8 @@ import { RadioGroup } from "@/registry/new-york/ui/radio"
   name="plan"
   defaultValue="monthly"
   options={[
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'yearly', label: 'Yearly' },
+    { value: 'monthly',  label: 'Monthly' },
+    { value: 'yearly',   label: 'Yearly' },
     { value: 'lifetime', label: 'Lifetime' },
   ]}
 />`}
@@ -24,12 +24,18 @@ import { RadioGroup } from "@/registry/new-york/ui/radio"
     name="plan-preview"
     defaultValue="monthly"
     options={[
-      { value: "monthly", label: "Monthly" },
-      { value: "yearly", label: "Yearly" },
+      { value: "monthly",  label: "Monthly" },
+      { value: "yearly",   label: "Yearly" },
       { value: "lifetime", label: "Lifetime" },
     ]}
   />
 </PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/radio.json
+```
 
 ## Horizontal layout
 
@@ -40,9 +46,10 @@ import { RadioGroup } from "@/registry/new-york/ui/radio"
   orientation="horizontal"
   defaultValue="md"
   options={[
-    { value: 'sm', label: 'Small' },
-    { value: 'md', label: 'Medium' },
-    { value: 'lg', label: 'Large' },
+    { value: 'sm', label: 'S' },
+    { value: 'md', label: 'M' },
+    { value: 'lg', label: 'L' },
+    { value: 'xl', label: 'XL' },
   ]}
 />`}
 >
@@ -51,9 +58,60 @@ import { RadioGroup } from "@/registry/new-york/ui/radio"
     orientation="horizontal"
     defaultValue="md"
     options={[
-      { value: "sm", label: "Small" },
-      { value: "md", label: "Medium" },
-      { value: "lg", label: "Large" },
+      { value: "sm", label: "S" },
+      { value: "md", label: "M" },
+      { value: "lg", label: "L" },
+      { value: "xl", label: "XL" },
+    ]}
+  />
+</PreviewContainer>
+
+## With disabled option
+
+<PreviewContainer
+  componentName="radio"
+  code={`<RadioGroup
+  name="tier"
+  defaultValue="free"
+  options={[
+    { value: 'free', label: 'Free' },
+    { value: 'pro',  label: 'Pro' },
+    { value: 'enterprise', label: 'Enterprise', disabled: true },
+  ]}
+/>`}
+>
+  <RadioGroup
+    name="tier-preview"
+    defaultValue="free"
+    options={[
+      { value: "free",       label: "Free" },
+      { value: "pro",        label: "Pro" },
+      { value: "enterprise", label: "Enterprise", disabled: true },
+    ]}
+  />
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="radio"
+  code={`<RadioGroup
+  name="theme-demo"
+  theme="crayon"
+  defaultValue="b"
+  options={[
+    { value: 'a', label: 'Option A' },
+    { value: 'b', label: 'Option B' },
+  ]}
+/>`}
+>
+  <RadioGroup
+    name="theme-demo"
+    theme="crayon"
+    defaultValue="b"
+    options={[
+      { value: "a", label: "Option A" },
+      { value: "b", label: "Option B" },
     ]}
   />
 </PreviewContainer>

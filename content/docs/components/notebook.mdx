@@ -1,0 +1,98 @@
+---
+title: Notebook
+description: A hand-drawn lined paper container with ruled lines and a red margin.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Notebook } from "@/components/ui/notebook"
+
+<PreviewContainer
+  componentName="notebook"
+  code={`import { Notebook } from '@/components/crumble/ui/notebook'
+
+<Notebook>
+  <p>Dear diary,</p>
+  <p>Today I shipped the design system.</p>
+</Notebook>`}
+>
+  <div className="w-full max-w-sm">
+    <Notebook>
+      <p>Dear diary,</p>
+      <p>Today I shipped the design system.</p>
+    </Notebook>
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/notebook.json
+```
+
+## Without margin
+
+<PreviewContainer
+  componentName="notebook"
+  code={`<Notebook showMargin={false}>
+  <p>No red margin line.</p>
+  <p>Just ruled lines.</p>
+</Notebook>`}
+>
+  <div className="w-full max-w-sm">
+    <Notebook showMargin={false}>
+      <p>No red margin line.</p>
+      <p>Just ruled lines.</p>
+    </Notebook>
+  </div>
+</PreviewContainer>
+
+## Custom line spacing
+
+<PreviewContainer
+  componentName="notebook"
+  code={`<Notebook lineSpacing={36}>
+  <p>Wider ruled lines</p>
+  <p>More breathing room.</p>
+</Notebook>`}
+>
+  <div className="w-full max-w-sm">
+    <Notebook lineSpacing={36}>
+      <p>Wider ruled lines.</p>
+      <p>More breathing room between lines.</p>
+    </Notebook>
+  </div>
+</PreviewContainer>
+
+## As a card
+
+<PreviewContainer
+  componentName="notebook"
+  code={`<Notebook className="rounded-xl shadow-sm" lineSpacing={28}>
+  <h3 className="font-semibold">Meeting notes</h3>
+  <p className="text-muted-foreground">Discussed Q3 roadmap and priorities.</p>
+  <p className="text-muted-foreground">Follow up with design team on Monday.</p>
+</Notebook>`}
+>
+  <div className="w-full max-w-sm">
+    <Notebook className="rounded-xl shadow-sm" lineSpacing={28}>
+      <h3 className="font-semibold">Meeting notes</h3>
+      <p className="text-muted-foreground">Discussed Q3 roadmap and priorities.</p>
+      <p className="text-muted-foreground">Follow up with design team on Monday.</p>
+    </Notebook>
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="notebook"
+  code={`<Notebook theme="ink">
+  <p>Ink ruled paper.</p>
+</Notebook>`}
+>
+  <div className="w-full max-w-sm">
+    <Notebook theme="ink">
+      <p>Ink ruled paper. The lines are tighter and more precise.</p>
+    </Notebook>
+  </div>
+</PreviewContainer>

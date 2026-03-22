@@ -1,0 +1,67 @@
+---
+title: Badge
+description: A hand-drawn label badge with rough border and semantic variants.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Badge } from "@/components/ui/badge"
+
+<PreviewContainer
+  componentName="badge"
+  code={`import { Badge } from '@/components/crumble/ui/badge'
+
+<Badge>Default</Badge>`}
+>
+  <Badge>Default</Badge>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/badge.json
+```
+
+## Variants
+
+<PreviewContainer
+  componentName="badge"
+  code={`<Badge variant="default">Default</Badge>
+<Badge variant="success">Success</Badge>
+<Badge variant="warning">Warning</Badge>
+<Badge variant="destructive">Error</Badge>
+<Badge variant="outline">Outline</Badge>`}
+>
+  <div className="flex flex-wrap gap-2">
+    <Badge variant="default">Default</Badge>
+    <Badge variant="success">Success</Badge>
+    <Badge variant="warning">Warning</Badge>
+    <Badge variant="destructive">Error</Badge>
+    <Badge variant="outline">Outline</Badge>
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="badge"
+  code={`<Badge theme="pencil">Pencil</Badge>
+<Badge theme="ink">Ink</Badge>
+<Badge theme="crayon">Crayon</Badge>`}
+>
+  <div className="flex flex-wrap gap-2">
+    <Badge theme="pencil">Pencil</Badge>
+    <Badge theme="ink">Ink</Badge>
+    <Badge theme="crayon">Crayon</Badge>
+  </div>
+</PreviewContainer>
+
+## Hover animation
+
+Pass `animateOnHover` to redraw the border on hover.
+
+<PreviewContainer
+  componentName="badge"
+  code={`<Badge animateOnHover>Hover me</Badge>`}
+>
+  <Badge animateOnHover>Hover me</Badge>
+</PreviewContainer>

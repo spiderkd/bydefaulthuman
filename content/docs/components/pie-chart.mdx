@@ -1,0 +1,132 @@
+---
+title: Pie Chart
+description: A hand-drawn pie or donut chart with hachure-filled slices and d3-shape arc math.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PieChart } from "@/components/ui/pie-chart"
+
+<PreviewContainer
+  componentName="pie-chart"
+  code={`import { PieChart } from '@/components/crumble/ui/pie-chart'
+
+<PieChart
+  data={[
+    { label: "Design",      value: 40 },
+    { label: "Engineering", value: 35 },
+    { label: "Marketing",   value: 25 },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-sm">
+    <PieChart
+      data={[
+        { label: "Design",      value: 40 },
+        { label: "Engineering", value: 35 },
+        { label: "Marketing",   value: 25 },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npm install d3-shape d3-scale
+npx shadcn add https://crumble.dev/r/pie-chart.json
+```
+
+## Donut variant
+
+<PreviewContainer
+  componentName="pie-chart"
+  code={`<PieChart
+  donut
+  data={[
+    { label: "Completed", value: 68 },
+    { label: "In progress", value: 22 },
+    { label: "Pending", value: 10 },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-sm">
+    <PieChart
+      donut
+      data={[
+        { label: "Completed",   value: 68 },
+        { label: "In progress", value: 22 },
+        { label: "Pending",     value: 10 },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Custom colors
+
+<PreviewContainer
+  componentName="pie-chart"
+  code={`<PieChart
+  data={[
+    { label: "A", value: 30, color: "oklch(0.6 0.18 260)" },
+    { label: "B", value: 50, color: "oklch(0.6 0.16 145)" },
+    { label: "C", value: 20, color: "oklch(0.65 0.18 55)" },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-sm">
+    <PieChart
+      data={[
+        { label: "A", value: 30, color: "oklch(0.6 0.18 260)" },
+        { label: "B", value: 50, color: "oklch(0.6 0.16 145)" },
+        { label: "C", value: 20, color: "oklch(0.65 0.18 55)" },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Custom value format
+
+<PreviewContainer
+  componentName="pie-chart"
+  code={`<PieChart
+  formatValue={(v, total) => \`\${v}k\`}
+  data={[
+    { label: "Direct",   value: 120 },
+    { label: "Organic",  value: 85 },
+    { label: "Referral", value: 45 },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-sm">
+    <PieChart
+      formatValue={(v) => `${v}k`}
+      data={[
+        { label: "Direct",   value: 120 },
+        { label: "Organic",  value: 85 },
+        { label: "Referral", value: 45 },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="pie-chart"
+  code={`<PieChart theme="crayon" data={[
+  { label: "Red",   value: 40 },
+  { label: "Blue",  value: 35 },
+  { label: "Green", value: 25 },
+]} />`}
+>
+  <div className="w-full max-w-sm">
+    <PieChart
+      theme="crayon"
+      data={[
+        { label: "Red",   value: 40 },
+        { label: "Blue",  value: 35 },
+        { label: "Green", value: 25 },
+      ]}
+    />
+  </div>
+</PreviewContainer>

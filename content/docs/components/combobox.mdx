@@ -1,0 +1,93 @@
+---
+title: Combobox
+description: A searchable hand-drawn select with filtered dropdown and keyboard navigation.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Combobox } from "@/components/ui/combobox"
+
+<PreviewContainer
+  componentName="combobox"
+  code={`import { Combobox } from '@/components/crumble/ui/combobox'
+
+<Combobox
+  label="Framework"
+  placeholder="Search..."
+  options={[
+    { value: "next", label: "Next.js" },
+    { value: "remix", label: "Remix" },
+    { value: "astro", label: "Astro" },
+    { value: "svelte", label: "SvelteKit" },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-xs">
+    <Combobox
+      label="Framework"
+      placeholder="Search..."
+      options={[
+        { value: "next",   label: "Next.js" },
+        { value: "remix",  label: "Remix" },
+        { value: "astro",  label: "Astro" },
+        { value: "svelte", label: "SvelteKit" },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/combobox.json
+```
+
+## With disabled options
+
+<PreviewContainer
+  componentName="combobox"
+  code={`<Combobox
+  label="Plan"
+  placeholder="Select a plan..."
+  options={[
+    { value: "free",  label: "Free" },
+    { value: "pro",   label: "Pro" },
+    { value: "enterprise", label: "Enterprise", disabled: true },
+  ]}
+/>`}
+>
+  <div className="w-full max-w-xs">
+    <Combobox
+      label="Plan"
+      placeholder="Select a plan..."
+      options={[
+        { value: "free",       label: "Free" },
+        { value: "pro",        label: "Pro" },
+        { value: "enterprise", label: "Enterprise", disabled: true },
+      ]}
+    />
+  </div>
+</PreviewContainer>
+
+## Error state
+
+<PreviewContainer
+  componentName="combobox"
+  code={`<Combobox
+  label="Country"
+  placeholder="Pick a country"
+  error="Please select a country"
+  options={[{ value: "in", label: "India" }, { value: "us", label: "United States" }]}
+/>`}
+>
+  <div className="w-full max-w-xs">
+    <Combobox
+      label="Country"
+      placeholder="Pick a country"
+      error="Please select a country"
+      options={[
+        { value: "in", label: "India" },
+        { value: "us", label: "United States" },
+      ]}
+    />
+  </div>
+</PreviewContainer>

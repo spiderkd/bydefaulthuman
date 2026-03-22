@@ -1,10 +1,10 @@
 ---
 title: Button
-description: A hand-drawn button with a wobbly border that redraws on hover.
+description: A hand-drawn button with a wobbly border that redraws on hover and click.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/components/ui/button"
 
 <PreviewContainer
   componentName="button"
@@ -12,11 +12,7 @@ import { Button } from "@/registry/new-york/ui/button"
 
 <Button>Click me</Button>`}
 >
-  <div className="flex flex-wrap gap-3">
-    <Button>Default</Button>
-    <Button variant="ghost">Ghost</Button>
-    <Button variant="destructive">Destructive</Button>
-  </div>
+  <Button>Click me</Button>
 </PreviewContainer>
 
 ## Installation
@@ -55,6 +51,19 @@ npx shadcn add https://crumble.dev/r/button.json
   </div>
 </PreviewContainer>
 
+## Disabled
+
+<PreviewContainer
+  componentName="button"
+  code={`<Button disabled>Disabled</Button>
+<Button variant="destructive" disabled>Disabled</Button>`}
+>
+  <div className="flex gap-3">
+    <Button disabled>Disabled</Button>
+    <Button variant="destructive" disabled>Disabled</Button>
+  </div>
+</PreviewContainer>
+
 ## Themes
 
 <PreviewContainer
@@ -68,10 +77,4 @@ npx shadcn add https://crumble.dev/r/button.json
     <Button theme="ink">Ink</Button>
     <Button theme="crayon">Crayon</Button>
   </div>
-</PreviewContainer>
-
-## Disabled
-
-<PreviewContainer componentName="button" code={`<Button disabled>Disabled</Button>`}>
-  <Button disabled>Disabled</Button>
 </PreviewContainer>

@@ -1,0 +1,92 @@
+---
+title: Tabs
+description: Tab navigation where the active tab gets a hand-drawn underline that redraws on switch.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+
+<PreviewContainer
+  componentName="tabs"
+  code={`import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/crumble/ui/tabs'
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Account settings</TabsContent>
+  <TabsContent value="password">Change your password</TabsContent>
+</Tabs>`}
+>
+  <Tabs defaultValue="account">
+    <TabsList>
+      <TabsTrigger value="account">Account</TabsTrigger>
+      <TabsTrigger value="password">Password</TabsTrigger>
+    </TabsList>
+    <TabsContent value="account">
+      <p className="text-sm text-muted-foreground">Manage your account settings here.</p>
+    </TabsContent>
+    <TabsContent value="password">
+      <p className="text-sm text-muted-foreground">Change your password here.</p>
+    </TabsContent>
+  </Tabs>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/tabs.json
+```
+
+## With disabled tab
+
+<PreviewContainer
+  componentName="tabs"
+  code={`<Tabs defaultValue="overview">
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="analytics">Analytics</TabsTrigger>
+    <TabsTrigger value="reports" disabled>Reports</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">Overview content</TabsContent>
+  <TabsContent value="analytics">Analytics content</TabsContent>
+</Tabs>`}
+>
+  <Tabs defaultValue="overview">
+    <TabsList>
+      <TabsTrigger value="overview">Overview</TabsTrigger>
+      <TabsTrigger value="analytics">Analytics</TabsTrigger>
+      <TabsTrigger value="reports" disabled>Reports</TabsTrigger>
+    </TabsList>
+    <TabsContent value="overview">
+      <p className="text-sm text-muted-foreground">Overview content</p>
+    </TabsContent>
+    <TabsContent value="analytics">
+      <p className="text-sm text-muted-foreground">Analytics content</p>
+    </TabsContent>
+  </Tabs>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="tabs"
+  code={`<Tabs defaultValue="a" theme="crayon">
+  <TabsList>
+    <TabsTrigger value="a">Alpha</TabsTrigger>
+    <TabsTrigger value="b">Beta</TabsTrigger>
+  </TabsList>
+  <TabsContent value="a">Alpha</TabsContent>
+  <TabsContent value="b">Beta</TabsContent>
+</Tabs>`}
+>
+  <Tabs defaultValue="a" theme="crayon">
+    <TabsList>
+      <TabsTrigger value="a">Alpha</TabsTrigger>
+      <TabsTrigger value="b">Beta</TabsTrigger>
+    </TabsList>
+    <TabsContent value="a"><p className="text-sm text-muted-foreground">Alpha content</p></TabsContent>
+    <TabsContent value="b"><p className="text-sm text-muted-foreground">Beta content</p></TabsContent>
+  </Tabs>
+</PreviewContainer>

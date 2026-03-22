@@ -1,0 +1,88 @@
+---
+title: Sticky Note
+description: A hand-drawn sticky note with a folded corner and five color variants.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { StickyNote } from "@/components/ui/sticky-note"
+
+<PreviewContainer
+  componentName="sticky-note"
+  code={`import { StickyNote } from '@/components/crumble/ui/sticky-note'
+
+<StickyNote title="Remember">
+  Pick up milk on the way home.
+</StickyNote>`}
+>
+  <StickyNote title="Remember">
+    Pick up milk on the way home.
+  </StickyNote>
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/sticky-note.json
+```
+
+## Colors
+
+<PreviewContainer
+  componentName="sticky-note"
+  code={`<StickyNote color="yellow">Yellow</StickyNote>
+<StickyNote color="pink">Pink</StickyNote>
+<StickyNote color="blue">Blue</StickyNote>
+<StickyNote color="green">Green</StickyNote>
+<StickyNote color="orange">Orange</StickyNote>`}
+>
+  <div className="flex flex-wrap gap-3">
+    <StickyNote color="yellow">Yellow</StickyNote>
+    <StickyNote color="pink">Pink</StickyNote>
+    <StickyNote color="blue">Blue</StickyNote>
+    <StickyNote color="green">Green</StickyNote>
+    <StickyNote color="orange">Orange</StickyNote>
+  </div>
+</PreviewContainer>
+
+## Rotated
+
+<PreviewContainer
+  componentName="sticky-note"
+  code={`<StickyNote color="yellow" rotate={-2} title="Todo">
+  Finish the design system docs.
+</StickyNote>`}
+>
+  <StickyNote color="yellow" rotate={-2} title="Todo">
+    Finish the design system docs.
+  </StickyNote>
+</PreviewContainer>
+
+## Group of notes
+
+<PreviewContainer
+  componentName="sticky-note"
+  code={`<div className="flex gap-4">
+  <StickyNote color="yellow" rotate={-1.5} title="Idea">Add dark mode.</StickyNote>
+  <StickyNote color="pink"   rotate={1}    title="Bug">Fix the nav menu.</StickyNote>
+  <StickyNote color="blue"   rotate={-0.5} title="Note">Ship by Friday.</StickyNote>
+</div>`}
+>
+  <div className="flex flex-wrap gap-4">
+    <StickyNote color="yellow" rotate={-1.5} title="Idea">Add dark mode.</StickyNote>
+    <StickyNote color="pink"   rotate={1}    title="Bug">Fix the nav menu.</StickyNote>
+    <StickyNote color="blue"   rotate={-0.5} title="Note">Ship by Friday.</StickyNote>
+  </div>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="sticky-note"
+  code={`<StickyNote color="yellow" theme="ink">Ink theme</StickyNote>
+<StickyNote color="yellow" theme="crayon">Crayon theme</StickyNote>`}
+>
+  <div className="flex gap-3">
+    <StickyNote color="yellow" theme="ink">Ink theme</StickyNote>
+    <StickyNote color="yellow" theme="crayon">Crayon theme</StickyNote>
+  </div>
+</PreviewContainer>

@@ -3,7 +3,7 @@ title: Installation
 description: Add Crumble to your project in one command.
 ---
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/components/ui/button";
 
 Crumble uses the [shadcn CLI](https://ui.shadcn.com/docs/cli) for distribution. Each component is a registry JSON file that resolves into copyable source in your project.
 
@@ -27,9 +27,9 @@ This copies `button.tsx` into your project and automatically installs `roughjs` 
 All components default to `pencil`. To change it globally, call `configureCrumble` once anywhere in your app:
 
 ```ts
-import { configureCrumble } from "@/lib/rough"
+import { configureCrumble } from "@/lib/rough";
 
-configureCrumble({ theme: "ink" })
+configureCrumble({ theme: "ink" });
 ```
 
 ## Per-component override
@@ -45,5 +45,5 @@ configureCrumble({ theme: "ink" })
 configureCrumble({
   animateOnMount: false,
   animateOnHover: false,
-})
+});
 ```

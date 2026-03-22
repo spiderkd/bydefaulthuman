@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, type RefObject } from "react";
+import { useCallback, useContext, useRef, type RefObject } from "react";
 import rough from "roughjs";
 import type { Options } from "roughjs/bin/core";
 import type { RoughSVG } from "roughjs/bin/svg";
@@ -11,7 +11,7 @@ import {
   type ComponentVariant,
   type CrumbleTheme,
 } from "@/lib/rough";
-import { useCrumble } from "@/lib/crumble-context";
+import { CrumbleContext } from "@/lib/crumble-context";
 
 interface UseRoughProps {
   variant?: ComponentVariant;
@@ -32,7 +32,12 @@ export function useRough({
   const svgRef = externalSvgRef ?? internalSvgRef;
   const rcRef = useRef<RoughSVG | null>(null);
   const lastSvgRef = useRef<SVGSVGElement | null>(null);
-  const { animateOnHover, animateOnMount, theme: contextTheme } = useCrumble();
+  // Read live theme + config from context
+  const {
+    animateOnHover,
+    animateOnMount,
+    theme: contextTheme,
+  } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
 
   const getRenderer = useCallback(() => {
@@ -50,13 +55,7 @@ export function useRough({
   const getOptions = useCallback(
     (extra?: Partial<Options>) => {
       const resolvedSeed =
-        extra?.seed ??
-        (stableId
-          ? stableSeed(stableId)
-          : animateOnHover
-            ? randomSeed()
-            : stableSeed("crumble-default"));
-
+        extra?.seed ?? (stableId ? stableSeed(stableId) : randomSeed());
       return getRoughOptions(theme, variant, {
         ...options,
         ...extra,
@@ -83,12 +82,7 @@ export function useRough({
   );
 
   const drawCircle = useCallback(
-    (
-      cx: number,
-      cy: number,
-      diameter: number,
-      extra?: Partial<Options>,
-    ) => {
+    (cx: number, cy: number, diameter: number, extra?: Partial<Options>) => {
       const rc = getRenderer();
       if (!rc) return null;
 
