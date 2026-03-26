@@ -1,8 +1,14 @@
 "use client";
 
 /**
- * Pure roughjs — no d3 needed.
- * Wraps any child with a rough callout annotation.
+ * Annotation — Crumble wrapper around rough-notation.
+ *
+ * rough-notation handles the hard parts: SVG layout timing, getTotalLength(),
+ * CSS keyframe injection, multiline via getClientRects(), resize observation,
+ * and annotationGroup sequencing. We wrap it in React with Crumble's theme
+ * system and add trigger="inView" | "hover" | "mount".
+ *
+ * Install dep:  npm install rough-notation
  */
 
 import {
@@ -10,235 +16,302 @@ import {
   useContext,
   useEffect,
   useRef,
+  useState,
   type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import rough from "roughjs";
+import { annotate } from "rough-notation";
+
+type RoughAnnotation = ReturnType<typeof annotate>;
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
-  resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
 
-export type AnnotationType = "box" | "circle" | "underline" | "bracket" | "arrow-label";
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export type AnnotationType =
+  | "underline"
+  | "box"
+  | "circle"
+  | "highlight"
+  | "strike-through"
+  | "crossed-off"
+  | "bracket";
+
 export type AnnotationSide = "top" | "bottom" | "left" | "right";
+export type BracketSide = "left" | "right" | "top" | "bottom";
+export type AnnotationTrigger = "mount" | "inView" | "hover";
 
 export interface AnnotationProps
-  extends HTMLAttributes<HTMLSpanElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLSpanElement>, CrumbleColorProps {
   animate?: boolean;
+  /**
+   * Delay before the draw animation starts (ms).
+   * Useful for sequencing multiple annotations on a page.
+   */
+  animationDelay?: number;
   animationDuration?: number;
+  /** Which bracket sides to draw. Only for type="bracket". Default: ["left","right"] */
+  brackets?: BracketSide | BracketSide[];
   color?: string;
-  id?: string;
+  /** Number of times each stroke is drawn. Default 2. Creates the double-drawn look. */
+  iterations?: number;
   label?: ReactNode;
   labelSide?: AnnotationSide;
-  padding?: number;
+  /**
+   * Annotate each text line independently (via getClientRects).
+   * Essential for underline / highlight / strike-through on wrapping text.
+   */
+  multiline?: boolean;
+  padding?: number | [number, number] | [number, number, number, number];
+  /**
+   * Controlled visibility. Provide this to take full control.
+   * Re-animates every time show flips false → true.
+   */
+  show?: boolean;
+  strokeWidth?: number;
   theme?: CrumbleTheme;
+  /**
+   * "mount"  — draw on first render (default)
+   * "inView" — draw once when element enters viewport
+   * "hover"  — draw on mouseenter, reset on mouseleave
+   */
+  trigger?: AnnotationTrigger;
   type?: AnnotationType;
 }
 
-function animatePaths(svg: SVGSVGElement, duration: number) {
-  svg.querySelectorAll("path").forEach((path) => {
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = String(len);
-    path.style.strokeDashoffset = String(len);
-    path.style.transition = `stroke-dashoffset ${duration}ms cubic-bezier(0.16,1,0.3,1)`;
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      path.style.strokeDashoffset = "0";
-    }));
-  });
+// ─── Theme → rough-notation config ───────────────────────────────────────────
+
+function getThemeDefaults(theme: CrumbleTheme) {
+  switch (theme) {
+    case "ink":
+      return { strokeWidth: 1.8, animationDuration: 380, iterations: 1 };
+    case "crayon":
+      return { strokeWidth: 3, animationDuration: 750, iterations: 2 };
+    case "pencil":
+    default:
+      return { strokeWidth: 1.2, animationDuration: 600, iterations: 2 };
+  }
 }
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function Annotation({
   animate = true,
+  animationDelay = 0,
   animationDuration,
+  brackets: bracketsProp,
   children,
   className,
   color = "currentColor",
-  fill,
-  id,
+  iterations: iterationsProp,
   label,
   labelSide = "top",
+  multiline = false,
   padding = 5,
-  stroke,
-  strokeMuted,
+  show: showProp,
+  strokeWidth: strokeWidthProp,
   style,
   theme: themeProp,
-  type = "box",
+  trigger = "mount",
+  type = "underline",
+  // CrumbleColorProps — unused by rough-notation directly, accepted for API compat
+  fill: _fill,
+  stroke: _stroke,
+  strokeMuted: _strokeMuted,
   ...props
 }: AnnotationProps) {
-  const containerRef = useRef<HTMLSpanElement>(null);
-  const svgRef       = useRef<SVGSVGElement>(null);
-  const annoId = id ?? "annotation";
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const annotationRef = useRef<RoughAnnotation | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
-  const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
-  const duration = animationDuration ?? (theme === "ink" ? 350 : theme === "crayon" ? 700 : 550);
+  const themeDefaults = getThemeDefaults(theme);
 
-  const draw = useCallback(() => {
-    const container = containerRef.current;
-    const svg       = svgRef.current;
-    if (!container || !svg) return;
+  const resolvedDuration = animationDuration ?? themeDefaults.animationDuration;
+  const resolvedIterations = iterationsProp ?? themeDefaults.iterations;
+  const resolvedStrokeWidth = strokeWidthProp ?? themeDefaults.strokeWidth;
+  const resolvedBrackets = bracketsProp
+    ? Array.isArray(bracketsProp)
+      ? bracketsProp
+      : [bracketsProp]
+    : (["left", "right"] as BracketSide[]);
 
-    svg.replaceChildren();
+  // ── Controlled vs uncontrolled ──────────────────────────────────────────────
+  const isControlled = showProp !== undefined;
+  const [internalVisible, setInternalVisible] = useState(
+    !isControlled && trigger === "mount",
+  );
+  const visible = isControlled ? showProp : internalVisible;
 
-    const w = container.offsetWidth;
-    const h = container.offsetHeight;
-    const pad = padding;
+  // ── Show / hide helpers ─────────────────────────────────────────────────────
+  const showAnnotation = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      annotationRef.current?.show();
+      timeoutRef.current = null;
+    }, animationDelay);
+  }, [animationDelay]);
 
-    // SVG slightly larger than content to avoid clipping the rough overscroll
-    const svgW = w + pad * 2 + 12;
-    const svgH = h + pad * 2 + 12;
-    svg.setAttribute("width", String(svgW));
-    svg.setAttribute("height", String(svgH));
-    svg.setAttribute("viewBox", `0 0 ${svgW} ${svgH}`);
+  const hideAnnotation = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    annotationRef.current?.hide();
+  }, []);
 
-    const rc = rough.svg(svg);
-    const strokeW = theme === "crayon" ? 2.5 : theme === "ink" ? 1.8 : 1.2;
+  // ── Init rough-notation annotation ─────────────────────────────────────────
+  useEffect(() => {
+    const el = spanRef.current;
+    if (!el) return;
 
-    const opts = getRoughOptions(theme, "border", {
-      seed: stableSeed(annoId),
-      stroke: color,
-      strokeWidth: strokeW,
+    // rough-notation inserts SVG as a sibling to el, so the parent needs
+    // position:relative. We set it here rather than requiring the user to.
+    const parent = el.parentElement;
+    if (parent) {
+      const pos = window.getComputedStyle(parent).position;
+      if (!pos || pos === "static") {
+        parent.style.position = "relative";
+      }
+    }
+
+    const ann = annotate(el, {
+      type,
+      animate,
+      animationDuration: resolvedDuration,
+      color,
+      strokeWidth: resolvedStrokeWidth,
+      padding,
+      iterations: resolvedIterations,
+      multiline,
+      brackets: resolvedBrackets as any,
     });
 
-    // Content sits at (pad+4, pad+4) in the SVG coordinate space
-    const cx = pad + 4; // content x-start in SVG coords
-    const cy = pad + 4; // content y-start
-    const cw = w;
-    const ch = h;
+    annotationRef.current = ann;
 
-    let node: SVGGElement | null = null;
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      ann.remove();
+      annotationRef.current = null;
+    };
+    // Only re-init if the type changes — type cannot be changed on a live annotation
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
 
-    switch (type) {
-      case "box":
-        node = rc.rectangle(-pad + cx, -pad + cy, cw + pad * 2, ch + pad * 2, {
-          ...opts,
-          fill: "none",
-        }) as SVGGElement;
-        break;
+  // ── Live-update mutable props (no re-init needed) ──────────────────────────
+  useEffect(() => {
+    const ann = annotationRef.current;
+    if (!ann) return;
+    ann.animate = animate;
+    ann.animationDuration = resolvedDuration;
+    ann.color = color;
+    ann.strokeWidth = resolvedStrokeWidth;
+    ann.padding = padding as any;
+    ann.iterations = resolvedIterations;
+    // Re-show to apply new styles if currently visible
+    if (ann.isShowing()) {
+      ann.show();
+    }
+  }, [
+    animate,
+    resolvedDuration,
+    color,
+    resolvedStrokeWidth,
+    padding,
+    resolvedIterations,
+  ]);
 
-      case "circle":
-        node = rc.ellipse(
-          cx + cw / 2,
-          cy + ch / 2,
-          cw + pad * 3,
-          ch + pad * 3,
-          { ...opts, fill: "none" },
-        ) as SVGGElement;
-        break;
+  // ── React to visible state ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (visible) {
+      showAnnotation();
+    } else {
+      hideAnnotation();
+    }
+  }, [visible, showAnnotation, hideAnnotation]);
 
-      case "underline":
-        node = rc.line(
-          cx - pad,
-          cy + ch + 3,
-          cx + cw + pad,
-          cy + ch + 3,
-          opts,
-        ) as SVGGElement;
-        break;
+  // ── Trigger: inView ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (isControlled || trigger !== "inView") return;
+    const el = spanRef.current;
+    if (!el) return;
 
-      case "bracket": {
-        const left  = rc.line(cx - pad, cy - pad, cx - pad, cy + ch + pad, opts) as SVGGElement;
-        const right = rc.line(cx + cw + pad, cy - pad, cx + cw + pad, cy + ch + pad, {
-          ...opts, seed: stableSeed(`${annoId}-r`),
-        }) as SVGGElement;
-        svg.append(left, right);
-        if (animate) { animatePaths(svg, duration); }
-        return;
-      }
-
-      case "arrow-label": {
-        // Draw a rough arrow pointing at the content from the label side
-        const arrowLen = 24;
-        let x1: number, y1: number, x2: number, y2: number;
-
-        if (labelSide === "top") {
-          x1 = cx + cw / 2; y1 = cy - pad - arrowLen;
-          x2 = cx + cw / 2; y2 = cy - pad - 2;
-        } else if (labelSide === "bottom") {
-          x1 = cx + cw / 2; y1 = cy + ch + pad + arrowLen;
-          x2 = cx + cw / 2; y2 = cy + ch + pad + 2;
-        } else if (labelSide === "left") {
-          x1 = cx - pad - arrowLen; y1 = cy + ch / 2;
-          x2 = cx - pad - 2;       y2 = cy + ch / 2;
-        } else {
-          x1 = cx + cw + pad + arrowLen; y1 = cy + ch / 2;
-          x2 = cx + cw + pad + 2;       y2 = cy + ch / 2;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInternalVisible(true);
+          observer.disconnect(); // Draw once, like a real marker
         }
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isControlled, trigger]);
 
-        const arrowNode = rc.line(x1, y1, x2, y2, opts) as SVGGElement;
-        svg.appendChild(arrowNode);
-
-        // Arrowhead — two short lines at x2,y2
-        const angle = Math.atan2(y2 - y1, x2 - x1);
-        const hs = 7;
-        svg.appendChild(rc.line(x2, y2,
-          x2 - Math.cos(angle - 0.5) * hs,
-          y2 - Math.sin(angle - 0.5) * hs,
-          { ...opts, seed: stableSeed(`${annoId}-ah1`) }) as SVGGElement);
-        svg.appendChild(rc.line(x2, y2,
-          x2 - Math.cos(angle + 0.5) * hs,
-          y2 - Math.sin(angle + 0.5) * hs,
-          { ...opts, seed: stableSeed(`${annoId}-ah2`) }) as SVGGElement);
-
-        if (animate) animatePaths(svg, duration);
-        return;
-      }
-    }
-
-    if (node) {
-      svg.appendChild(node);
-      if (animate) animatePaths(svg, duration);
-    }
-  }, [animate, annoId, color, duration, labelSide, padding, theme, type]);
-
+  // ── Trigger: hover ──────────────────────────────────────────────────────────
   useEffect(() => {
-    const rid = requestAnimationFrame(() => draw());
-    return () => cancelAnimationFrame(rid);
-  }, [draw]);
+    if (isControlled || trigger !== "hover") return;
+    const el = spanRef.current;
+    if (!el) return;
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const ro = new ResizeObserver(() => draw());
-    ro.observe(container);
-    return () => ro.disconnect();
-  }, [draw]);
+    const onEnter = () => setInternalVisible(true);
+    const onLeave = () => setInternalVisible(false);
 
-  const labelPositionStyle: Record<AnnotationSide, CSSProperties> = {
-    bottom: { bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: 4 },
-    left:   { right: "100%", top: "50%",  transform: "translateY(-50%)", marginRight: 8 },
-    right:  { left: "100%",  top: "50%",  transform: "translateY(-50%)", marginLeft: 8 },
-    top:    { bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: 4 },
+    el.addEventListener("mouseenter", onEnter);
+    el.addEventListener("mouseleave", onLeave);
+    return () => {
+      el.removeEventListener("mouseenter", onEnter);
+      el.removeEventListener("mouseleave", onLeave);
+    };
+  }, [isControlled, trigger]);
+
+  // ── Label positioning ────────────────────────────────────────────────────────
+  const labelStyle: Record<AnnotationSide, CSSProperties> = {
+    top: {
+      bottom: "100%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      marginBottom: 4,
+    },
+    bottom: {
+      top: "100%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      marginTop: 4,
+    },
+    left: {
+      right: "100%",
+      top: "50%",
+      transform: "translateY(-50%)",
+      marginRight: 8,
+    },
+    right: {
+      left: "100%",
+      top: "50%",
+      transform: "translateY(-50%)",
+      marginLeft: 8,
+    },
   };
 
   return (
     <span
-      ref={containerRef}
+      ref={spanRef}
       className={cn("relative inline-block", className)}
-      style={{ ...roughStyle, ...style }}
+      style={style}
       {...props}
     >
       {children}
-      <svg
-        ref={svgRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute overflow-visible"
-        style={{
-          top:  -(padding + 4),
-          left: -(padding + 4),
-        }}
-      />
       {label ? (
         <span
-          className="absolute pointer-events-none whitespace-nowrap text-xs font-medium"
-          style={{ ...labelPositionStyle[labelSide], color }}
+          className="pointer-events-none absolute whitespace-nowrap text-xs font-medium"
+          style={{ ...labelStyle[labelSide], color }}
         >
           {label}
         </span>

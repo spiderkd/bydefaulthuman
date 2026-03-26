@@ -20,7 +20,8 @@ import {
 } from "@/lib/rough";
 
 export interface NumberInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange">,
+  extends
+    Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange">,
     CrumbleColorProps {
   className?: string;
   defaultValue?: number;
@@ -111,7 +112,11 @@ function StepButton({
       style={{ width: BTN_W, height: HEIGHT }}
       aria-label={label === "+" ? "increment" : "decrement"}
     >
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={svgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
     </button>
   );
 }
@@ -140,7 +145,8 @@ export function NumberInput({
   const [focused, setFocused] = useState(false);
 
   const value = controlledValue ?? internalValue;
-  const inputId = id ?? `number-${label?.toLowerCase().replace(/\s+/g, "-") ?? "input"}`;
+  const inputId =
+    id ?? `number-${label?.toLowerCase().replace(/\s+/g, "-") ?? "input"}`;
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
@@ -160,7 +166,11 @@ export function NumberInput({
     // Only top and bottom lines — left/right are handled by StepButton borders
     const opts = getRoughOptions(theme, "border", {
       seed: stableSeed(inputId),
-      stroke: error ? "var(--cr-stroke-error)" : focused ? "var(--cr-stroke)" : "var(--cr-stroke-muted)",
+      stroke: error
+        ? "var(--cr-stroke-error)"
+        : focused
+          ? "var(--cr-stroke)"
+          : "var(--cr-stroke-muted)",
     });
     svg.appendChild(rc.line(0, 1, w, 1, opts));
     svg.appendChild(rc.line(0, HEIGHT - 1, w, HEIGHT - 1, opts));
@@ -194,7 +204,10 @@ export function NumberInput({
   return (
     <div className={cn("flex flex-col gap-1.5", className)} style={roughStyle}>
       {label ? (
-        <label htmlFor={inputId} className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        <label
+          htmlFor={inputId}
+          className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground"
+        >
           {label}
         </label>
       ) : null}
@@ -208,7 +221,11 @@ export function NumberInput({
           btnId={`${inputId}-dec`}
         />
         <div className="relative flex-1" style={{ height: HEIGHT }}>
-          <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+          <svg
+            ref={svgRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 overflow-visible"
+          />
           <input
             id={inputId}
             type="number"

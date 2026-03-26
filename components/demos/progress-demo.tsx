@@ -10,7 +10,7 @@ export function ProgressStorageDemo() {
         value={3.2}
         max={5}
         showValue
-        formatValue={(v) => `${v.toFixed(1)} GB`}
+        formatValue={(v: number) => `${v.toFixed(1)} GB`}
       />
     </div>
   );

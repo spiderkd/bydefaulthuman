@@ -20,6 +20,7 @@ export interface ProgressProps extends CrumbleColorProps {
   showValue?: boolean;
   theme?: CrumbleTheme;
   value?: number;
+  formatValue?: (value: number, max: number) => string; // ✅ add this
 }
 
 const TRACK_H = 16;
@@ -35,13 +36,15 @@ export function Progress({
   strokeMuted,
   theme: themeProp,
   value = 0,
+  formatValue,
 }: ProgressProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
-  const progressId = id ?? `progress-${label?.toLowerCase().replace(/\s+/g, "-") ?? "bar"}`;
+  const progressId =
+    id ?? `progress-${label?.toLowerCase().replace(/\s+/g, "-") ?? "bar"}`;
 
   const pct = Math.min(Math.max(value / max, 0), 1);
 
@@ -60,23 +63,35 @@ export function Progress({
 
     // Track (empty background)
     svg.appendChild(
-      rc.rectangle(1, 1, w - 2, TRACK_H - 2, getRoughOptions(theme, "border", {
-        fill: "none",
-        seed: stableSeed(`${progressId}-track`),
-        stroke: "var(--cr-stroke-muted)",
-      })),
+      rc.rectangle(
+        1,
+        1,
+        w - 2,
+        TRACK_H - 2,
+        getRoughOptions(theme, "border", {
+          fill: "none",
+          seed: stableSeed(`${progressId}-track`),
+          stroke: "var(--cr-stroke-muted)",
+        }),
+      ),
     );
 
     // Fill (progress)
     if (pct > 0) {
       const fillW = Math.max((w - 4) * pct, 4);
       svg.appendChild(
-        rc.rectangle(2, 2, fillW, TRACK_H - 4, getRoughOptions(theme, "fill", {
-          fill: "currentColor",
-          fillStyle: theme === "ink" ? "solid" : "hachure",
-          seed: stableSeed(`${progressId}-fill`),
-          stroke: "none",
-        })),
+        rc.rectangle(
+          2,
+          2,
+          fillW,
+          TRACK_H - 4,
+          getRoughOptions(theme, "fill", {
+            fill: "currentColor",
+            fillStyle: theme === "ink" ? "solid" : "hachure",
+            seed: stableSeed(`${progressId}-fill`),
+            stroke: "none",
+          }),
+        ),
       );
     }
   }, [pct, progressId, theme]);
@@ -102,9 +117,16 @@ export function Progress({
               {label}
             </span>
           ) : null}
-          {showValue ? (
+          {/* {showValue ? (
             <span className="text-[11px] tabular-nums text-muted-foreground">
               {Math.round(pct * 100)}%
+            </span>
+          ) : null} */}
+          {showValue ? (
+            <span className="text-[11px] tabular-nums text-muted-foreground">
+              {formatValue
+                ? formatValue(value, max)
+                : `${Math.round(pct * 100)}%`}
             </span>
           ) : null}
         </div>
@@ -118,7 +140,11 @@ export function Progress({
         className="relative"
         style={{ height: TRACK_H }}
       >
-        <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+        <svg
+          ref={svgRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-visible"
+        />
       </div>
     </div>
   );

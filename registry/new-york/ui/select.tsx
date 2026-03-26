@@ -107,9 +107,7 @@ export function Select({
 
       if (!arrow) return;
       arrow.replaceChildren();
-      const chevronStroke = disabled
-        ? "var(--cr-stroke-muted)"
-        : currentStroke;
+      const chevronStroke = disabled ? "var(--cr-stroke-muted)" : currentStroke;
 
       const leftLine = drawLine(2, open ? 10 : 4, 8, open ? 4 : 10, {
         stroke: chevronStroke,
@@ -346,7 +344,7 @@ export function Select({
                   aria-disabled={option.disabled}
                   className={cn(
                     "relative flex cursor-pointer items-center px-3 text-sm",
-                    "hover:text-background",
+                    "hover:text-foreground",
                     option.disabled && "cursor-not-allowed opacity-40",
                     isSelected && "font-medium",
                   )}

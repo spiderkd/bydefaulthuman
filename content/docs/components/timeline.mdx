@@ -5,16 +5,123 @@ description: A vertical event list with rough circle nodes and connecting lines.
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { Timeline, TimelineItem } from "@/registry/new-york/ui/timeline";
+import { TimelineDemo } from "@/components/demos/TimelineDemo";
+
+## Animated Demo
+
+<PreviewContainer componentName="timeline">
+  <TimelineDemo />
+</PreviewContainer>
+
+The demo above auto-plays on mount and exposes a **Replay** button. It drives
+status changes through a plain `setTimeout` stagger — no extra dependencies
+required.
+
+```tsx
+// components/demo/TimelineDemo.tsx
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import {
+  Timeline,
+  TimelineItem,
+  type TimelineStatus,
+} from "@/registry/new-york/ui/timeline";
+
+interface Step {
+  title: string;
+  description?: string;
+  time?: string;
+  status: TimelineStatus;
+}
+
+const STEPS: Omit<Step, "status">[] = [
+  { title: "Order placed", description: "Payment confirmed.", time: "9:00 AM" },
+  {
+    title: "Processing",
+    description: "Items picked and packed.",
+    time: "9:15 AM",
+  },
+  {
+    title: "Out for delivery",
+    description: "Your driver is on the way.",
+    time: "11:30 AM",
+  },
+  { title: "Delivered", description: "Left at front door.", time: "2:04 PM" },
+];
+
+function deriveStatuses(activeIdx: number): TimelineStatus[] {
+  return STEPS.map((_, i) => {
+    if (i < activeIdx) return "complete";
+    if (i === activeIdx) return "active";
+    return "pending";
+  });
+}
+
+export function TimelineDemo() {
+  const [activeIdx, setActiveIdx] = useState<number>(-1);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const runAnimation = () => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setActiveIdx(-1);
+
+    STEPS.forEach((_, i) => {
+      const t = setTimeout(() => setActiveIdx(i), (i + 1) * 900);
+      timersRef.current.push(t);
+    });
+  };
+
+  useEffect(() => {
+    runAnimation();
+    return () => timersRef.current.forEach(clearTimeout);
+  }, []);
+
+  const statuses =
+    activeIdx === -1
+      ? STEPS.map((): TimelineStatus => "pending")
+      : deriveStatuses(activeIdx);
+
+  return (
+    <div className="flex flex-col items-start gap-4 w-full max-w-xs">
+      <Timeline>
+        {STEPS.map((step, i) => (
+          <TimelineItem
+            key={step.title}
+            title={step.title}
+            description={step.description}
+            time={step.time}
+            status={statuses[i]}
+            isLast={i === STEPS.length - 1}
+          />
+        ))}
+      </Timeline>
+
+      <button
+        onClick={runAnimation}
+        className="self-start rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+      >
+        Replay ↺
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## Static Example
 
 <PreviewContainer
   componentName="timeline"
   code={`import { Timeline, TimelineItem } from '@/components/crumble/ui/timeline'
 
 <Timeline>
-  <TimelineItem title="Order placed"    status="complete" time="9:00 AM" />
-  <TimelineItem title="Processing"      status="complete" time="9:15 AM" />
-  <TimelineItem title="Out for delivery" status="active"  time="11:30 AM" />
-  <TimelineItem title="Delivered"       status="pending"  isLast />
+  <TimelineItem title="Order placed"     status="complete" time="9:00 AM" />
+  <TimelineItem title="Processing"       status="complete" time="9:15 AM" />
+  <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" />
+  <TimelineItem title="Delivered"        status="pending"  isLast />
 </Timeline>`}
 >
   <div className="w-full max-w-xs">
@@ -44,8 +151,8 @@ npx shadcn add https://crumble.dev/r/timeline.json
 <PreviewContainer
   componentName="timeline"
   code={`<Timeline theme="crayon">
-  <TimelineItem title="Step one" status="complete" />
-  <TimelineItem title="Step two" status="active" />
+  <TimelineItem title="Step one"   status="complete" />
+  <TimelineItem title="Step two"   status="active" />
   <TimelineItem title="Step three" status="pending" isLast />
 </Timeline>`}
 >

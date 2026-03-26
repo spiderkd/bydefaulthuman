@@ -9,8 +9,15 @@ import { DrawerDemo, DrawerSidesDemo } from "@/components/demos/drawer-demo";
 <PreviewContainer
   componentName="drawer"
   code={`import { useState } from 'react'
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerBody, DrawerFooter } from '@/components/crumble/ui/drawer'
-import { Button } from '@/components/crumble/ui/button'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerBody,
+  DrawerFooter,
+} from '@/components/ui/drawer'
+import { Button } from '@/components/ui/button'
 
 function Demo() {
 const [open, setOpen] = useState(false)
@@ -19,7 +26,7 @@ return (
 <>
 <Button onClick={() => setOpen(true)}>Open drawer</Button>
 <Drawer open={open} onOpenChange={setOpen}>
-<DrawerContent open={open}>
+<DrawerContent>
 <DrawerHeader>
 <DrawerTitle>Settings</DrawerTitle>
 </DrawerHeader>
@@ -51,7 +58,7 @@ The rough line is drawn only on the single exposed edge — left, right (default
 <PreviewContainer
   componentName="drawer"
   code={`<Drawer open={open} onOpenChange={setOpen} side="left">
-  <DrawerContent open={open}>...</DrawerContent>
+  <DrawerContent>...</DrawerContent>
 </Drawer>`}
 >
   <DrawerSidesDemo />
@@ -62,9 +69,8 @@ The rough line is drawn only on the single exposed edge — left, right (default
 Control width (left/right) or height (top/bottom) with the `size` prop — any CSS value.
 
 ```tsx
-<Drawer side="right">
-  <DrawerContent size="480px">...</DrawerContent>
-</Drawer>
+<DrawerContent size="480px">...</DrawerContent>
+<DrawerContent size="40vw">...</DrawerContent>
 ```
 
 ## Themes
@@ -72,7 +78,7 @@ Control width (left/right) or height (top/bottom) with the `size` prop — any C
 <PreviewContainer
   componentName="drawer"
   code={`<Drawer open={open} onOpenChange={setOpen} theme="crayon">
-  <DrawerContent open={open}>...</DrawerContent>
+  <DrawerContent>...</DrawerContent>
 </Drawer>`}
 >
   <DrawerDemo theme="crayon" />

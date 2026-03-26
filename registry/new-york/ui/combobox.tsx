@@ -257,8 +257,10 @@ export function Combobox({
             aria-expanded={open}
             aria-autocomplete="list"
             disabled={disabled}
-            placeholder={open ? placeholder : selectedOption?.label ?? placeholder}
-            value={open ? query : selectedOption?.label ?? ""}
+            placeholder={
+              open ? placeholder : (selectedOption?.label ?? placeholder)
+            }
+            value={open ? query : (selectedOption?.label ?? "")}
             onFocus={() => {
               setFocused(true);
               setOpen(true);
@@ -338,7 +340,7 @@ export function Combobox({
                     aria-selected={isSelected}
                     className={cn(
                       "relative flex cursor-pointer items-center px-3 text-sm",
-                      "hover:text-background",
+                      "hover:text-foreground",
                       option.disabled && "cursor-not-allowed opacity-40",
                       isSelected && "font-medium",
                     )}

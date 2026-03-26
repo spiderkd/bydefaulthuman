@@ -3,8 +3,16 @@ title: Annotation
 description: Wrap any element with a hand-drawn annotation that draws itself on mount.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Annotation } from "@/registry/new-york/ui/annotation"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Annotation } from "@/registry/new-york/ui/annotation";
+
+# Annotation
+
+Wrap any element with a hand-drawn annotation powered by rough-notation.
+
+---
+
+## Basic
 
 <PreviewContainer
   componentName="annotation"
@@ -19,46 +27,64 @@ import { Annotation } from "@/registry/new-york/ui/annotation"
   </Annotation>
 </PreviewContainer>
 
-## Installation
-
-```bash
-npx shadcn add https://crumble.dev/r/annotation.json
-```
+---
 
 ## Types
 
 <PreviewContainer
-  componentName="annotation"
-  code={`<Annotation type="box"><span className="text-sm">Box</span></Annotation>
-<Annotation type="circle"><span className="text-sm">Circle</span></Annotation>
-<Annotation type="underline"><span className="text-sm">Underline</span></Annotation>
-<Annotation type="bracket"><span className="text-sm">Bracket</span></Annotation>`}
+  componentName="annotation-types"
+  code={`<Annotation type="box">Box</Annotation>
+<Annotation type="circle">Circle</Annotation>
+<Annotation type="underline">Underline</Annotation>
+<Annotation type="highlight">Highlight</Annotation>
+<Annotation type="strike-through">Strike</Annotation>
+<Annotation type="crossed-off">Crossed</Annotation>
+<Annotation type="bracket">Bracket</Annotation>`}
 >
-  <div className="flex flex-wrap gap-8 py-2">
-    <Annotation type="box"><span className="text-sm">Box</span></Annotation>
-    <Annotation type="circle"><span className="text-sm">Circle</span></Annotation>
-    <Annotation type="underline"><span className="text-sm">Underline</span></Annotation>
-    <Annotation type="bracket"><span className="text-sm">Bracket</span></Annotation>
+  <div className="flex flex-wrap gap-6 py-4">
+    <Annotation type="box">
+      <span>Box</span>
+    </Annotation>
+    <Annotation type="circle">
+      <span>Circle</span>
+    </Annotation>
+    <Annotation type="underline">
+      <span>Underline</span>
+    </Annotation>
+    <Annotation type="highlight" color="oklch(0.6 0.18 260)">
+      <span>Highlight</span>
+    </Annotation>
+    <Annotation type="strike-through">
+      <span>Strike</span>
+    </Annotation>
+    <Annotation type="crossed-off">
+      <span>Crossed</span>
+    </Annotation>
+    <Annotation type="bracket">
+      <span>Bracket</span>
+    </Annotation>
   </div>
 </PreviewContainer>
 
-## Arrow label
+---
+
+## Labels
 
 <PreviewContainer
-  componentName="annotation"
+  componentName="annotation-label"
   code={`<Annotation
-  type="arrow-label"
-  label="This is important"
+  type="box"
+  label="Important"
   labelSide="top"
   color="oklch(0.6 0.18 260)"
 >
-  <span className="text-base font-semibold">Key feature</span>
+  Feature
 </Annotation>`}
 >
   <div className="py-10">
     <Annotation
-      type="arrow-label"
-      label="This is important"
+      type="box"
+      label="Important"
       labelSide="top"
       color="oklch(0.6 0.18 260)"
     >
@@ -67,45 +93,139 @@ npx shadcn add https://crumble.dev/r/annotation.json
   </div>
 </PreviewContainer>
 
-## Custom color
+---
+
+## Trigger: Hover
 
 <PreviewContainer
-  componentName="annotation"
-  code={`<Annotation type="box" color="oklch(0.6 0.22 25)">
-  <span className="text-sm">Coral box</span>
+  componentName="annotation-hover"
+  code={`<Annotation type="circle" trigger="hover">
+  Hover me
 </Annotation>`}
 >
-  <Annotation type="box" color="oklch(0.6 0.22 25)">
-    <span className="text-sm">Coral box</span>
+  <Annotation type="circle" trigger="hover">
+    <span>Hover me</span>
   </Annotation>
 </PreviewContainer>
 
-## Disable animation
+---
+
+## Trigger: In View
 
 <PreviewContainer
-  componentName="annotation"
+  componentName="annotation-inview"
+  code={`<Annotation type="highlight" trigger="inView">
+  Scroll into view
+</Annotation>`}
+>
+  <div className="h-[200px] flex items-center justify-center">
+    <Annotation type="highlight" trigger="inView" color="oklch(0.6 0.18 260)">
+      <span>Scroll into view</span>
+    </Annotation>
+  </div>
+</PreviewContainer>
+
+---
+
+## Animation Control
+
+<PreviewContainer
+  componentName="annotation-animation"
+  code={`<Annotation
+  type="underline"
+  animationDuration={1200}
+  animationDelay={300}
+>
+  Slow animation
+</Annotation>`}
+>
+  <Annotation type="underline" animationDuration={1200} animationDelay={300}>
+    <span>Slow animation</span>
+  </Annotation>
+</PreviewContainer>
+
+---
+
+## Disable Animation
+
+<PreviewContainer
+  componentName="annotation-no-animation"
   code={`<Annotation type="circle" animate={false}>
-  <span className="text-sm">No draw-on animation</span>
+  Static annotation
 </Annotation>`}
 >
   <Annotation type="circle" animate={false}>
-    <span className="text-sm">No draw-on animation</span>
+    <span>Static annotation</span>
   </Annotation>
 </PreviewContainer>
 
-## In a paragraph
+---
+
+## Multiline
 
 <PreviewContainer
-  componentName="annotation"
-  code={`<p className="text-base leading-relaxed">
-  The most{" "}
-  <Annotation type="highlight" color="#fbbf24">
-    important thing
-  </Annotation>{" "}
-  is to ship.
+  componentName="annotation-multiline"
+  code={`<Annotation type="underline" multiline>
+  This is a long text that wraps across multiple lines
+</Annotation>`}
+>
+  <div className="max-w-xs">
+    <Annotation type="underline" multiline>
+      This is a long text that wraps across multiple lines and still gets
+      annotated correctly.
+    </Annotation>
+  </div>
+</PreviewContainer>
+
+---
+
+## Custom Color
+
+<PreviewContainer
+  componentName="annotation-color"
+  code={`<Annotation type="box" color="oklch(0.6 0.22 25)">
+  Coral box
+</Annotation>`}
+>
+  <Annotation type="box" color="oklch(0.6 0.22 25)">
+    <span>Coral box</span>
+  </Annotation>
+</PreviewContainer>
+
+---
+
+## Themes
+
+<PreviewContainer
+  componentName="annotation-themes"
+  code={`<Annotation theme="pencil">Pencil</Annotation>
+<Annotation theme="ink">Ink</Annotation>
+<Annotation theme="crayon">Crayon</Annotation>`}
+>
+  <div className="flex gap-6 py-2">
+    <Annotation type="box" theme="pencil">
+      <span>Pencil</span>
+    </Annotation>
+    <Annotation type="box" theme="ink">
+      <span>Ink</span>
+    </Annotation>
+    <Annotation type="box" theme="crayon">
+      <span>Crayon</span>
+    </Annotation>
+  </div>
+</PreviewContainer>
+
+---
+
+## In a Paragraph
+
+<PreviewContainer
+  componentName="annotation-paragraph"
+  code={`<p>
+  The most <Annotation type="underline">important thing</Annotation> is to ship.
 </p>`}
 >
-  <p className="text-base leading-relaxed">
+  <p className="text-base leading-relaxed max-w-lg">
     The most{" "}
     <Annotation type="underline" color="oklch(0.65 0.18 55)">
       important thing
@@ -114,17 +234,10 @@ npx shadcn add https://crumble.dev/r/annotation.json
   </p>
 </PreviewContainer>
 
-## Themes
+---
 
-<PreviewContainer
-  componentName="annotation"
-  code={`<Annotation type="box" theme="pencil"><span className="text-sm">Pencil</span></Annotation>
-<Annotation type="box" theme="ink"><span className="text-sm">Ink</span></Annotation>
-<Annotation type="box" theme="crayon"><span className="text-sm">Crayon</span></Annotation>`}
->
-  <div className="flex flex-wrap gap-8 py-2">
-    <Annotation type="box" theme="pencil"><span className="text-sm">Pencil</span></Annotation>
-    <Annotation type="box" theme="ink"><span className="text-sm">Ink</span></Annotation>
-    <Annotation type="box" theme="crayon"><span className="text-sm">Crayon</span></Annotation>
-  </div>
-</PreviewContainer>
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/annotation.json
+```

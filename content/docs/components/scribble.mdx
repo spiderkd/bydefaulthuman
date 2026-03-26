@@ -1,0 +1,134 @@
+---
+title: Scribble
+description: Draw rough freehand scribbles over content for emphasis, redaction, or playful UI effects.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Scribble } from "@/registry/new-york/ui/scribble";
+
+<PreviewContainer
+  componentName="scribble"
+  code={`import { Scribble } from "@/components/scribble"
+
+<Scribble>
+  <span className="text-base font-medium">Scribbled text</span>
+</Scribble>`}
+>
+  <Scribble>
+    <span className="text-base font-medium">Scribbled text</span>
+  </Scribble>
+</PreviewContainer>
+
+## Types
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<Scribble type="scrawl"><span>Scrawl</span></Scribble>
+<Scribble type="redact"><span>Redact</span></Scribble>
+<Scribble type="circle"><span>Circle</span></Scribble>
+<Scribble type="blob"><span>Blob</span></Scribble>`}
+>
+  <div className="flex flex-wrap gap-8 py-2">
+    <Scribble type="scrawl">
+      <span>Scrawl</span>
+    </Scribble>
+    <Scribble type="redact">
+      <span>Redact</span>
+    </Scribble>
+    <Scribble type="circle">
+      <span>Circle</span>
+    </Scribble>
+    <Scribble type="blob">
+      <span>Blob</span>
+    </Scribble>
+  </div>
+</PreviewContainer>
+
+## Redaction
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<Scribble type="redact">
+  <span className="text-sm">Sensitive content</span>
+</Scribble>`}
+>
+  <Scribble type="redact">
+    <span className="text-sm">Sensitive content</span>
+  </Scribble>
+</PreviewContainer>
+
+## Custom Color
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<Scribble type="blob" color="oklch(0.6 0.22 25)">
+  <span className="text-sm">Custom color</span>
+</Scribble>`}
+>
+  <Scribble type="blob" color="oklch(0.6 0.22 25)">
+    <span className="text-sm">Custom color</span>
+  </Scribble>
+</PreviewContainer>
+
+## Opacity
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<Scribble type="circle" opacity={0.5}>
+  <span className="text-sm">Soft emphasis</span>
+</Scribble>`}
+>
+  <Scribble type="circle" opacity={0.5}>
+    <span className="text-sm">Soft emphasis</span>
+  </Scribble>
+</PreviewContainer>
+
+## Padding
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<Scribble type="blob" padding={10}>
+  <span className="text-sm">Extra padding</span>
+</Scribble>`}
+>
+  <Scribble type="blob" padding={10}>
+    <span className="text-sm">Extra padding</span>
+  </Scribble>
+</PreviewContainer>
+
+## Themes
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<div className="flex flex-wrap gap-8">
+  <Scribble theme="pencil"><span>Pencil</span></Scribble>
+  <Scribble theme="ink"><span>Ink</span></Scribble>
+  <Scribble theme="crayon"><span>Crayon</span></Scribble>
+</div>`}
+>
+  <div className="flex flex-wrap gap-8">
+    <Scribble theme="pencil">
+      <span>Pencil</span>
+    </Scribble>
+    <Scribble theme="ink">
+      <span>Ink</span>
+    </Scribble>
+    <Scribble theme="crayon">
+      <span>Crayon</span>
+    </Scribble>
+  </div>
+</PreviewContainer>
+
+## In a Paragraph
+
+<PreviewContainer
+  componentName="scribble"
+  code={`<p>
+  This is a <Scribble type="scrawl">wrong idea</Scribble> that should be avoided.
+</p>`}
+>
+  <p>
+    This is a <Scribble type="scrawl">wrong idea</Scribble> that should be
+    avoided.
+  </p>
+</PreviewContainer>

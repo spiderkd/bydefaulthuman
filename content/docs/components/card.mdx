@@ -3,8 +3,8 @@ title: Card
 description: A hand-drawn card container with an optional stacked paper effect.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Button } from "@/registry/new-york/ui/button"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/new-york/ui/card";
 
 <PreviewContainer
   componentName="card"
@@ -24,6 +24,7 @@ import {
 </Card>`}
 >
   <Card padding={20}>
+   
     <p className="text-sm font-medium">Card title</p>
     <p className="mt-1 text-xs text-muted-foreground">Some content goes here.</p>
   </Card>
@@ -46,7 +47,9 @@ npx shadcn add https://crumble.dev/r/card.json
 >
   <Card stacked padding={20}>
     <p className="text-sm font-medium">Stacked card</p>
-    <p className="mt-1 text-xs text-muted-foreground">Feels like a stack of paper.</p>
+    <p className="mt-1 text-xs text-muted-foreground">
+      Feels like a stack of paper.
+    </p>
   </Card>
 </PreviewContainer>
 
@@ -103,8 +106,14 @@ npx shadcn add https://crumble.dev/r/card.json
 <Card theme="crayon" padding={16}><p className="text-sm">Crayon</p></Card>`}
 >
   <div className="flex flex-wrap gap-3">
-    <Card theme="pencil" padding={16}><p className="text-sm">Pencil</p></Card>
-    <Card theme="ink"    padding={16}><p className="text-sm">Ink</p></Card>
-    <Card theme="crayon" padding={16}><p className="text-sm">Crayon</p></Card>
+    <Card theme="pencil" padding={16}>
+      <p className="text-sm">Pencil</p>
+    </Card>
+    <Card theme="ink" padding={16}>
+      <p className="text-sm">Ink</p>
+    </Card>
+    <Card theme="crayon" padding={16}>
+      <p className="text-sm">Crayon</p>
+    </Card>
   </div>
 </PreviewContainer>

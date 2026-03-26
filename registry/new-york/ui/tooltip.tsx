@@ -75,7 +75,7 @@ export function Tooltip({
 
     const rc = rough.svg(svg);
     const opts = getRoughOptions(theme, "border", {
-      fill: "hsl(var(--popover))",
+      fill: "var(--popover)",
       fillStyle: "solid",
       seed: stableSeed(tooltipId),
       stroke: "var(--cr-stroke)",
@@ -87,7 +87,13 @@ export function Tooltip({
     svg.appendChild(rc.rectangle(bx + 1, by + 1, w - 2, h - 2, opts));
 
     // Arrow triangle
-    const arrowOpts = { ...opts, roughness: 0.8, stroke: "var(--cr-stroke)", fill: "hsl(var(--popover))", fillStyle: "solid" as const };
+    const arrowOpts = {
+      ...opts,
+      roughness: 0.8,
+      stroke: "var(--cr-stroke)",
+      fill: "var(--popover)",
+      fillStyle: "solid" as const,
+    };
     let arrowPath = "";
     if (side === "top") {
       const mx = w / 2;
@@ -123,9 +129,9 @@ export function Tooltip({
 
   const sideClasses: Record<TooltipSide, string> = {
     bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-    left:   "right-full top-1/2 -translate-y-1/2 mr-2",
-    right:  "left-full top-1/2 -translate-y-1/2 ml-2",
-    top:    "bottom-full left-1/2 -translate-x-1/2 mb-2",
+    left: "right-full top-1/2 -translate-y-1/2 mr-2",
+    right: "left-full top-1/2 -translate-y-1/2 ml-2",
+    top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
   };
 
   return (
@@ -140,17 +146,21 @@ export function Tooltip({
       {visible ? (
         <div
           role="tooltip"
-          className={cn(
-            "absolute z-50 pointer-events-none",
-            sideClasses[side],
-          )}
+          className={cn("absolute z-50 pointer-events-none", sideClasses[side])}
         >
           <div ref={tooltipRef} className="relative">
-            <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
-            <div className={cn(
-              "relative px-3 py-1.5 text-xs text-popover-foreground",
-              className,
-            )} style={roughStyle}>
+            <svg
+              ref={svgRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 overflow-visible"
+            />
+            <div
+              className={cn(
+                "relative px-3 py-1.5 text-xs text-popover-foreground",
+                className,
+              )}
+              style={roughStyle}
+            >
               {content}
             </div>
           </div>

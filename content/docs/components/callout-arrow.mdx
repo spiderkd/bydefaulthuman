@@ -1,0 +1,71 @@
+---
+title: Callout Arrow
+description: A hand-drawn curved arrow connecting two DOM elements.
+---
+
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { CalloutDemo } from "@/components/demos/callDemo.tsx";
+
+## Basic Usage
+
+The `CalloutArrow` component creates a dynamic, hand-drawn connection between two elements using React refs. It renders into a fixed SVG overlay, allowing it to span across different layout containers.
+
+<PreviewContainer
+  componentName="callout-arrow"
+  code={`import { useRef } from "react"
+import { CalloutArrow } from "@/components/ui/callout-arrow"
+
+export default function Demo() {
+  const fromRef = useRef(null)
+  const toRef = useRef(null)
+
+return (
+
+<div className="flex flex-col items-center gap-12">
+<div ref={fromRef}>Source</div>
+<div ref={toRef}>Target</div>
+<CalloutArrow fromRef={fromRef} toRef={toRef} label="Look here!" />
+</div>
+)
+}`}
+
+>
+
+  <CalloutDemo />
+</PreviewContainer>
+
+## Customization
+
+### Curvature
+
+Adjust the `curvature` prop to change the arc. Positive values bow one way, negative values the other, and `0` results in a straight line.
+
+<PreviewContainer
+  componentName="callout-arrow"
+  code={`<CalloutArrow fromRef={f} toRef={t} curvature={-100} label="Inverse" />`}
+>
+  <CalloutDemo curvature={-80} label="Inverse Curve" />
+</PreviewContainer>
+
+### Color
+
+The arrow and label inherit the current text color by default, but you can pass any valid CSS color string to the `color` prop.
+
+<PreviewContainer
+  componentName="callout-arrow"
+  code={`<CalloutArrow color="oklch(0.6 0.22 25)" label="Vibrant" />`}
+>
+  <CalloutDemo color="oklch(0.6 0.22 25)" label="Custom Color" />
+</PreviewContainer>
+
+## Props
+
+| Prop        | Type           | Default          | Description                                                |
+| :---------- | :------------- | :--------------- | :--------------------------------------------------------- |
+| `fromRef`   | `RefObject`    | -                | **Required**. The element the tail starts from.            |
+| `toRef`     | `RefObject`    | -                | **Required**. The element the head points at.              |
+| `label`     | `ReactNode`    | -                | Optional label near the tail.                              |
+| `curvature` | `number`       | `80`             | How much the arc bows.                                     |
+| `color`     | `string`       | `"currentColor"` | Stroke and text color.                                     |
+| `withHead`  | `boolean`      | `true`           | Whether to render the arrowhead.                           |
+| `theme`     | `CrumbleTheme` | -                | Override the contextual theme (`pencil`, `ink`, `crayon`). |

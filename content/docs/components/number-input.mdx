@@ -3,8 +3,9 @@ title: Number Input
 description: A hand-drawn number input with rough increment and decrement buttons.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { NumberInput } from "@/registry/new-york/ui/number-input"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { NumberInput } from "@/registry/new-york/ui/number-input";
+import { AgeExample } from "@/components/demos/AgeExample";
 
 <PreviewContainer
   componentName="number-input"
@@ -41,7 +42,7 @@ npx shadcn add https://crumble.dev/r/number-input.json
   code={`<NumberInput label="Age" defaultValue={0} error="Must be at least 18" />`}
 >
   <div className="w-full max-w-xs">
-    <NumberInput label="Age" defaultValue={0} error="Must be at least 18" />
+    <AgeExample />
   </div>
 </PreviewContainer>
 

@@ -5,7 +5,78 @@ description: A hand-drawn progress bar with animated hachure fill.
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { Progress } from "@/registry/new-york/ui/progress";
+import { ProgressDemo } from "@/components/demos/ProgressDemo";
 import { ProgressStorageDemo } from "@/components/demos/progress-demo";
+
+## Animated Demo
+
+<PreviewContainer componentName="progress">
+  <ProgressDemo />
+</PreviewContainer>
+
+The demo auto-plays on mount using `requestAnimationFrame` with a cubic ease-out
+curve, so the fill decelerates naturally as it approaches 100 %. Hit **Replay ↺**
+to restart.
+
+```tsx
+// components/demos/ProgressDemo.tsx
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Progress } from "@/registry/new-york/ui/progress";
+
+export function ProgressDemo() {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  const DURATION = 2200; // ms to go 0 → 100
+
+  const runAnimation = () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    setValue(0);
+    startTimeRef.current = null;
+
+    const step = (now: number) => {
+      if (!startTimeRef.current) startTimeRef.current = now;
+      const elapsed = now - startTimeRef.current;
+      const pct = Math.min(elapsed / DURATION, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - pct, 3);
+      setValue(Math.round(eased * 100));
+      if (pct < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+  };
+
+  useEffect(() => {
+    runAnimation();
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col items-start gap-4 w-full max-w-sm">
+      <Progress label="Loading" value={value} showValue />
+
+      <button
+        onClick={runAnimation}
+        className="self-start rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+      >
+        Replay ↺
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## Static Example
 
 <PreviewContainer
   componentName="progress"
