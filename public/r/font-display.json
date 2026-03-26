@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "font-display",
+  "title": "Caveat",
+  "description": "Handwritten display font for Crumble labels and annotations.",
+  "type": "registry:font",
+  "font": {
+    "family": "'Caveat Variable', cursive",
+    "provider": "google",
+    "import": "Caveat",
+    "variable": "--font-display",
+    "weight": [
+      "400",
+      "500",
+      "600",
+      "700"
+    ],
+    "subsets": [
+      "latin"
+    ],
+    "dependency": "@fontsource-variable/caveat"
+  }
+}

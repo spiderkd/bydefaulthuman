@@ -1,0 +1,70 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "crumble-theme",
+  "title": "Crumble Design System",
+  "description": "Foundational theme, custom CSS variables, and font configuration for Crumble.",
+  "dependencies": [
+    "roughjs",
+    "tw-animate-css"
+  ],
+  "registryDependencies": [
+    "http://localhost:3000/r/font-display.json",
+    "utils"
+  ],
+  "cssVars": {
+    "light": {
+      "cr-stroke": "currentColor",
+      "cr-stroke-muted": "color-mix(in srgb, currentColor 40%, transparent)",
+      "cr-stroke-error": "var(--destructive)",
+      "cr-fill": "transparent",
+      "cr-sketch-duration": "600ms",
+      "cr-sketch-easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "cr-wiggle-duration": "120ms",
+      "cr-radius": "4px",
+      "cr-weight": "1px",
+      "color-ivory": "oklch(97.22% 0.002 102.31)",
+      "color-sandalwood": "oklch(74.51% 0.15 65.88)",
+      "color-muted-gold": "oklch(84.12% 0.12 80.11)",
+      "color-indigo": "oklch(37% 0.12 260)"
+    },
+    "dark": {
+      "cr-stroke": "currentColor",
+      "cr-stroke-muted": "color-mix(in srgb, currentColor 40%, transparent)",
+      "cr-stroke-error": "var(--destructive)",
+      "cr-fill": "transparent",
+      "cr-sketch-duration": "600ms",
+      "cr-sketch-easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "cr-wiggle-duration": "120ms",
+      "cr-radius": "4px",
+      "cr-weight": "1px",
+      "color-ivory": "oklch(97.22% 0.002 102.31)",
+      "color-sandalwood": "oklch(74.51% 0.15 65.88)",
+      "color-muted-gold": "oklch(84.12% 0.12 80.11)",
+      "color-indigo": "oklch(37% 0.12 260)"
+    }
+  },
+  "css": {
+    "@layer base": {
+      "[data-crumble-theme='pencil']": {
+        "--cr-weight": "1px",
+        "--cr-sketch-duration": "800ms"
+      },
+      "[data-crumble-theme='ink']": {
+        "--cr-weight": "2px",
+        "--cr-sketch-duration": "400ms"
+      },
+      "[data-crumble-theme='crayon']": {
+        "--cr-weight": "3.5px",
+        "--cr-sketch-duration": "600ms"
+      }
+    }
+  },
+  "type": "registry:base",
+  "config": {
+    "style": "new-york",
+    "tailwind": {
+      "baseColor": "neutral",
+      "cssVariables": true
+    }
+  }
+}
