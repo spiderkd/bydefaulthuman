@@ -1,0 +1,56 @@
+---
+title: Activity Feed Block
+description: A live event timeline combining Timeline, Avatar, and Badge with animated reveal and unread tracking.
+---
+
+import { ActivityFeedBlockDemo } from "@/components/block/demos/ActivityFeedBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="timeline"
+  code={`import { ActivityFeedBlock } from '@/components/block/ActivityFeedBlock'
+
+<ActivityFeedBlock />`}
+>
+  <ActivityFeedBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/timeline.json
+npx shadcn add https://crumble.dev/r/avatar.json
+npx shadcn add https://crumble.dev/r/badge.json
+npx shadcn add https://crumble.dev/r/button.json
+npx shadcn add https://crumble.dev/r/card.json
+```
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animate', type: "boolean", default: undefined, description: "Enables entry animation." },
+  { prop: 'animationStaggerMs', type: "number", default: undefined, description: "Delay between animated items." },
+  { prop: 'events', type: "FeedEvent[]", default: undefined, description: "Events rendered in the feed." },
+  { prop: 'onEventClick', type: "(event: FeedEvent) => void", default: undefined, description: "Callback fired when an event is selected." },
+  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
+]} />
+
+
+## Without animation
+
+```tsx
+<ActivityFeedBlock animate={false} />
+```
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { ActivityFeedBlock } from '@/components/block/ActivityFeedBlock'
+
+<ActivityFeedBlock />
+```

@@ -4,6 +4,8 @@ description: A hand-drawn dropzone that becomes more expressive when a file is d
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { FileUpload } from "@/registry/new-york/ui/file-upload"
 
 <PreviewContainer
@@ -19,9 +21,20 @@ import { FileUpload } from "@/registry/new-york/ui/file-upload"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/file-upload.json
-```
+<InstallTabs slug="file-upload" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'accept', type: "string", default: undefined, description: "Accepted file types." },
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'multiple', type: "boolean", default: "false", description: "Allows handling multiple values or files." },
+  { prop: 'onChange', type: "(files: FileList) => void", default: undefined, description: "Callback fired when the value changes." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## With hint and accept
 
@@ -63,3 +76,15 @@ npx shadcn add https://crumble.dev/r/file-upload.json
     <FileUpload theme="crayon" label="Drop here" />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+FileUpload still uses a native file input under the custom dropzone, so browser file picker behavior and keyboard activation remain available. Add surrounding copy that explains accepted file types and size limits when needed.
+
+## Examples
+
+```tsx
+import { FileUpload } from '@/components/crumble/ui/file-upload'
+
+<FileUpload />
+```

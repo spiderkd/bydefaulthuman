@@ -4,6 +4,8 @@ description: A hand-drawn toggle switch with a sliding circle thumb.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Toggle } from "@/registry/new-york/ui/toggle";
 
 <PreviewContainer
@@ -21,9 +23,21 @@ import { Toggle } from "@/registry/new-york/ui/toggle";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/toggle.json
-```
+<InstallTabs slug="toggle" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'checked', type: "boolean", default: undefined, description: "Controls the `checked` behavior." },
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'defaultChecked', type: "boolean", default: "false", description: "Controls the `defaultChecked` behavior." },
+  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'onChange', type: "(checked: boolean) => void", default: undefined, description: "Callback fired when the value changes." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'variant', type: "ToggleVariant", default: "\"ball\"", description: "Controls the `variant` behavior." },
+]} />
 
 ## States
 
@@ -62,3 +76,15 @@ npx shadcn add https://crumble.dev/r/toggle.json
     <Toggle label="Crayon" theme="crayon" defaultChecked />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Toggle uses a native checkbox input and mirrors its state visually with the rough sketch track. Pair it with a clear text label so assistive technologies can announce the setting meaningfully.
+
+## Examples
+
+```tsx
+import { Toggle } from '@/components/crumble/ui/toggle'
+
+<Toggle label="Notifications" />
+```

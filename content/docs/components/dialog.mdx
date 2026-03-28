@@ -4,6 +4,8 @@ description: A modal dialog using the native browser dialog element with a rough
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { DialogDemo, DialogSizesDemo } from "@/components/demos/dialog-demo";
 
 <PreviewContainer
@@ -40,9 +42,16 @@ return (
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/dialog.json
-```
+<InstallTabs slug="dialog" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
+  { prop: 'onOpenChange', type: "(open: boolean) => void", default: undefined, description: "Callback fired when the open state changes." },
+  { prop: 'open', type: "boolean", default: undefined, description: "Controlled open state.", required: true },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Sizes
 
@@ -75,3 +84,36 @@ The `size` prop controls the max-width of the panel: `sm`, `md` (default), `lg`,
 ## Notes
 
 Dialog uses the native `<dialog>` element. The browser handles the backdrop, focus trap, and Escape key. The rough border redraws with a fresh seed every time the dialog opens — each appearance has a unique wobble.
+
+## Accessibility
+
+Dialog should be used for short, interruptive tasks rather than long document layouts. When you control `open`, make sure your surrounding app returns focus to the triggering control after close.
+
+## Examples
+
+```tsx
+import { useState } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/crumble/ui/dialog'
+import { Button } from '@/components/crumble/ui/button'
+
+function Demo() {
+const [open, setOpen] = useState(false)
+return (
+<>
+<Button onClick={() => setOpen(true)}>Open dialog</Button>
+<Dialog open={open} onOpenChange={setOpen}>
+<DialogContent open={open}>
+<DialogHeader>
+<DialogTitle>Confirm action</DialogTitle>
+<DialogDescription>This cannot be undone.</DialogDescription>
+</DialogHeader>
+<DialogFooter>
+<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+<Button onClick={() => setOpen(false)}>Confirm</Button>
+</DialogFooter>
+</DialogContent>
+</Dialog>
+</>
+)
+}
+```

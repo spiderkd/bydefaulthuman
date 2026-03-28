@@ -6,16 +6,14 @@ import {
   useEffect,
   useRef,
   useState,
-  type KeyboardEvent,
   type ClipboardEvent,
+  type KeyboardEvent,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -46,7 +44,13 @@ function OtpCell({
   theme: CrumbleTheme;
   value: string;
 }) {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawRect, svgRef } = useRough({
+    stableId: cellId,
+    svgRef: externalSvgRef,
+    theme,
+    variant: focused ? "interactive" : "border",
+  });
 
   const draw = useCallback(() => {
     const svg = svgRef.current;
@@ -58,23 +62,18 @@ function OtpCell({
     svg.setAttribute("height", String(SIZE));
     svg.setAttribute("viewBox", `0 0 ${SIZE} ${SIZE}`);
 
-    const rc = rough.svg(svg);
     const stroke = disabled
       ? "var(--cr-stroke-muted)"
-      : focused
+      : focused || hasValue
         ? "var(--cr-stroke)"
-        : hasValue
-          ? "var(--cr-stroke)"
-          : "var(--cr-stroke-muted)";
+        : "var(--cr-stroke-muted)";
 
-    svg.appendChild(
-      rc.rectangle(1, 1, SIZE - 2, SIZE - 2, getRoughOptions(theme, focused ? "interactive" : "border", {
-        fill: "none",
-        seed: stableSeed(cellId),
-        stroke,
-      })),
-    );
-  }, [cellId, disabled, focused, hasValue, theme]);
+    const rect = drawRect(1, 1, SIZE - 2, SIZE - 2, {
+      fill: "none",
+      stroke,
+    });
+    if (rect) svg.appendChild(rect);
+  }, [disabled, drawRect, focused, hasValue, svgRef]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -83,7 +82,11 @@ function OtpCell({
 
   return (
     <div className="relative" style={{ width: 44, height: 44 }}>
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
       <span className="absolute inset-0 flex items-center justify-center text-base font-mono font-medium text-foreground select-none">
         {value ? "•" : null}
       </span>
@@ -150,7 +153,10 @@ export function OtpInput({
 
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>, index: number) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length - index);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, length - index);
     if (!pasted) return;
     const next = [...digits];
     for (let i = 0; i < pasted.length; i++) next[index + i] = pasted[i];
@@ -178,7 +184,9 @@ export function OtpInput({
               value={digits[i]}
             />
             <input
-              ref={(el) => { inputRefs.current[i] = el; }}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
               id={i === 0 ? otpId : undefined}
               type="text"
               inputMode="numeric"

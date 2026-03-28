@@ -1,11 +1,9 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useRef } from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -20,7 +18,7 @@ export interface ProgressProps extends CrumbleColorProps {
   showValue?: boolean;
   theme?: CrumbleTheme;
   value?: number;
-  formatValue?: (value: number, max: number) => string; // ✅ add this
+  formatValue?: (value: number, max: number) => string;
 }
 
 const TRACK_H = 16;
@@ -39,14 +37,17 @@ export function Progress({
   formatValue,
 }: ProgressProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
   const progressId =
     id ?? `progress-${label?.toLowerCase().replace(/\s+/g, "-") ?? "bar"}`;
-
   const pct = Math.min(Math.max(value / max, 0), 1);
+  const { drawRect, svgRef, theme } = useRough({
+    stableId: progressId,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "fill",
+  });
 
   const draw = useCallback(() => {
     const svg = svgRef.current;
@@ -59,42 +60,24 @@ export function Progress({
     svg.setAttribute("height", String(TRACK_H));
     svg.setAttribute("viewBox", `0 0 ${w} ${TRACK_H}`);
 
-    const rc = rough.svg(svg);
+    const track = drawRect(1, 1, w - 2, TRACK_H - 2, {
+      fill: "none",
+      seed: stableSeed(`${progressId}-track`),
+      stroke: "var(--cr-stroke-muted)",
+    });
+    if (track) svg.appendChild(track);
 
-    // Track (empty background)
-    svg.appendChild(
-      rc.rectangle(
-        1,
-        1,
-        w - 2,
-        TRACK_H - 2,
-        getRoughOptions(theme, "border", {
-          fill: "none",
-          seed: stableSeed(`${progressId}-track`),
-          stroke: "var(--cr-stroke-muted)",
-        }),
-      ),
-    );
-
-    // Fill (progress)
     if (pct > 0) {
       const fillW = Math.max((w - 4) * pct, 4);
-      svg.appendChild(
-        rc.rectangle(
-          2,
-          2,
-          fillW,
-          TRACK_H - 4,
-          getRoughOptions(theme, "fill", {
-            fill: "currentColor",
-            fillStyle: theme === "ink" ? "solid" : "hachure",
-            seed: stableSeed(`${progressId}-fill`),
-            stroke: "none",
-          }),
-        ),
-      );
+      const bar = drawRect(2, 2, fillW, TRACK_H - 4, {
+        seed: stableSeed(`${progressId}-fill`),
+        fill: "currentColor",
+        fillStyle: theme === "ink" ? "solid" : "hachure",
+        stroke: "none",
+      });
+      if (bar) svg.appendChild(bar);
     }
-  }, [pct, progressId, theme]);
+  }, [drawRect, pct, progressId, svgRef, theme]);
 
   useEffect(() => {
     draw();
@@ -117,16 +100,9 @@ export function Progress({
               {label}
             </span>
           ) : null}
-          {/* {showValue ? (
-            <span className="text-[11px] tabular-nums text-muted-foreground">
-              {Math.round(pct * 100)}%
-            </span>
-          ) : null} */}
           {showValue ? (
             <span className="text-[11px] tabular-nums text-muted-foreground">
-              {formatValue
-                ? formatValue(value, max)
-                : `${Math.round(pct * 100)}%`}
+              {formatValue ? formatValue(value, max) : `${Math.round(pct * 100)}%`}
             </span>
           ) : null}
         </div>
@@ -141,7 +117,7 @@ export function Progress({
         style={{ height: TRACK_H }}
       >
         <svg
-          ref={svgRef}
+          ref={externalSvgRef}
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 overflow-visible"
         />

@@ -4,6 +4,8 @@ description: A hand-drawn range slider with a sketchy track and circle thumb.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Slider } from "@/registry/new-york/ui/slider";
 
 <PreviewContainer
@@ -16,6 +18,19 @@ import { Slider } from "@/registry/new-york/ui/slider";
     <Slider label="Volume" defaultValue={40} />
   </div>
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="slider" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'formatValue', type: "(value: number) => string", default: undefined, description: "Formats the displayed numeric value." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'showValue', type: "boolean", default: "true", description: "Shows the current numeric value in the UI." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Custom range and format
 
@@ -44,3 +59,15 @@ import { Slider } from "@/registry/new-york/ui/slider";
     <Slider label="Opacity" defaultValue={70} showValue={false} />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Slider uses a native range input underneath the sketch layers, so pointer and keyboard interactions remain intact. Always provide a visible label when the meaning of the numeric range is not obvious from context.
+
+## Examples
+
+```tsx
+import { Slider } from '@/components/crumble/ui/slider'
+
+<Slider label="Volume" defaultValue={40} />
+```

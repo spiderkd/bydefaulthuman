@@ -7,18 +7,15 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
   type HTMLAttributes,
 } from "react";
-import rough from "roughjs";
 import { arc as d3Arc, pie as d3Pie, type PieArcDatum } from "d3-shape";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -32,8 +29,7 @@ export interface PieChartSlice {
 }
 
 export interface PieChartProps
-  extends HTMLAttributes<HTMLDivElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLDivElement>, CrumbleColorProps {
   animateOnMount?: boolean;
   data: PieChartSlice[];
   donut?: boolean;
@@ -47,12 +43,12 @@ export interface PieChartProps
 
 // Default sketch-friendly palette — hand-drawn feel, not too saturated
 const DEFAULT_COLORS = [
-  "oklch(0.65 0.18 260)",  // blue
-  "oklch(0.62 0.16 145)",  // green
-  "oklch(0.68 0.18 55)",   // amber
-  "oklch(0.63 0.22 25)",   // coral
-  "oklch(0.60 0.16 300)",  // purple
-  "oklch(0.64 0.14 185)",  // teal
+  "oklch(0.65 0.18 260)", // blue
+  "oklch(0.62 0.16 145)", // green
+  "oklch(0.68 0.18 55)", // amber
+  "oklch(0.63 0.22 25)", // coral
+  "oklch(0.60 0.16 300)", // purple
+  "oklch(0.64 0.14 185)", // teal
 ];
 
 export function PieChart({
@@ -72,11 +68,13 @@ export function PieChart({
   ...props
 }: PieChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const chartId = id ?? "pie-chart";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { drawPath, svgRef, theme } = useRough({
+    variant: "fill",
+    stableId: chartId,
+    theme: themeProp,
+  });
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
 
   const total = data.reduce((s, d) => s + d.value, 0);
@@ -118,10 +116,9 @@ export function PieChart({
       .innerRadius(outerR * 0.75)
       .outerRadius(outerR * 0.75);
 
-    const rc = rough.svg(svg);
-
     arcs.forEach((arcDatum, i) => {
-      const color = arcDatum.data.color ?? DEFAULT_COLORS[i % DEFAULT_COLORS.length];
+      const color =
+        arcDatum.data.color ?? DEFAULT_COLORS[i % DEFAULT_COLORS.length];
       const isHovered = hoveredIndex === i;
 
       // Slightly explode hovered slice
@@ -134,7 +131,7 @@ export function PieChart({
       const pathD = arcGen(arcDatum);
       if (!pathD) return;
 
-      const sliceOpts = getRoughOptions(theme, "fill", {
+      const sliceNode = drawPath(pathD, {
         fill: color,
         fillStyle: theme === "ink" ? "solid" : "hachure",
         fillWeight: theme === "pencil" ? 0.9 : 1.2,
@@ -143,12 +140,11 @@ export function PieChart({
         seed: stableSeed(`${chartId}-slice-${i}`),
         stroke: color,
         strokeWidth: theme === "crayon" ? 2 : theme === "ink" ? 1.5 : 1,
-      });
+      }) as SVGGElement | null;
+      if (!sliceNode) return;
 
       const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
       group.setAttribute("transform", `translate(${cx + dx}, ${cy + dy})`);
-
-      const sliceNode = rc.path(pathD, sliceOpts) as SVGGElement;
 
       // Animate on mount: fade + scale in staggered
       if (animateOnMount) {
@@ -156,16 +152,21 @@ export function PieChart({
         group.style.transform = `translate(${cx + dx}px, ${cy + dy}px) scale(0.85)`;
         group.style.transformOrigin = `${cx + dx}px ${cy + dy}px`;
         group.style.transition = `opacity 350ms ease ${i * 60}ms, transform 350ms cubic-bezier(0.16,1,0.3,1) ${i * 60}ms`;
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          group.style.opacity = "1";
-          group.style.transform = `translate(${cx + dx}px, ${cy + dy}px) scale(1)`;
-        }));
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            group.style.opacity = "1";
+            group.style.transform = `translate(${cx + dx}px, ${cy + dy}px) scale(1)`;
+          }),
+        );
       }
 
       group.appendChild(sliceNode);
 
       // Hit area for hover
-      const hitPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const hitPath = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
       hitPath.setAttribute("d", pathD);
       hitPath.setAttribute("fill", "transparent");
       hitPath.setAttribute("stroke", "none");
@@ -179,7 +180,10 @@ export function PieChart({
       // Slice label
       if (showLabels && arcDatum.endAngle - arcDatum.startAngle > 0.4) {
         const [lx, ly] = labelArc.centroid(arcDatum);
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        const t = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
         t.setAttribute("x", String(cx + lx));
         t.setAttribute("y", String(cy + ly));
         t.setAttribute("text-anchor", "middle");
@@ -228,7 +232,10 @@ export function PieChart({
         const color = d.color ?? DEFAULT_COLORS[i % DEFAULT_COLORS.length];
 
         // Color dot
-        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        const dot = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle",
+        );
         dot.setAttribute("cx", String(lx + 5));
         dot.setAttribute("cy", String(ly + 5));
         dot.setAttribute("r", "5");
@@ -236,7 +243,10 @@ export function PieChart({
         dot.setAttribute("opacity", "0.85");
         svg.appendChild(dot);
 
-        const lt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        const lt = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
         lt.setAttribute("x", String(lx + 14));
         lt.setAttribute("y", String(ly + 9));
         lt.setAttribute("fill", "currentColor");
@@ -246,7 +256,21 @@ export function PieChart({
         svg.appendChild(lt);
       });
     }
-  }, [animateOnMount, chartId, data, donut, formatValue, height, hoveredIndex, showLabels, showLegend, theme, total]);
+  }, [
+    animateOnMount,
+    chartId,
+    data,
+    donut,
+    drawPath,
+    formatValue,
+    height,
+    hoveredIndex,
+    showLabels,
+    showLegend,
+    svgRef,
+    theme,
+    total,
+  ]);
 
   useEffect(() => {
     const rid = requestAnimationFrame(() => draw());

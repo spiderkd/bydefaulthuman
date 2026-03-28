@@ -4,6 +4,8 @@ description: A data table where row separators are hand-drawn rough lines instea
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import {
   Table,
   TableHeader,
@@ -67,10 +69,41 @@ import { Badge } from "@/registry/new-york/ui/badge";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/table.json
-```
+<InstallTabs slug="table" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Notes
 
 Each `TableRow` receives an `index` prop — this is used as the seed for the rough separator line so each row's line is consistently wobbly but stable across renders. Pass sequential integers starting from 0.
+
+## Accessibility
+
+Table is best for genuinely tabular relationships, not just layout. Use clear headers and keep cell content concise so screen-reader users can understand row and column relationships without extra narration.
+
+## Examples
+
+```tsx
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/crumble/ui/table'
+
+<Table>
+  <TableHeader>
+    <TableRow index={0}>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Role</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow index={1}>
+      <TableCell>Alice</TableCell>
+      <TableCell>Active</TableCell>
+      <TableCell>Admin</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```

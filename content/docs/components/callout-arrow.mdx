@@ -4,6 +4,8 @@ description: A hand-drawn curved arrow connecting two DOM elements.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { CalloutDemo } from "@/components/demos/callDemo.tsx";
 
 ## Basic Usage
@@ -31,8 +33,82 @@ return (
 
 >
 
-  <CalloutDemo />
+  <CalloutDemo duration={1200} />
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="callout-arrow" />
+
+## Props
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "color",
+      type: "string",
+      default: '"currentColor"',
+      description: "Overrides the main accent or stroke color.",
+    },
+    {
+      prop: "curvature",
+      type: "number",
+      default: "80",
+      description: "Controls the arrow bend amount.",
+    },
+    {
+      prop: "fromRef",
+      type: "RefObject<HTMLElement | null>",
+      default: undefined,
+      description: "Reference to the starting element.",
+      required: true,
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "ReactNode",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "style",
+      type: "CSSProperties",
+      default: undefined,
+      description: "Controls the `style` behavior.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "toRef",
+      type: "RefObject<HTMLElement | null>",
+      default: undefined,
+      description: "Reference to the target element.",
+      required: true,
+    },
+    {
+      prop: "withHead",
+      type: "boolean",
+      default: "true",
+      description: "Shows an arrow head at the end of the callout.",
+    },
+  ]}
+/>
 
 ## Customization
 
@@ -58,14 +134,26 @@ The arrow and label inherit the current text color by default, but you can pass 
   <CalloutDemo color="oklch(0.6 0.22 25)" label="Custom Color" />
 </PreviewContainer>
 
-## Props
+## Accessibility
 
-| Prop        | Type           | Default          | Description                                                |
-| :---------- | :------------- | :--------------- | :--------------------------------------------------------- |
-| `fromRef`   | `RefObject`    | -                | **Required**. The element the tail starts from.            |
-| `toRef`     | `RefObject`    | -                | **Required**. The element the head points at.              |
-| `label`     | `ReactNode`    | -                | Optional label near the tail.                              |
-| `curvature` | `number`       | `80`             | How much the arc bows.                                     |
-| `color`     | `string`       | `"currentColor"` | Stroke and text color.                                     |
-| `withHead`  | `boolean`      | `true`           | Whether to render the arrowhead.                           |
-| `theme`     | `CrumbleTheme` | -                | Override the contextual theme (`pencil`, `ink`, `crayon`). |
+CalloutArrow is decorative and renders `aria-hidden`. Any relationship the arrow implies between two elements should also be explained in nearby text.
+
+## Examples
+
+```tsx
+import { useRef } from "react";
+import { CalloutArrow } from "@/components/ui/callout-arrow";
+
+export default function Demo() {
+  const fromRef = useRef(null);
+  const toRef = useRef(null);
+
+  return (
+    <div className="flex flex-col items-center gap-12">
+      <div ref={fromRef}>Source</div>
+      <div ref={toRef}>Target</div>
+      <CalloutArrow fromRef={fromRef} toRef={toRef} label="Look here!" />
+    </div>
+  );
+}
+```

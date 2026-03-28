@@ -9,6 +9,7 @@ import {
   type ChangeEvent,
 } from "react";
 import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
@@ -70,12 +71,11 @@ export function Combobox({
 
   const value = controlledValue ?? internalValue;
   const selectedOption = options.find((option) => option.value === value);
-
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const triggerSvgRef = useRef<SVGSVGElement>(null);
   const optionSvgRefs = useRef<Map<string, SVGSVGElement>>(new Map());
-  const dropdownSvgRef = useRef<SVGSVGElement | null>(null);
+  const dropdownSvgRef = useRef<SVGSVGElement>(null);
   const comboId =
     id ?? `combobox-${label?.toLowerCase().replace(/\s+/g, "-") ?? "field"}`;
   const filtered = query.trim()
@@ -86,10 +86,22 @@ export function Combobox({
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawRect: drawTriggerRect } = useRough({
+    stableId: comboId,
+    svgRef: triggerSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
+  const { drawRect: drawDropdownRect } = useRough({
+    stableId: `${comboId}-dropdown`,
+    svgRef: dropdownSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const drawTrigger = useCallback(
     (reseed = false) => {
-      const svg = svgRef.current;
+      const svg = triggerSvgRef.current;
       const wrapper = wrapperRef.current;
       if (!svg || !wrapper) return;
 
@@ -99,53 +111,39 @@ export function Combobox({
       svg.setAttribute("height", String(TRIGGER_HEIGHT));
       svg.setAttribute("viewBox", `0 0 ${width} ${TRIGGER_HEIGHT}`);
 
-      const renderer = rough.svg(svg);
       const currentStroke = error
         ? "var(--cr-stroke-error)"
         : focused || open
           ? "var(--cr-stroke)"
           : "var(--cr-stroke-muted)";
 
-      svg.appendChild(
-        renderer.rectangle(
-          1,
-          1,
-          width - 2,
-          TRIGGER_HEIGHT - 2,
-          getRoughOptions(theme, "border", {
-            fill: "none",
-            seed: reseed ? randomSeed() : stableSeed(comboId),
-            stroke: currentStroke,
-          }),
-        ),
-      );
+      const rect = drawTriggerRect(1, 1, width - 2, TRIGGER_HEIGHT - 2, {
+        fill: "none",
+        seed: reseed ? randomSeed() : undefined,
+        stroke: currentStroke,
+      });
+      if (rect) svg.appendChild(rect);
     },
-    [comboId, error, focused, open, theme],
+    [drawTriggerRect, error, focused, open],
   );
 
-  const drawDropdown = useCallback(
-    (svg: SVGSVGElement, width: number, height: number) => {
-      svg.replaceChildren();
-      svg.setAttribute("width", String(width));
-      svg.setAttribute("height", String(height));
-      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-      const renderer = rough.svg(svg);
-      svg.appendChild(
-        renderer.rectangle(
-          1,
-          1,
-          width - 2,
-          height - 2,
-          getRoughOptions(theme, "border", {
-            fill: "none",
-            seed: stableSeed(`${comboId}-dropdown`),
-            stroke: "var(--cr-stroke)",
-          }),
-        ),
-      );
-    },
-    [comboId, theme],
-  );
+  const drawDropdown = useCallback(() => {
+    const svg = dropdownSvgRef.current;
+    if (!svg) return;
+
+    const width = svg.parentElement?.offsetWidth ?? 200;
+    const height = Math.max(filtered.length * OPTION_HEIGHT, OPTION_HEIGHT);
+    svg.replaceChildren();
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const rect = drawDropdownRect(1, 1, width - 2, height - 2, {
+      fill: "none",
+      stroke: "var(--cr-stroke)",
+    });
+    if (rect) svg.appendChild(rect);
+  }, [drawDropdownRect, filtered.length]);
 
   const drawOption = useCallback(
     (svg: SVGSVGElement, width: number, highlighted: boolean) => {
@@ -180,12 +178,21 @@ export function Combobox({
   }, [drawTrigger]);
 
   useEffect(() => {
+    if (!open) return;
+    const id = requestAnimationFrame(() => drawDropdown());
+    return () => cancelAnimationFrame(id);
+  }, [drawDropdown, open]);
+
+  useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-    const observer = new ResizeObserver(() => drawTrigger());
+    const observer = new ResizeObserver(() => {
+      drawTrigger();
+      if (open) drawDropdown();
+    });
     observer.observe(wrapper);
     return () => observer.disconnect();
-  }, [drawTrigger]);
+  }, [drawDropdown, drawTrigger, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -245,7 +252,7 @@ export function Combobox({
       <div ref={wrapperRef} className="relative">
         <div className="relative" style={{ height: TRIGGER_HEIGHT }}>
           <svg
-            ref={svgRef}
+            ref={triggerSvgRef}
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 overflow-visible"
           />
@@ -257,10 +264,8 @@ export function Combobox({
             aria-expanded={open}
             aria-autocomplete="list"
             disabled={disabled}
-            placeholder={
-              open ? placeholder : (selectedOption?.label ?? placeholder)
-            }
-            value={open ? query : (selectedOption?.label ?? "")}
+            placeholder={open ? placeholder : selectedOption?.label ?? placeholder}
+            value={open ? query : selectedOption?.label ?? ""}
             onFocus={() => {
               setFocused(true);
               setOpen(true);
@@ -285,24 +290,8 @@ export function Combobox({
             viewBox="0 0 16 14"
             className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
-            <line
-              x1="2"
-              y1={open ? 10 : 4}
-              x2="8"
-              y2={open ? 4 : 10}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-            <line
-              x1="8"
-              y1={open ? 4 : 10}
-              x2="14"
-              y2={open ? 10 : 4}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
+            <line x1="2" y1={open ? 10 : 4} x2="8" y2={open ? 4 : 10} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="8" y1={open ? 4 : 10} x2="14" y2={open ? 10 : 4} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>
 
@@ -312,16 +301,9 @@ export function Combobox({
             style={{ minWidth: "100%" }}
           >
             <svg
+              ref={dropdownSvgRef}
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 overflow-visible"
-              ref={(element) => {
-                dropdownSvgRef.current = element;
-                if (element) {
-                  const width = element.parentElement?.offsetWidth ?? 200;
-                  const height = filtered.length * OPTION_HEIGHT;
-                  drawDropdown(element, width, height || OPTION_HEIGHT);
-                }
-              }}
             />
             {filtered.length === 0 ? (
               <div

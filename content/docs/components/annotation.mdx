@@ -4,6 +4,8 @@ description: Wrap any element with a hand-drawn annotation that draws itself on 
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Annotation } from "@/registry/new-york/ui/annotation";
 
 # Annotation
@@ -26,6 +28,107 @@ Wrap any element with a hand-drawn annotation powered by rough-notation.
     <span className="text-base font-medium">Annotated text</span>
   </Annotation>
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="annotation" peerDeps={["rough-notation"]} />
+
+## Props
+
+<PropsTable
+  rows={[
+    {
+      prop: "animate",
+      type: "boolean",
+      default: "true",
+      description: "Controls the `animate` behavior.",
+    },
+    {
+      prop: "animationDelay",
+      type: "number",
+      default: "0",
+      description: "Animation delay in milliseconds.",
+    },
+    {
+      prop: "animationDuration",
+      type: "number",
+      default: undefined,
+      description: "Animation duration in milliseconds.",
+    },
+    {
+      prop: "brackets",
+      type: "BracketSide | BracketSide[]",
+      default: undefined,
+      description: "Bracket sides drawn when using bracket annotations.",
+    },
+    {
+      prop: "color",
+      type: "string",
+      default: '"currentColor"',
+      description: "Overrides the main accent or stroke color.",
+    },
+    {
+      prop: "iterations",
+      type: "number",
+      default: undefined,
+      description: "Number of sketch passes used by the annotation.",
+    },
+    {
+      prop: "label",
+      type: "ReactNode",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "labelSide",
+      type: "AnnotationSide",
+      default: '"top"',
+      description: "Controls the `labelSide` behavior.",
+    },
+    {
+      prop: "multiline",
+      type: "boolean",
+      default: "false",
+      description: "Handles wrapped text as multiple annotation lines.",
+    },
+    {
+      prop: "padding",
+      type: "number | [number, number] | [number, number, number, number]",
+      default: "5",
+      description: "Adds padding around the component content.",
+    },
+    {
+      prop: "show",
+      type: "boolean",
+      default: undefined,
+      description: "Controls the `show` behavior.",
+    },
+    {
+      prop: "strokeWidth",
+      type: "number",
+      default: undefined,
+      description: "Controls the `strokeWidth` behavior.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "trigger",
+      type: "AnnotationTrigger",
+      default: '"inView" | "hover" | "mount".',
+      description: "Controls when the annotation is shown.",
+    },
+    {
+      prop: "type",
+      type: "AnnotationType",
+      default: undefined,
+      description: "Controls the visual variant or drawing style.",
+    },
+  ]}
+/>
 
 ---
 
@@ -170,7 +273,7 @@ Wrap any element with a hand-drawn annotation powered by rough-notation.
 </Annotation>`}
 >
   <div className="max-w-xs">
-    <Annotation type="underline" multiline>
+    <Annotation type="bracket" multiline>
       This is a long text that wraps across multiple lines and still gets
       annotated correctly.
     </Annotation>
@@ -194,29 +297,6 @@ Wrap any element with a hand-drawn annotation powered by rough-notation.
 
 ---
 
-## Themes
-
-<PreviewContainer
-  componentName="annotation-themes"
-  code={`<Annotation theme="pencil">Pencil</Annotation>
-<Annotation theme="ink">Ink</Annotation>
-<Annotation theme="crayon">Crayon</Annotation>`}
->
-  <div className="flex gap-6 py-2">
-    <Annotation type="box" theme="pencil">
-      <span>Pencil</span>
-    </Annotation>
-    <Annotation type="box" theme="ink">
-      <span>Ink</span>
-    </Annotation>
-    <Annotation type="box" theme="crayon">
-      <span>Crayon</span>
-    </Annotation>
-  </div>
-</PreviewContainer>
-
----
-
 ## In a Paragraph
 
 <PreviewContainer
@@ -236,8 +316,16 @@ Wrap any element with a hand-drawn annotation powered by rough-notation.
 
 ---
 
-## Installation
+## Accessibility
 
-```bash
-npx shadcn add https://crumble.dev/r/annotation.json
+Annotation adds emphasis around existing text but does not change the underlying semantics. Do not use the annotation stroke as the only way to communicate importance or status.
+
+## Examples
+
+```tsx
+import { Annotation } from "@/components/crumble/ui/annotation";
+
+<Annotation type="box">
+  <span className="text-base font-medium">Annotated text</span>
+</Annotation>;
 ```

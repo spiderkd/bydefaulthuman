@@ -1,0 +1,15 @@
+{
+  "title": "Blocks",
+  "pages": [
+    "dashboard",
+    "activity-feed",
+    "pricing",
+    "onboarding-stepper",
+    "data-table",
+    "profile-card",
+    "metrics-comparison",
+    "feedback-form",
+    "notification-center",
+    "kanban"
+  ]
+}

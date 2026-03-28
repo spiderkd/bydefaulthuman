@@ -4,6 +4,8 @@ description: A hand-drawn progress bar with animated hachure fill.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Progress } from "@/registry/new-york/ui/progress";
 import { ProgressDemo } from "@/components/demos/ProgressDemo";
 import { ProgressStorageDemo } from "@/components/demos/progress-demo";
@@ -13,6 +15,23 @@ import { ProgressStorageDemo } from "@/components/demos/progress-demo";
 <PreviewContainer componentName="progress">
   <ProgressDemo />
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="progress" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'max', type: "number", default: "100", description: "Upper bound for the value." },
+  { prop: 'showValue', type: "boolean", default: "false", description: "Shows the current numeric value in the UI." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'value', type: "number", default: "0", description: "Controlled value for the component." },
+  { prop: 'formatValue', type: "(value: number, max: number) => string", default: undefined, description: "Formats the displayed numeric value." },
+]} />
 
 The demo auto-plays on mount using `requestAnimationFrame` with a cubic ease-out
 curve, so the fill decelerates naturally as it approaches 100 %. Hit **Replay ↺**
@@ -89,11 +108,7 @@ export function ProgressDemo() {
   </div>
 </PreviewContainer>
 
-## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/progress.json
-```
 
 ## With label and value
 
@@ -137,3 +152,13 @@ Use `formatValue` to control how the displayed value is rendered. Pass it from a
     <Progress label="Crayon" value={55} theme="crayon" />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Progress exposes the value visually, but you should still provide a meaningful `label` when the progress represents a task or upload state. Keep the value text enabled when the percentage itself matters.
+
+## Examples
+
+```tsx
+
+```

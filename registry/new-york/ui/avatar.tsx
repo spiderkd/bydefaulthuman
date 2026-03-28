@@ -1,14 +1,12 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useRef } from "react";
-import rough from "roughjs";
+import { useCallback, useContext, useEffect } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -46,11 +44,17 @@ function AvatarCircle({
   strokeMuted,
   theme: themeProp,
 }: AvatarProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
   const stableId = id ?? `avatar-${fallback ?? "user"}`;
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const {
+    animateOnHover: animateFromContext,
+    drawCircle,
+    svgRef,
+  } = useRough({
+    stableId,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const draw = useCallback(
     (reseed = false) => {
@@ -62,16 +66,14 @@ function AvatarCircle({
       svg.setAttribute("height", String(size));
       svg.setAttribute("viewBox", `0 0 ${size} ${size}`);
 
-      const rc = rough.svg(svg);
-      svg.appendChild(
-        rc.circle(size / 2, size / 2, size - 3, getRoughOptions(theme, "border", {
-          fill: "none",
-          seed: reseed ? randomSeed() : stableSeed(stableId),
-          stroke: "var(--cr-stroke)",
-        })),
-      );
+      const circle = drawCircle(size / 2, size / 2, size - 3, {
+        fill: "none",
+        seed: reseed ? randomSeed() : undefined,
+        stroke: "var(--cr-stroke)",
+      });
+      if (circle) svg.appendChild(circle);
     },
-    [size, stableId, theme],
+    [drawCircle, size, svgRef],
   );
 
   useEffect(() => {
@@ -81,10 +83,17 @@ function AvatarCircle({
 
   return (
     <div
-      className={cn("relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full", className)}
+      className={cn(
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full",
+        className,
+      )}
       style={{ ...roughStyle, width: size, height: size }}
-      onMouseEnter={() => { if (animateOnHover) draw(true); }}
-      onMouseLeave={() => { if (animateOnHover) draw(false); }}
+      onMouseEnter={() => {
+        if (animateOnHover && animateFromContext) draw(true);
+      }}
+      onMouseLeave={() => {
+        if (animateOnHover && animateFromContext) draw(false);
+      }}
     >
       {src ? (
         <img
@@ -142,9 +151,16 @@ export function AvatarGroup({
       {overflow > 0 ? (
         <div
           className="relative inline-flex shrink-0 items-center justify-center rounded-full bg-muted"
-          style={{ width: size, height: size, marginLeft: -overlap, zIndex: visible.length }}
+          style={{
+            width: size,
+            height: size,
+            marginLeft: -overlap,
+            zIndex: visible.length,
+          }}
         >
-          <span className="text-xs font-medium text-muted-foreground">+{overflow}</span>
+          <span className="text-xs font-medium text-muted-foreground">
+            +{overflow}
+          </span>
         </div>
       ) : null}
     </div>

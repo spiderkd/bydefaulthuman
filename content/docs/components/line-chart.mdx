@@ -4,6 +4,8 @@ description: A hand-drawn line chart with Catmull-Rom curves and animated draw-o
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { LineChart } from "@/registry/new-york/ui/line-chart"
 
 <PreviewContainer
@@ -25,9 +27,22 @@ import { LineChart } from "@/registry/new-york/ui/line-chart"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/line-chart.json
-```
+<InstallTabs slug="line-chart" peerDeps={["d3-shape", "d3-scale"]} />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnMount', type: "boolean", default: "true", description: "Animates the component when it first renders." },
+  { prop: 'formatValue', type: "(v: number) => string", default: undefined, description: "Formats the displayed numeric value." },
+  { prop: 'formatX', type: "(i: number) => string", default: undefined, description: "Formats X-axis labels." },
+  { prop: 'height', type: "number", default: "240", description: "Sets the rendered height in pixels." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'labels', type: "string[]", default: undefined, description: "Labels used by the component." },
+  { prop: 'series', type: "LineChartSeries[]", default: undefined, description: "Series data used to render the component.", required: true },
+  { prop: 'showDots', type: "boolean", default: "true", description: "Shows point markers for each chart value." },
+  { prop: 'showGrid', type: "boolean", default: "true", description: "Shows background grid lines." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Multiple series
 
@@ -70,3 +85,18 @@ npx shadcn add https://crumble.dev/r/line-chart.json
     />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+LineChart is best treated as a visual aid rather than the only source of truth. Include a textual summary or supporting table if exact values and trends need to be accessible.
+
+## Examples
+
+```tsx
+import { LineChart } from '@/components/crumble/ui/line-chart'
+
+<LineChart
+  labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+  series={[{ id: "revenue", label: "Revenue", data: [40, 65, 55, 80, 70, 90] }]}
+/>
+```

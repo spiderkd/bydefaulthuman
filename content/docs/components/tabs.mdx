@@ -4,6 +4,8 @@ description: Tab navigation where the active tab gets a hand-drawn underline tha
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import {
   Tabs,
   TabsList,
@@ -40,9 +42,17 @@ import {
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/tabs.json
-```
+<InstallTabs slug="tabs" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
+  { prop: 'defaultValue', type: "string", default: "\"\"", description: "Initial uncontrolled value." },
+  { prop: 'onValueChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the active value changes." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'value', type: "string", default: undefined, description: "Controlled value for the component." },
+]} />
 
 ## With disabled tab
 
@@ -101,3 +111,22 @@ npx shadcn add https://crumble.dev/r/tabs.json
     </TabsContent>
   </Tabs>
 </PreviewContainer>
+
+## Accessibility
+
+Tabs uses semantic tab roles and only renders the active panel content. Make each trigger label short and descriptive so screen-reader users can understand the panel switch without extra context.
+
+## Examples
+
+```tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/crumble/ui/tabs'
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Account settings</TabsContent>
+  <TabsContent value="password">Change your password</TabsContent>
+</Tabs>
+```

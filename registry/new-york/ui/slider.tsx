@@ -2,17 +2,14 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
   type ChangeEvent,
   type InputHTMLAttributes,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -51,18 +48,28 @@ export function Slider({
 }: SliderProps) {
   const [current, setCurrent] = useState(Number(value ?? defaultValue ?? min));
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<SVGSVGElement>(null);
-  const thumbRef = useRef<SVGSVGElement>(null);
+  const trackSvgRef = useRef<SVGSVGElement>(null);
+  const thumbSvgRef = useRef<SVGSVGElement>(null);
   const sliderId =
     id ?? `slider-${label?.toLowerCase().replace(/\s+/g, "-") ?? "field"}`;
   const pct = (current - Number(min)) / (Number(max) - Number(min));
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawLine, theme } = useRough({
+    stableId: sliderId,
+    svgRef: trackSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
+  const { drawCircle } = useRough({
+    stableId: `${sliderId}-thumb`,
+    svgRef: thumbSvgRef,
+    theme: themeProp,
+    variant: "interactive",
+  });
 
   const drawAll = useCallback(() => {
-    const thumbSvg = thumbRef.current;
-    const trackSvg = trackRef.current;
+    const thumbSvg = thumbSvgRef.current;
+    const trackSvg = trackSvgRef.current;
     const wrapper = wrapperRef.current;
 
     if (!thumbSvg || !trackSvg || !wrapper) return;
@@ -75,52 +82,37 @@ export function Slider({
     trackSvg.setAttribute("height", String(trackHeight));
     trackSvg.setAttribute("viewBox", `0 0 ${width} ${trackHeight}`);
 
-    const trackRenderer = rough.svg(trackSvg);
-    const baseOptions = getRoughOptions(theme, "border", {
-      seed: stableSeed(sliderId),
+    const baseStrokeWidth = TRACK_HEIGHT;
+    const track = drawLine(0, TRACK_HEIGHT / 2 + 2, width, TRACK_HEIGHT / 2 + 2, {
+      seed: stableSeed(`${sliderId}-track`),
+      stroke: "hsl(var(--border))",
+      strokeWidth: baseStrokeWidth,
     });
-
-    trackSvg.appendChild(
-      trackRenderer.line(0, TRACK_HEIGHT / 2 + 2, width, TRACK_HEIGHT / 2 + 2, {
-        ...baseOptions,
-        stroke: "hsl(var(--border))",
-        strokeWidth: TRACK_HEIGHT,
-      }),
-    );
+    if (track) trackSvg.appendChild(track);
 
     if (pct > 0) {
-      trackSvg.appendChild(
-        trackRenderer.line(
-          0,
-          TRACK_HEIGHT / 2 + 2,
-          width * pct,
-          TRACK_HEIGHT / 2 + 2,
-          {
-            ...baseOptions,
-            seed: stableSeed(`${sliderId}-fill`),
-            stroke: "var(--cr-stroke)",
-            strokeWidth: TRACK_HEIGHT,
-          },
-        ),
+      const fillLine = drawLine(
+        0,
+        TRACK_HEIGHT / 2 + 2,
+        width * pct,
+        TRACK_HEIGHT / 2 + 2,
+        {
+          seed: stableSeed(`${sliderId}-fill`),
+          stroke: "var(--cr-stroke)",
+          strokeWidth: baseStrokeWidth,
+        },
       );
+      if (fillLine) trackSvg.appendChild(fillLine);
     }
 
     thumbSvg.replaceChildren();
-    const thumbRenderer = rough.svg(thumbSvg);
-    thumbSvg.appendChild(
-      thumbRenderer.circle(
-        THUMB_SIZE / 2,
-        THUMB_SIZE / 2,
-        THUMB_SIZE - 2,
-        getRoughOptions(theme, "interactive", {
-          fill: "hsl(var(--background))",
-          fillStyle: "solid",
-          seed: stableSeed(`${sliderId}-thumb`),
-          stroke: "var(--cr-stroke)",
-        }),
-      ),
-    );
-  }, [pct, sliderId, theme]);
+    const thumb = drawCircle(THUMB_SIZE / 2, THUMB_SIZE / 2, THUMB_SIZE - 2, {
+      fill: "hsl(var(--background))",
+      fillStyle: "solid",
+      stroke: "var(--cr-stroke)",
+    });
+    if (thumb) thumbSvg.appendChild(thumb);
+  }, [drawCircle, drawLine, pct, sliderId]);
 
   useEffect(() => {
     drawAll();
@@ -161,12 +153,12 @@ export function Slider({
       ) : null}
       <div ref={wrapperRef} className="relative flex h-6 items-center">
         <svg
-          ref={trackRef}
+          ref={trackSvgRef}
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 overflow-visible"
         />
         <svg
-          ref={thumbRef}
+          ref={thumbSvgRef}
           aria-hidden="true"
           height={THUMB_SIZE}
           width={THUMB_SIZE}

@@ -73,7 +73,6 @@ export function getRoughOptions(
   return { ...base, ...override, ...extra };
 }
 
-
 export function stableSeed(id: string): number {
   let hash = 5381;
 
@@ -87,8 +86,6 @@ export function stableSeed(id: string): number {
 export function randomSeed(): number {
   return Math.floor(Math.random() * 2 ** 31);
 }
-
-
 
 export interface CrumbleConfig {
   theme: CrumbleTheme;
@@ -147,9 +144,7 @@ export function resolveRoughVars({
     "--cr-stroke": stroke,
     "--cr-stroke-muted":
       strokeMuted ??
-      (stroke
-        ? `color-mix(in srgb, ${stroke} 40%, transparent)`
-        : undefined),
+      (stroke ? `color-mix(in srgb, ${stroke} 40%, transparent)` : undefined),
     "--cr-fill": fill,
   };
 

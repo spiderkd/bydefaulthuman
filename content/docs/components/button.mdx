@@ -3,8 +3,10 @@ title: Button
 description: A hand-drawn button with a wobbly border that redraws on hover and click.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { Button } from "@/registry/new-york/ui/button"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
+import { Button } from "@/registry/new-york/ui/button";
 
 <PreviewContainer
   componentName="button"
@@ -17,9 +19,57 @@ import { Button } from "@/registry/new-york/ui/button"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/button.json
-```
+<InstallTabs slug="button" />
+
+## Props
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+      required: true,
+    },
+    {
+      prop: "size",
+      type: "ButtonSize",
+      default: '"md"',
+      description: "Controls the visual size of the component.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "variant",
+      type: "ButtonVariant",
+      default: '"default"',
+      description: "Controls the `variant` behavior.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: undefined,
+      description: "Disables the button.",
+    },
+    {
+      prop: "onClick",
+      type: "() => void",
+      default: undefined,
+      description: "Click handler.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+  ]}
+/>
 
 ## Variants
 
@@ -60,21 +110,20 @@ npx shadcn add https://crumble.dev/r/button.json
 >
   <div className="flex gap-3">
     <Button disabled>Disabled</Button>
-    <Button variant="destructive" disabled>Disabled</Button>
+    <Button variant="destructive" disabled>
+      Disabled
+    </Button>
   </div>
 </PreviewContainer>
 
-## Themes
+## Accessibility
 
-<PreviewContainer
-  componentName="button"
-  code={`<Button theme="pencil">Pencil</Button>
-<Button theme="ink">Ink</Button>
-<Button theme="crayon">Crayon</Button>`}
->
-  <div className="flex flex-wrap gap-3">
-    <Button theme="pencil">Pencil</Button>
-    <Button theme="ink">Ink</Button>
-    <Button theme="crayon">Crayon</Button>
-  </div>
-</PreviewContainer>
+Button renders a native `button` element and supports keyboard activation through the browser defaults. When you pass `disabled`, the disabled state is forwarded to the DOM so assistive technologies announce it correctly.
+
+## Examples
+
+```tsx
+import { Button } from "@/components/crumble/ui/button";
+
+<Button>Click me</Button>;
+```

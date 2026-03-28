@@ -4,6 +4,8 @@ description: Collapsible sections with rough chevrons and hand-drawn separators.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import {
   Accordion,
   AccordionItem,
@@ -44,9 +46,17 @@ import {
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/accordion.json
-```
+<InstallTabs slug="accordion" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
+  { prop: 'defaultValue', type: "string | string[]", default: undefined, description: "Initial uncontrolled value." },
+  { prop: 'multiple', type: "boolean", default: "false", description: "Allows handling multiple values or files." },
+  { prop: 'onValueChange', type: "(value: string | string[]) => void", default: undefined, description: "Callback fired when the active value changes." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Multiple open
 
@@ -76,3 +86,22 @@ npx shadcn add https://crumble.dev/r/accordion.json
     </Accordion>
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Accordion keeps triggers as real buttons with `aria-expanded`, which is the right semantic pattern for disclosure content. Keep each trigger label descriptive enough to stand alone when navigated out of context.
+
+## Examples
+
+```tsx
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/crumble/ui/accordion'
+
+<Accordion>
+  <AccordionItem value="a">
+    <AccordionTrigger value="a">What is crumble?</AccordionTrigger>
+    <AccordionContent value="a">
+      A hand-drawn React component library built on Rough.js.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```

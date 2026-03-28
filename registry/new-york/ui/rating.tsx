@@ -1,14 +1,12 @@
 "use client";
 
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -26,7 +24,6 @@ export interface RatingProps extends CrumbleColorProps {
   value?: number;
 }
 
-// Star path centred in a `size × size` box
 function starPath(size: number): string {
   const cx = size / 2;
   const cy = size / 2;
@@ -67,8 +64,14 @@ function Star({
   size: number;
   theme: CrumbleTheme;
 }) {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const path = starPath(size);
+  const { drawPath, svgRef } = useRough({
+    stableId: `${ratingId}-star-${index}`,
+    svgRef: externalSvgRef,
+    theme,
+    variant: "interactive",
+  });
 
   const draw = useCallback(
     (reseed = false) => {
@@ -80,19 +83,16 @@ function Star({
       svg.setAttribute("height", String(size));
       svg.setAttribute("viewBox", `0 0 ${size} ${size}`);
 
-      const rc = rough.svg(svg);
       const filled = active || hovered;
-
-      svg.appendChild(
-        rc.path(path, getRoughOptions(theme, "interactive", {
-          fill: filled ? "currentColor" : "none",
-          fillStyle: theme === "ink" ? "solid" : "hachure",
-          seed: reseed ? randomSeed() : stableSeed(`${ratingId}-star-${index}`),
-          stroke: filled ? "currentColor" : "var(--cr-stroke-muted)",
-        })),
-      );
+      const star = drawPath(path, {
+        fill: filled ? "currentColor" : "none",
+        fillStyle: theme === "ink" ? "solid" : "hachure",
+        seed: reseed ? randomSeed() : undefined,
+        stroke: filled ? "currentColor" : "var(--cr-stroke-muted)",
+      });
+      if (star) svg.appendChild(star);
     },
-    [active, hovered, index, path, ratingId, size, theme],
+    [active, drawPath, hovered, path, size, svgRef, theme],
   );
 
   useEffect(() => {
@@ -105,8 +105,14 @@ function Star({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      onMouseEnter={() => { onHover(); draw(true); }}
-      onMouseLeave={() => { onLeave(); draw(false); }}
+      onMouseEnter={() => {
+        onHover();
+        draw(true);
+      }}
+      onMouseLeave={() => {
+        onLeave();
+        draw(false);
+      }}
       className={cn(
         "relative p-0.5 outline-none",
         disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer",
@@ -114,7 +120,7 @@ function Star({
       style={{ width: size + 4, height: size + 4 }}
     >
       <svg
-        ref={svgRef}
+        ref={externalSvgRef}
         aria-hidden="true"
         className="pointer-events-none overflow-visible"
         style={{ width: size, height: size }}

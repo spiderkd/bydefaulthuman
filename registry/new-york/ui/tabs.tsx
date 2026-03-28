@@ -9,14 +9,12 @@ import {
   useState,
   type HTMLAttributes,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -71,7 +69,11 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={{ activeTab, animateOnHover, setActiveTab, theme }}>
-      <div className={cn("flex flex-col gap-0", className)} style={roughStyle} {...props}>
+      <div
+        className={cn("flex flex-col gap-0", className)}
+        style={roughStyle}
+        {...props}
+      >
         {children}
       </div>
     </TabsContext.Provider>
@@ -104,10 +106,17 @@ export function TabsTrigger({
   value,
   ...props
 }: TabsTriggerProps) {
-  const { activeTab, animateOnHover, setActiveTab, theme } = useContext(TabsContext);
+  const { activeTab, animateOnHover, setActiveTab, theme } =
+    useContext(TabsContext);
   const active = activeTab === value;
   const btnRef = useRef<HTMLButtonElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawLine, svgRef } = useRough({
+    stableId: `tab-trigger-${value}`,
+    svgRef: externalSvgRef,
+    theme,
+    variant: "border",
+  });
 
   const draw = useCallback(
     (reseed = false) => {
@@ -123,20 +132,16 @@ export function TabsTrigger({
       svg.setAttribute("height", String(h));
       svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-      const rc = rough.svg(svg);
-
       if (active) {
-        // Rough underline for active tab
-        svg.appendChild(
-          rc.line(2, h - 1, w - 2, h - 1, getRoughOptions(theme, "border", {
-            seed: reseed ? randomSeed() : stableSeed(`tab-trigger-${value}`),
-            stroke: "currentColor",
-            strokeWidth: theme === "crayon" ? 3 : theme === "ink" ? 2 : 1.5,
-          })),
-        );
+        const line = drawLine(2, h - 1, w - 2, h - 1, {
+          seed: reseed ? randomSeed() : undefined,
+          stroke: "currentColor",
+          strokeWidth: theme === "crayon" ? 3 : theme === "ink" ? 2 : 1.5,
+        });
+        if (line) svg.appendChild(line);
       }
     },
-    [active, theme, value],
+    [active, drawLine, svgRef, theme],
   );
 
   useEffect(() => {
@@ -160,16 +165,28 @@ export function TabsTrigger({
       disabled={disabled}
       className={cn(
         "relative pb-2 pt-1 px-3 text-sm outline-none transition-colors select-none",
-        active ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
+        active
+          ? "font-medium text-foreground"
+          : "text-muted-foreground hover:text-foreground",
         disabled && "cursor-not-allowed opacity-40",
         className,
       )}
-      onClick={() => { if (!disabled) setActiveTab(value); }}
-      onMouseEnter={() => { if (!disabled && animateOnHover && active) draw(true); }}
-      onMouseLeave={() => { if (!disabled && animateOnHover && active) draw(false); }}
+      onClick={() => {
+        if (!disabled) setActiveTab(value);
+      }}
+      onMouseEnter={() => {
+        if (!disabled && animateOnHover && active) draw(true);
+      }}
+      onMouseLeave={() => {
+        if (!disabled && animateOnHover && active) draw(false);
+      }}
       {...(props as HTMLAttributes<HTMLButtonElement>)}
     >
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
       <span className="relative">{children}</span>
     </button>
   );
@@ -179,16 +196,17 @@ export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
   value: string;
 }
 
-export function TabsContent({ children, className, value, ...props }: TabsContentProps) {
+export function TabsContent({
+  children,
+  className,
+  value,
+  ...props
+}: TabsContentProps) {
   const { activeTab } = useContext(TabsContext);
   if (activeTab !== value) return null;
 
   return (
-    <div
-      role="tabpanel"
-      className={cn("mt-4 outline-none", className)}
-      {...props}
-    >
+    <div role="tabpanel" className={cn("mt-4 outline-none", className)} {...props}>
       {children}
     </div>
   );

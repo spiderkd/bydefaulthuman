@@ -117,11 +117,13 @@ interface CalloutDemoProps {
   curvature?: number;
   label?: string;
   color?: string;
+  duration?: number;
 }
 
 export function CalloutDemo({
   curvature = 80,
   label = "Check this out",
+  duration,
   color,
 }: CalloutDemoProps) {
   const fromRef = useRef<HTMLDivElement>(null);
@@ -154,6 +156,7 @@ export function CalloutDemo({
       {isMounted && (
         <CalloutArrow
           fromRef={fromRef}
+          duration={duration}
           toRef={toRef}
           label={label}
           curvature={curvature}

@@ -4,6 +4,8 @@ description: A hand-drawn number input with rough increment and decrement button
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { NumberInput } from "@/registry/new-york/ui/number-input";
 import { AgeExample } from "@/components/demos/AgeExample";
 
@@ -20,9 +22,24 @@ import { AgeExample } from "@/components/demos/AgeExample";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/number-input.json
-```
+<InstallTabs slug="number-input" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'defaultValue', type: "number", default: "0", description: "Initial uncontrolled value." },
+  { prop: 'disabled', type: "boolean", default: undefined, description: "Disables interaction." },
+  { prop: 'error', type: "string", default: undefined, description: "Error message shown below the component." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'max', type: "number", default: undefined, description: "Upper bound for the value." },
+  { prop: 'min', type: "number", default: undefined, description: "Lower bound for the value." },
+  { prop: 'onChange', type: "(value: number) => void", default: undefined, description: "Callback fired when the value changes." },
+  { prop: 'step', type: "number", default: "1", description: "Increment between values." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'value', type: "number", default: undefined, description: "Controlled value for the component." },
+]} />
 
 ## Min, max and step
 
@@ -56,3 +73,15 @@ npx shadcn add https://crumble.dev/r/number-input.json
     <NumberInput label="Locked" defaultValue={42} disabled />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+NumberInput uses a native number field plus semantic buttons for stepping, so focus management remains predictable. Keep the label visible when the number has units or limits that are not obvious.
+
+## Examples
+
+```tsx
+import { NumberInput } from '@/components/crumble/ui/number-input'
+
+<NumberInput label="Quantity" defaultValue={1} min={0} />
+```

@@ -4,6 +4,8 @@ description: An inline mini chart that drops naturally into text and table cells
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Sparkline } from "@/registry/new-york/ui/sparkline";
 
 <PreviewContainer
@@ -17,10 +19,20 @@ import { Sparkline } from "@/registry/new-york/ui/sparkline";
 
 ## Installation
 
-```bash
-npm install d3-shape d3-scale
-npx shadcn add https://crumble.dev/r/sparkline.json
-```
+<InstallTabs slug="sparkline" peerDeps={["d3-shape", "d3-scale"]} />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnMount', type: "boolean", default: "true", description: "Animates the component when it first renders." },
+  { prop: 'color', type: "string", default: undefined, description: "Overrides the main accent or stroke color." },
+  { prop: 'data', type: "number[]", default: undefined, description: "Data used to render the component.", required: true },
+  { prop: 'height', type: "number", default: "32", description: "Sets the rendered height in pixels." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'type', type: "SparklineType", default: "\"line\"", description: "Controls the visual variant or drawing style." },
+  { prop: 'width', type: "number", default: "80", description: "Sets the rendered width in pixels." },
+]} />
 
 ## Types
 
@@ -106,3 +118,15 @@ npx shadcn add https://crumble.dev/r/sparkline.json
     <Sparkline theme="crayon" data={[30, 50, 40, 65, 55, 75]} />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Sparkline is intentionally compact and should be paired with adjacent text that explains what the trend represents. Treat it as decorative context unless you also expose the values elsewhere.
+
+## Examples
+
+```tsx
+import { Sparkline } from '@/components/crumble/ui/sparkline'
+
+<Sparkline data={[40, 55, 45, 60, 50, 70, 65, 80]} />
+```

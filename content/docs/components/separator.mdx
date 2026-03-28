@@ -4,6 +4,8 @@ description: A hand-drawn horizontal or vertical divider line.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Separator } from "@/registry/new-york/ui/separator";
 
 <PreviewContainer
@@ -19,9 +21,17 @@ import { Separator } from "@/registry/new-york/ui/separator";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/separator.json
-```
+<InstallTabs slug="separator" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'orientation', type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Controls the component layout direction." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## With label
 
@@ -62,3 +72,15 @@ npx shadcn add https://crumble.dev/r/separator.json
     <Separator theme="crayon" />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Separator renders `role="separator"` and sets the correct `aria-orientation`. Use the optional label only when the divider genuinely introduces a new section.
+
+## Examples
+
+```tsx
+import { Separator } from '@/components/crumble/ui/separator'
+
+<Separator />
+```

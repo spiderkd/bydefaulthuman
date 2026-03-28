@@ -1,10 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import rough from "roughjs";
 import { useRough } from "@/hooks/use-rough";
 import {
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
   stableSeed,
@@ -38,6 +36,88 @@ export interface SelectProps extends CrumbleColorProps {
 const TRIGGER_HEIGHT = 40;
 const OPTION_HEIGHT = 36;
 
+interface SelectOptionRowProps {
+  isSelected: boolean;
+  onSelect: () => void;
+  option: SelectOption;
+}
+
+function SelectOptionRow({
+  isSelected,
+  onSelect,
+  option,
+}: SelectOptionRowProps) {
+  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawRect, svgRef } = useRough({
+    variant: "fill",
+    stableId: option.value,
+    svgRef: externalSvgRef,
+  });
+
+  const draw = useCallback(() => {
+    const container = containerRef.current;
+    const svg = svgRef.current;
+    if (!container || !svg) return;
+
+    const width = container.offsetWidth;
+    svg.replaceChildren();
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(OPTION_HEIGHT));
+    svg.setAttribute("viewBox", `0 0 ${width} ${OPTION_HEIGHT}`);
+
+    if (!hovered && !isSelected) return;
+
+    const highlight = drawRect(2, 2, width - 4, OPTION_HEIGHT - 4, {
+      fill: hovered ? "currentColor" : "none",
+      fillStyle: "hachure",
+      fillWeight: isSelected ? 1.5 : 1,
+      stroke: hovered ? "currentColor" : "none",
+      strokeWidth: 0,
+    });
+    if (highlight) svg.appendChild(highlight);
+  }, [drawRect, hovered, isSelected, svgRef]);
+
+  useEffect(() => {
+    draw();
+  }, [draw]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const observer = new ResizeObserver(() => draw());
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [draw]);
+
+  return (
+    <div
+      ref={containerRef}
+      role="option"
+      aria-selected={isSelected}
+      aria-disabled={option.disabled}
+      className={cn(
+        "relative flex cursor-pointer items-center px-3 text-sm",
+        "hover:text-foreground",
+        option.disabled && "cursor-not-allowed opacity-40",
+        isSelected && "font-medium",
+      )}
+      style={{ height: OPTION_HEIGHT }}
+      onClick={onSelect}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
+      <span className="relative z-10">{option.label}</span>
+    </div>
+  );
+}
+
 export function Select({
   className,
   defaultValue,
@@ -67,7 +147,7 @@ export function Select({
   const triggerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const arrowRef = useRef<SVGSVGElement>(null);
-  const optionSvgRefs = useRef<Map<string, SVGSVGElement>>(new Map());
+  const dropdownSvgRef = useRef<SVGSVGElement>(null);
 
   const selectId =
     id ?? `select-${label?.toLowerCase().replace(/\s+/g, "-") ?? "field"}`;
@@ -75,6 +155,12 @@ export function Select({
   const { drawLine, drawRect, animateOnHover, theme } = useRough({
     stableId: selectId,
     svgRef,
+    theme: themeProp,
+    variant: "border",
+  });
+  const { drawRect: drawDropdownRect } = useRough({
+    stableId: `${selectId}-dropdown`,
+    svgRef: dropdownSvgRef,
     theme: themeProp,
     variant: "border",
   });
@@ -124,60 +210,34 @@ export function Select({
     [disabled, drawLine, drawRect, error, focused, open, selectId],
   );
 
-  const drawOption = useCallback(
-    (
-      svg: SVGSVGElement,
-      width: number,
-      isHighlighted: boolean,
-      isSelected: boolean,
-      optionId: string,
-    ) => {
-      svg.replaceChildren();
-      svg.setAttribute("width", String(width));
-      svg.setAttribute("height", String(OPTION_HEIGHT));
-      svg.setAttribute("viewBox", `0 0 ${width} ${OPTION_HEIGHT}`);
+  const drawDropdown = useCallback(() => {
+    const svg = dropdownSvgRef.current;
+    if (!svg) return;
 
-      if (!isHighlighted && !isSelected) return;
+    const width = svg.parentElement?.offsetWidth ?? 200;
+    const height = options.length * OPTION_HEIGHT;
+    svg.replaceChildren();
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-      const renderer = rough.svg(svg);
-      const options = getRoughOptions(theme, "fill", {
-        fill: isHighlighted ? "currentColor" : "none",
-        fillStyle: "hachure",
-        fillWeight: isSelected ? 1.5 : 1,
-        seed: stableSeed(optionId),
-        stroke: isHighlighted ? "currentColor" : "none",
-        strokeWidth: 0,
-      });
-
-      svg.appendChild(
-        renderer.rectangle(2, 2, width - 4, OPTION_HEIGHT - 4, options),
-      );
-    },
-    [theme],
-  );
-
-  const drawDropdown = useCallback(
-    (svg: SVGSVGElement, width: number, height: number) => {
-      svg.replaceChildren();
-      svg.setAttribute("width", String(width));
-      svg.setAttribute("height", String(height));
-      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-
-      const renderer = rough.svg(svg);
-      const options = getRoughOptions(theme, "border", {
-        fill: "none",
-        seed: stableSeed(`${selectId}-dropdown`),
-        stroke: "var(--cr-stroke)",
-      });
-
-      svg.appendChild(renderer.rectangle(1, 1, width - 2, height - 2, options));
-    },
-    [selectId, theme],
-  );
+    const rect = drawDropdownRect(1, 1, width - 2, height - 2, {
+      fill: "none",
+      stroke: "var(--cr-stroke)",
+    });
+    if (rect) svg.appendChild(rect);
+  }, [drawDropdownRect, options.length]);
 
   useEffect(() => {
     drawTrigger();
   }, [drawTrigger, open, theme]);
+
+  useEffect(() => {
+    if (open) {
+      const id = requestAnimationFrame(() => drawDropdown());
+      return () => cancelAnimationFrame(id);
+    }
+  }, [drawDropdown, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -215,10 +275,13 @@ export function Select({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const observer = new ResizeObserver(() => drawTrigger());
+    const observer = new ResizeObserver(() => {
+      drawTrigger();
+      if (open) drawDropdown();
+    });
     observer.observe(wrapper);
     return () => observer.disconnect();
-  }, [drawTrigger]);
+  }, [drawDropdown, drawTrigger, open]);
 
   const handleSelect = (option: SelectOption) => {
     if (option.disabled) return;
@@ -318,76 +381,21 @@ export function Select({
             className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 bg-background"
             style={{ minWidth: "100%" }}
           >
-            {(() => {
-              const totalHeight = options.length * OPTION_HEIGHT;
-              return (
-                <svg
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 overflow-visible"
-                  ref={(element) => {
-                    if (element) {
-                      const width = element.parentElement?.offsetWidth ?? 200;
-                      drawDropdown(element, width, totalHeight);
-                    }
-                  }}
-                />
-              );
-            })()}
+            <svg
+              ref={dropdownSvgRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 overflow-visible"
+            />
 
             {options.map((option) => {
               const isSelected = option.value === value;
               return (
-                <div
+                <SelectOptionRow
                   key={option.value}
-                  role="option"
-                  aria-selected={isSelected}
-                  aria-disabled={option.disabled}
-                  className={cn(
-                    "relative flex cursor-pointer items-center px-3 text-sm",
-                    "hover:text-foreground",
-                    option.disabled && "cursor-not-allowed opacity-40",
-                    isSelected && "font-medium",
-                  )}
-                  style={{ height: OPTION_HEIGHT }}
-                  onClick={() => handleSelect(option)}
-                  onMouseEnter={(event) => {
-                    const svg = optionSvgRefs.current.get(option.value);
-                    if (!svg) return;
-
-                    drawOption(
-                      svg,
-                      event.currentTarget.offsetWidth,
-                      true,
-                      isSelected,
-                      option.value,
-                    );
-                  }}
-                  onMouseLeave={(event) => {
-                    const svg = optionSvgRefs.current.get(option.value);
-                    if (!svg) return;
-
-                    drawOption(
-                      svg,
-                      event.currentTarget.offsetWidth,
-                      false,
-                      isSelected,
-                      option.value,
-                    );
-                  }}
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 overflow-visible"
-                    ref={(element) => {
-                      if (element) {
-                        optionSvgRefs.current.set(option.value, element);
-                      } else {
-                        optionSvgRefs.current.delete(option.value);
-                      }
-                    }}
-                  />
-                  <span className="relative z-10">{option.label}</span>
-                </div>
+                  isSelected={isSelected}
+                  option={option}
+                  onSelect={() => handleSelect(option)}
+                />
               );
             })}
           </div>

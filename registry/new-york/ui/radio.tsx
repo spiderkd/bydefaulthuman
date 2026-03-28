@@ -1,13 +1,10 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRough } from "@/hooks/use-rough";
 import {
-  CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -45,10 +42,12 @@ function RadioItem({
   option: RadioOption;
   theme?: CrumbleTheme;
 }) {
-  const svgRef = useRef<SVGSVGElement>(null);
   const id = `radio-${name}-${option.value}`;
-  const { animateOnHover, theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { animateOnHover, drawCircle, svgRef } = useRough({
+    stableId: id,
+    theme: themeProp,
+    variant: "interactive",
+  });
 
   const draw = useCallback(
     (isOn: boolean, reseed = false) => {
@@ -57,32 +56,25 @@ function RadioItem({
 
       svg.replaceChildren();
 
-      const renderer = rough.svg(svg);
-      const seed = reseed ? randomSeed() : stableSeed(id);
-      const options = getRoughOptions(theme, "interactive", {
+      const stroke = option.disabled ? "var(--cr-stroke-muted)" : "var(--cr-stroke)";
+      const outer = drawCircle(SIZE / 2, SIZE / 2, SIZE - 2, {
         fill: "none",
-        seed,
-        stroke: option.disabled
-          ? "var(--cr-stroke-muted)"
-          : "var(--cr-stroke)",
+        seed: reseed ? randomSeed() : undefined,
+        stroke,
       });
-
-      svg.appendChild(renderer.circle(SIZE / 2, SIZE / 2, SIZE - 2, options));
+      if (outer) svg.appendChild(outer);
 
       if (isOn) {
-        svg.appendChild(
-          renderer.circle(SIZE / 2, SIZE / 2, SIZE / 2, {
-            ...options,
-            fill: option.disabled
-              ? "var(--cr-stroke-muted)"
-              : "var(--cr-stroke)",
-            fillStyle: "solid",
-            stroke: "none",
-          }),
-        );
+        const inner = drawCircle(SIZE / 2, SIZE / 2, SIZE / 2, {
+          fill: stroke,
+          fillStyle: "solid",
+          seed: reseed ? randomSeed() : undefined,
+          stroke: "none",
+        });
+        if (inner) svg.appendChild(inner);
       }
     },
-    [id, option.disabled, theme],
+    [drawCircle, option.disabled, svgRef],
   );
 
   useEffect(() => {
@@ -96,14 +88,10 @@ function RadioItem({
         option.disabled && "cursor-not-allowed opacity-40",
       )}
       onMouseEnter={() => {
-        if (!option.disabled && animateOnHover) {
-          draw(checked, true);
-        }
+        if (!option.disabled && animateOnHover) draw(checked, true);
       }}
       onMouseLeave={() => {
-        if (!option.disabled && animateOnHover) {
-          draw(checked, false);
-        }
+        if (!option.disabled && animateOnHover) draw(checked, false);
       }}
     >
       <div className="relative h-5 w-5 shrink-0">

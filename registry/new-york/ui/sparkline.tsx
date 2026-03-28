@@ -5,20 +5,12 @@
  * npm install d3-shape d3-scale
  */
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  type HTMLAttributes,
-} from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, type HTMLAttributes } from "react";
 import { line as d3Line, area as d3Area, curveCatmullRom } from "d3-shape";
 import { scaleLinear } from "d3-scale";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -28,8 +20,7 @@ import {
 export type SparklineType = "line" | "area" | "bar";
 
 export interface SparklineProps
-  extends HTMLAttributes<HTMLSpanElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLSpanElement>, CrumbleColorProps {
   animateOnMount?: boolean;
   color?: string;
   data: number[];
@@ -55,10 +46,12 @@ export function Sparkline({
   width = 80,
   ...props
 }: SparklineProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
   const sparkId = id ?? "sparkline";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { drawCircle, drawPath, drawRect, svgRef, theme } = useRough({
+    variant: "chart",
+    stableId: sparkId,
+    theme: themeProp,
+  });
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
 
   const draw = useCallback(() => {
@@ -71,8 +64,8 @@ export function Sparkline({
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
     const PAD = { top: 3, bottom: 3, left: 2, right: 2 };
-    const plotW = width  - PAD.left - PAD.right;
-    const plotH = height - PAD.top  - PAD.bottom;
+    const plotW = width - PAD.left - PAD.right;
+    const plotH = height - PAD.top - PAD.bottom;
 
     // d3 scales — proper domain handling including negative values
     const xScale = scaleLinear()
@@ -85,12 +78,11 @@ export function Sparkline({
       .range([PAD.top + plotH, PAD.top])
       .nice();
 
-    const rc = rough.svg(svg);
     const strokeColor = color ?? "currentColor";
 
     if (type === "bar") {
       const barW = Math.max(2, (plotW / data.length) * 0.7);
-      const gap  = plotW / data.length;
+      const gap = plotW / data.length;
       const zeroY = yScale(0);
 
       data.forEach((v, i) => {
@@ -101,17 +93,16 @@ export function Sparkline({
 
         if (barH < 1) return;
 
-        svg.appendChild(
-          rc.rectangle(x, barY, barW, barH, getRoughOptions(theme, "fill", {
-            fill: strokeColor,
-            fillStyle: theme === "ink" ? "solid" : "hachure",
-            fillWeight: 0.7,
-            hachureGap: 4,
-            seed: stableSeed(`${sparkId}-bar-${i}`),
-            stroke: strokeColor,
-            strokeWidth: 0.5,
-          })),
-        );
+        const bar = drawRect(x, barY, barW, barH, {
+          fill: strokeColor,
+          fillStyle: theme === "ink" ? "solid" : "hachure",
+          fillWeight: 0.7,
+          hachureGap: 4,
+          seed: stableSeed(`${sparkId}-bar-${i}`),
+          stroke: strokeColor,
+          strokeWidth: 0.5,
+        });
+        if (bar) svg.appendChild(bar);
       });
       return;
     }
@@ -126,7 +117,10 @@ export function Sparkline({
 
       const areaPath = areaGen(data);
       if (areaPath) {
-        const areaNode = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const areaNode = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path",
+        );
         areaNode.setAttribute("d", areaPath);
         areaNode.setAttribute("fill", strokeColor);
         areaNode.setAttribute("opacity", "0.15");
@@ -144,14 +138,13 @@ export function Sparkline({
     const linePath = lineGen(data);
     if (!linePath) return;
 
-    const lineOpts = getRoughOptions(theme, "chart", {
+    const lineNode = drawPath(linePath, {
       fill: "none",
       seed: stableSeed(sparkId),
       stroke: strokeColor,
       strokeWidth: theme === "crayon" ? 2.5 : theme === "ink" ? 2 : 1.5,
-    });
-
-    const lineNode = rc.path(linePath, lineOpts) as SVGGElement;
+    }) as SVGGElement | null;
+    if (!lineNode) return;
 
     // Animate on mount: stroke-dashoffset draw-on
     if (animateOnMount) {
@@ -161,9 +154,11 @@ export function Sparkline({
         p.style.strokeDashoffset = String(len);
         const dur = theme === "crayon" ? 700 : theme === "ink" ? 400 : 550;
         p.style.transition = `stroke-dashoffset ${dur}ms cubic-bezier(0.16,1,0.3,1)`;
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          p.style.strokeDashoffset = "0";
-        }));
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            p.style.strokeDashoffset = "0";
+          }),
+        );
       });
     }
 
@@ -172,16 +167,28 @@ export function Sparkline({
     // End dot — marks current/latest value
     const lastX = xScale(data.length - 1);
     const lastY = yScale(data[data.length - 1]);
-    svg.appendChild(
-      rc.circle(lastX, lastY, 5, getRoughOptions(theme, "interactive", {
-        fill: strokeColor,
-        fillStyle: "solid",
-        seed: stableSeed(`${sparkId}-dot`),
-        stroke: strokeColor,
-        strokeWidth: 0.5,
-      })),
-    );
-  }, [animateOnMount, color, data, height, sparkId, theme, type, width]);
+    const dot = drawCircle(lastX, lastY, 5, {
+      fill: strokeColor,
+      fillStyle: "solid",
+      seed: stableSeed(`${sparkId}-dot`),
+      stroke: strokeColor,
+      strokeWidth: 0.5,
+    });
+    if (dot) svg.appendChild(dot);
+  }, [
+    animateOnMount,
+    color,
+    data,
+    drawCircle,
+    drawPath,
+    drawRect,
+    height,
+    sparkId,
+    svgRef,
+    theme,
+    type,
+    width,
+  ]);
 
   useEffect(() => {
     const rid = requestAnimationFrame(() => draw());

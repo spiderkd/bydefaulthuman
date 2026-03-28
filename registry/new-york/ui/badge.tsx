@@ -1,19 +1,21 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
 
-export type BadgeVariant = "default" | "success" | "warning" | "destructive" | "outline";
+export type BadgeVariant =
+  | "default"
+  | "success"
+  | "warning"
+  | "destructive"
+  | "outline";
 
 export interface BadgeProps extends CrumbleColorProps {
   animateOnHover?: boolean;
@@ -25,19 +27,19 @@ export interface BadgeProps extends CrumbleColorProps {
 }
 
 const variantStroke: Record<BadgeVariant, string> = {
-  default:     "currentColor",
+  default: "currentColor",
   destructive: "var(--cr-stroke-error)",
-  outline:     "var(--cr-stroke-muted)",
-  success:     "oklch(0.6 0.15 145)",
-  warning:     "oklch(0.7 0.15 75)",
+  outline: "var(--cr-stroke-muted)",
+  success: "oklch(0.6 0.15 145)",
+  warning: "oklch(0.7 0.15 75)",
 };
 
 const variantText: Record<BadgeVariant, string> = {
-  default:     "text-foreground",
+  default: "text-foreground",
   destructive: "text-destructive",
-  outline:     "text-muted-foreground",
-  success:     "text-green-700 dark:text-green-400",
-  warning:     "text-amber-700 dark:text-amber-400",
+  outline: "text-muted-foreground",
+  success: "text-green-700 dark:text-green-400",
+  warning: "text-amber-700 dark:text-amber-400",
 };
 
 export function Badge({
@@ -52,11 +54,19 @@ export function Badge({
   variant = "default",
 }: BadgeProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const stableId = id ?? `badge-${variant}`;
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const {
+    animateOnHover: animateFromContext,
+    drawRect,
+    svgRef,
+  } = useRough({
+    stableId,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const draw = useCallback(
     (reseed = false) => {
@@ -72,16 +82,14 @@ export function Badge({
       svg.setAttribute("height", String(h));
       svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-      const rc = rough.svg(svg);
-      svg.appendChild(
-        rc.rectangle(1, 1, w - 2, h - 2, getRoughOptions(theme, "border", {
-          fill: "none",
-          seed: reseed ? randomSeed() : stableSeed(stableId),
-          stroke: variantStroke[variant],
-        })),
-      );
+      const rect = drawRect(1, 1, w - 2, h - 2, {
+        fill: "none",
+        seed: reseed ? randomSeed() : undefined,
+        stroke: variantStroke[variant],
+      });
+      if (rect) svg.appendChild(rect);
     },
-    [stableId, theme, variant],
+    [drawRect, svgRef, variant],
   );
 
   useEffect(() => {
@@ -106,10 +114,18 @@ export function Badge({
         className,
       )}
       style={roughStyle}
-      onMouseEnter={() => { if (animateOnHover) draw(true); }}
-      onMouseLeave={() => { if (animateOnHover) draw(false); }}
+      onMouseEnter={() => {
+        if (animateOnHover && animateFromContext) draw(true);
+      }}
+      onMouseLeave={() => {
+        if (animateOnHover && animateFromContext) draw(false);
+      }}
     >
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
       <span className="relative">{children}</span>
     </span>
   );

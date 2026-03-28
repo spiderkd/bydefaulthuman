@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type HTMLAttributes,
-} from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef, type HTMLAttributes } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -26,8 +17,7 @@ export interface BarChartDataPoint {
 }
 
 export interface BarChartProps
-  extends HTMLAttributes<HTMLDivElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLDivElement>, CrumbleColorProps {
   animateOnMount?: boolean;
   axisLabel?: string;
   data: BarChartDataPoint[];
@@ -59,17 +49,26 @@ export function BarChart({
   ...props
 }: BarChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const chartId = id ?? "bar-chart";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { drawLine, drawRect, svgRef, theme } = useRough({
+    variant: "chart",
+    stableId: chartId,
+    theme: themeProp,
+  });
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
 
   // Linear scale helper
-  const scale = (value: number, domainMin: number, domainMax: number, rangeMin: number, rangeMax: number) =>
+  const scale = (
+    value: number,
+    domainMin: number,
+    domainMax: number,
+    rangeMin: number,
+    rangeMax: number,
+  ) =>
     domainMax === domainMin
       ? rangeMin
-      : rangeMin + ((value - domainMin) / (domainMax - domainMin)) * (rangeMax - rangeMin);
+      : rangeMin +
+        ((value - domainMin) / (domainMax - domainMin)) * (rangeMax - rangeMin);
 
   const draw = useCallback(() => {
     const container = containerRef.current;
@@ -90,28 +89,24 @@ export function BarChart({
     const maxVal = Math.max(...data.map((d) => d.value), 0);
     const niceMax = Math.ceil(maxVal / GRID_LINES) * GRID_LINES || 1;
 
-    const rc = rough.svg(svg);
-    const baseOpts = getRoughOptions(theme, "chart", {});
-    const borderOpts = getRoughOptions(theme, "border", {
-      stroke: "var(--cr-stroke-muted)",
-      strokeWidth: theme === "crayon" ? 1.5 : 0.8,
-    });
-
     // Grid lines + Y axis labels
     if (showGrid) {
       for (let i = 0; i <= GRID_LINES; i++) {
         const val = (niceMax / GRID_LINES) * i;
         const y = PAD.top + plotH - scale(val, 0, niceMax, 0, plotH);
 
-        svg.appendChild(
-          rc.line(PAD.left, y, PAD.left + plotW, y, {
-            ...borderOpts,
-            seed: stableSeed(`${chartId}-grid-${i}`),
-          }),
-        );
+        const gridLine = drawLine(PAD.left, y, PAD.left + plotW, y, {
+          seed: stableSeed(`${chartId}-grid-${i}`),
+          stroke: "var(--cr-stroke-muted)",
+          strokeWidth: theme === "crayon" ? 1.5 : 0.8,
+        });
+        if (gridLine) svg.appendChild(gridLine);
 
         // Y label
-        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        const text = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
         text.setAttribute("x", String(PAD.left - 8));
         text.setAttribute("y", String(y + 4));
         text.setAttribute("text-anchor", "end");
@@ -124,20 +119,35 @@ export function BarChart({
     }
 
     // Axes
-    svg.appendChild(rc.line(PAD.left, PAD.top, PAD.left, PAD.top + plotH, { ...borderOpts, seed: stableSeed(`${chartId}-yaxis`), strokeWidth: theme === "crayon" ? 2 : 1 }));
-    svg.appendChild(rc.line(PAD.left, PAD.top + plotH, PAD.left + plotW, PAD.top + plotH, { ...borderOpts, seed: stableSeed(`${chartId}-xaxis`), strokeWidth: theme === "crayon" ? 2 : 1 }));
+    const yAxis = drawLine(PAD.left, PAD.top, PAD.left, PAD.top + plotH, {
+      seed: stableSeed(`${chartId}-yaxis`),
+      stroke: "var(--cr-stroke-muted)",
+      strokeWidth: theme === "crayon" ? 2 : 1,
+    });
+    const xAxis = drawLine(
+      PAD.left,
+      PAD.top + plotH,
+      PAD.left + plotW,
+      PAD.top + plotH,
+      {
+        seed: stableSeed(`${chartId}-xaxis`),
+        stroke: "var(--cr-stroke-muted)",
+        strokeWidth: theme === "crayon" ? 2 : 1,
+      },
+    );
+    if (yAxis) svg.appendChild(yAxis);
+    if (xAxis) svg.appendChild(xAxis);
 
     // Bars
     const barW = Math.max(4, (plotW / data.length) * 0.6);
-    const gap  = plotW / data.length;
+    const gap = plotW / data.length;
 
     data.forEach((d, i) => {
       const barH = scale(d.value, 0, niceMax, 0, plotH);
       const x = PAD.left + gap * i + (gap - barW) / 2;
       const y = PAD.top + plotH - barH;
 
-      const barNode = rc.rectangle(x, y, barW, barH, {
-        ...baseOpts,
+      const barNode = drawRect(x, y, barW, barH, {
         fill: d.color ?? "currentColor",
         fillStyle: theme === "ink" ? "solid" : "hachure",
         fillWeight: theme === "pencil" ? 0.8 : 1.2,
@@ -145,19 +155,28 @@ export function BarChart({
         seed: stableSeed(`${chartId}-bar-${i}`),
         stroke: d.color ?? "currentColor",
         strokeWidth: theme === "crayon" ? 2 : theme === "ink" ? 1.5 : 1,
-      }) as SVGGElement;
+      }) as SVGGElement | null;
+      if (!barNode) return;
 
       // Animate on mount: bars grow from bottom using clipPath on the group
       if (animateOnMount) {
         const clipId = `${chartId}-clip-${i}`;
-        const defs = svg.querySelector("defs") ?? svg.insertBefore(
-          document.createElementNS("http://www.w3.org/2000/svg", "defs"),
-          svg.firstChild,
-        );
+        const defs =
+          svg.querySelector("defs") ??
+          svg.insertBefore(
+            document.createElementNS("http://www.w3.org/2000/svg", "defs"),
+            svg.firstChild,
+          );
 
-        const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+        const clipPath = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "clipPath",
+        );
         clipPath.setAttribute("id", clipId);
-        const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        const clipRect = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect",
+        );
         clipRect.setAttribute("x", String(x - 4));
         clipRect.setAttribute("y", String(PAD.top + plotH));
         clipRect.setAttribute("width", String(barW + 8));
@@ -170,7 +189,10 @@ export function BarChart({
         // Animate clip rect upward
         const delay = i * 60;
         const dur = theme === "crayon" ? 600 : theme === "ink" ? 350 : 500;
-        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        const anim = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "animate",
+        );
         anim.setAttribute("attributeName", "y");
         anim.setAttribute("from", String(PAD.top + plotH));
         anim.setAttribute("to", String(y - 4));
@@ -186,7 +208,10 @@ export function BarChart({
 
       // Value label above bar
       if (showValues && d.value > 0) {
-        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        const label = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
         label.setAttribute("x", String(x + barW / 2));
         label.setAttribute("y", String(y - 4));
         label.setAttribute("text-anchor", "middle");
@@ -198,7 +223,10 @@ export function BarChart({
       }
 
       // X axis label
-      const xlabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const xlabel = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text",
+      );
       xlabel.setAttribute("x", String(x + barW / 2));
       xlabel.setAttribute("y", String(PAD.top + plotH + 16));
       xlabel.setAttribute("text-anchor", "middle");
@@ -221,7 +249,20 @@ export function BarChart({
       al.textContent = axisLabel;
       svg.appendChild(al);
     }
-  }, [animateOnMount, axisLabel, chartId, data, formatValue, height, showGrid, showValues, theme]);
+  }, [
+    animateOnMount,
+    axisLabel,
+    chartId,
+    data,
+    drawLine,
+    drawRect,
+    formatValue,
+    height,
+    showGrid,
+    showValues,
+    svgRef,
+    theme,
+  ]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -243,7 +284,12 @@ export function BarChart({
       style={{ ...roughStyle, height }}
       {...props}
     >
-      <svg ref={svgRef} aria-label="Bar chart" role="img" className="overflow-visible" />
+      <svg
+        ref={svgRef}
+        aria-label="Bar chart"
+        role="img"
+        className="overflow-visible"
+      />
     </div>
   );
 }

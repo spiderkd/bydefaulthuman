@@ -4,6 +4,8 @@ description: A hand-drawn card preset for dashboard metrics with an optional tre
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { StatCard } from "@/registry/new-york/ui/stat-card";
 
 <PreviewContainer
@@ -17,9 +19,20 @@ import { StatCard } from "@/registry/new-york/ui/stat-card";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/stat-card.json
-```
+<InstallTabs slug="stat-card" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
+  { prop: 'description', type: "ReactNode", default: undefined, description: "Secondary descriptive content." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component.", required: true },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'trend', type: "TrendDirection", default: "== \"flat\") return;", description: "Trend direction shown alongside the value." },
+  { prop: 'trendLabel', type: "string", default: undefined, description: "Short text shown next to the trend indicator." },
+  { prop: 'value', type: "ReactNode", default: undefined, description: "Controlled value for the component.", required: true },
+]} />
 
 ## Trends
 
@@ -61,3 +74,15 @@ npx shadcn add https://crumble.dev/r/stat-card.json
     description="vs last month"
   />
 </PreviewContainer>
+
+## Accessibility
+
+StatCard is a presentational summary container with no landmark role by default. Repeat the metric label and trend in text so users are not relying on the drawn arrow alone.
+
+## Examples
+
+```tsx
+import { StatCard } from '@/components/crumble/ui/stat-card'
+
+<StatCard label="Revenue" value="$12,400" trend="up" trendLabel="+8% this week" />
+```

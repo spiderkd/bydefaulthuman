@@ -4,6 +4,8 @@ description: A hand-drawn checkbox with a rough tick mark.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Checkbox } from "@/registry/new-york/ui/checkbox"
 
 <PreviewContainer
@@ -17,9 +19,20 @@ import { Checkbox } from "@/registry/new-york/ui/checkbox"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/checkbox.json
-```
+<InstallTabs slug="checkbox" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'checked', type: "boolean", default: undefined, description: "Controls the `checked` behavior." },
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'defaultChecked', type: "boolean", default: undefined, description: "Controls the `defaultChecked` behavior." },
+  { prop: 'disabled', type: "boolean", default: undefined, description: "Disables interaction." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'onChange', type: "(checked: boolean) => void", default: undefined, description: "Callback fired when the value changes." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## States
 
@@ -72,3 +85,15 @@ function Demo() {
     <Checkbox label="Crayon" theme="crayon" defaultChecked />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Checkbox uses a native checkbox input under the sketch overlay, so keyboard focus, spacebar toggling, and form submission all work normally. Provide a clear text label whenever the choice carries meaning.
+
+## Examples
+
+```tsx
+import { Checkbox } from '@/components/crumble/ui/checkbox'
+
+<Checkbox label="Accept terms" />
+```

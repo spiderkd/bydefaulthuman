@@ -1,17 +1,9 @@
 "use client";
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  type HTMLAttributes,
-} from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef, type HTMLAttributes } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -26,8 +18,7 @@ export interface LineChartSeries {
 }
 
 export interface LineChartProps
-  extends HTMLAttributes<HTMLDivElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLDivElement>, CrumbleColorProps {
   animateOnMount?: boolean;
   formatValue?: (v: number) => string;
   formatX?: (i: number) => string;
@@ -79,13 +70,21 @@ export function LineChart({
   ...props
 }: LineChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const chartId = id ?? "line-chart";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { drawCircle, drawLine, drawPath, svgRef, theme } = useRough({
+    variant: "chart",
+    stableId: chartId,
+    theme: themeProp,
+  });
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
 
-  const scale = (v: number, dMin: number, dMax: number, rMin: number, rMax: number) =>
+  const scale = (
+    v: number,
+    dMin: number,
+    dMax: number,
+    rMin: number,
+    rMax: number,
+  ) =>
     dMax === dMin ? rMin : rMin + ((v - dMin) / (dMax - dMin)) * (rMax - rMin);
 
   const draw = useCallback(() => {
@@ -105,25 +104,28 @@ export function LineChart({
     const maxVal = Math.max(...allValues, 0);
     const minVal = Math.min(...allValues, 0);
     const niceMax = Math.ceil(maxVal / GRID_LINES) * GRID_LINES || 1;
-    const niceMin = minVal < 0 ? Math.floor(minVal / GRID_LINES) * GRID_LINES : 0;
+    const niceMin =
+      minVal < 0 ? Math.floor(minVal / GRID_LINES) * GRID_LINES : 0;
 
     const plotW = W - PAD.left - PAD.right;
     const plotH = H - PAD.top - PAD.bottom;
     const maxLen = Math.max(...series.map((s) => s.data.length));
-
-    const rc = rough.svg(svg);
-    const borderOpts = getRoughOptions(theme, "border", {
-      stroke: "var(--cr-stroke-muted)",
-      strokeWidth: theme === "crayon" ? 1.5 : 0.8,
-    });
 
     // Grid + Y labels
     if (showGrid) {
       for (let i = 0; i <= GRID_LINES; i++) {
         const val = niceMin + ((niceMax - niceMin) / GRID_LINES) * i;
         const y = PAD.top + plotH - scale(val, niceMin, niceMax, 0, plotH);
-        svg.appendChild(rc.line(PAD.left, y, PAD.left + plotW, y, { ...borderOpts, seed: stableSeed(`${chartId}-grid-${i}`) }));
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        const gridLine = drawLine(PAD.left, y, PAD.left + plotW, y, {
+          seed: stableSeed(`${chartId}-grid-${i}`),
+          stroke: "var(--cr-stroke-muted)",
+          strokeWidth: theme === "crayon" ? 1.5 : 0.8,
+        });
+        if (gridLine) svg.appendChild(gridLine);
+        const t = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
         t.setAttribute("x", String(PAD.left - 8));
         t.setAttribute("y", String(y + 4));
         t.setAttribute("text-anchor", "end");
@@ -136,13 +138,29 @@ export function LineChart({
     }
 
     // Axes
-    svg.appendChild(rc.line(PAD.left, PAD.top, PAD.left, PAD.top + plotH, { ...borderOpts, seed: stableSeed(`${chartId}-yaxis`) }));
-    svg.appendChild(rc.line(PAD.left, PAD.top + plotH, PAD.left + plotW, PAD.top + plotH, { ...borderOpts, seed: stableSeed(`${chartId}-xaxis`) }));
+    const yAxis = drawLine(PAD.left, PAD.top, PAD.left, PAD.top + plotH, {
+      seed: stableSeed(`${chartId}-yaxis`),
+      stroke: "var(--cr-stroke-muted)",
+      strokeWidth: theme === "crayon" ? 1.5 : 0.8,
+    });
+    const xAxis = drawLine(
+      PAD.left,
+      PAD.top + plotH,
+      PAD.left + plotW,
+      PAD.top + plotH,
+      {
+        seed: stableSeed(`${chartId}-xaxis`),
+        stroke: "var(--cr-stroke-muted)",
+        strokeWidth: theme === "crayon" ? 1.5 : 0.8,
+      },
+    );
+    if (yAxis) svg.appendChild(yAxis);
+    if (xAxis) svg.appendChild(xAxis);
 
     // X labels
     for (let i = 0; i < maxLen; i++) {
       const x = PAD.left + scale(i, 0, maxLen - 1, 0, plotW);
-      const lbl = formatX ? formatX(i) : labels?.[i] ?? String(i + 1);
+      const lbl = formatX ? formatX(i) : (labels?.[i] ?? String(i + 1));
       const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
       t.setAttribute("x", String(x));
       t.setAttribute("y", String(PAD.top + plotH + 16));
@@ -164,14 +182,13 @@ export function LineChart({
 
       const pathD = catmullRomPath(pts);
 
-      const lineOpts = getRoughOptions(theme, "chart", {
+      const lineNode = drawPath(pathD, {
         fill: "none",
         seed: stableSeed(`${chartId}-line-${si}`),
         stroke: color,
         strokeWidth: theme === "crayon" ? 2.5 : theme === "ink" ? 2 : 1.5,
-      });
-
-      const lineNode = rc.path(pathD, lineOpts) as SVGGElement;
+      }) as SVGGElement | null;
+      if (!lineNode) return;
 
       if (animateOnMount) {
         lineNode.querySelectorAll("path").forEach((p) => {
@@ -180,7 +197,11 @@ export function LineChart({
           p.style.strokeDashoffset = String(len);
           const dur = theme === "crayon" ? 900 : theme === "ink" ? 500 : 700;
           p.style.transition = `stroke-dashoffset ${dur}ms cubic-bezier(0.16,1,0.3,1) ${si * 100}ms`;
-          requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = "0"; }));
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              p.style.strokeDashoffset = "0";
+            }),
+          );
         });
       }
 
@@ -189,14 +210,14 @@ export function LineChart({
       // Dots at data points
       if (showDots) {
         pts.forEach((pt, i) => {
-          const dotNode = rc.circle(pt[0], pt[1], 7, getRoughOptions(theme, "interactive", {
+          const dotNode = drawCircle(pt[0], pt[1], 7, {
             fill: color,
             fillStyle: "solid",
             seed: stableSeed(`${chartId}-dot-${si}-${i}`),
             stroke: color,
             strokeWidth: 0.5,
-          }));
-          svg.appendChild(dotNode);
+          });
+          if (dotNode) svg.appendChild(dotNode);
         });
       }
     });
@@ -207,19 +228,46 @@ export function LineChart({
         const lx = PAD.left + i * 100;
         const ly = H - 8;
         const color = s.color ?? "currentColor";
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", String(lx)); line.setAttribute("y1", String(ly));
-        line.setAttribute("x2", String(lx + 16)); line.setAttribute("y2", String(ly));
-        line.setAttribute("stroke", color); line.setAttribute("stroke-width", "2");
+        const line = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line",
+        );
+        line.setAttribute("x1", String(lx));
+        line.setAttribute("y1", String(ly));
+        line.setAttribute("x2", String(lx + 16));
+        line.setAttribute("y2", String(ly));
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", "2");
         svg.appendChild(line);
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", String(lx + 20)); t.setAttribute("y", String(ly + 4));
-        t.setAttribute("fill", "currentColor"); t.setAttribute("font-size", "11"); t.setAttribute("opacity", "0.6");
+        const t = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
+        t.setAttribute("x", String(lx + 20));
+        t.setAttribute("y", String(ly + 4));
+        t.setAttribute("fill", "currentColor");
+        t.setAttribute("font-size", "11");
+        t.setAttribute("opacity", "0.6");
         t.textContent = s.label;
         svg.appendChild(t);
       });
     }
-  }, [animateOnMount, chartId, formatValue, formatX, height, labels, series, showDots, showGrid, theme]);
+  }, [
+    animateOnMount,
+    chartId,
+    drawCircle,
+    drawLine,
+    drawPath,
+    formatValue,
+    formatX,
+    height,
+    labels,
+    series,
+    showDots,
+    showGrid,
+    svgRef,
+    theme,
+  ]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -241,7 +289,12 @@ export function LineChart({
       style={{ ...roughStyle, height }}
       {...props}
     >
-      <svg ref={svgRef} aria-label="Line chart" role="img" className="overflow-visible" />
+      <svg
+        ref={svgRef}
+        aria-label="Line chart"
+        role="img"
+        className="overflow-visible"
+      />
     </div>
   );
 }

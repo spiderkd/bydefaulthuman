@@ -4,6 +4,7 @@ description: Hand-drawn arrow primitive for callouts and diagrams.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
 import { RoughArrow } from "@/components/primitives/rough-arrow";
 
 <PreviewContainer
@@ -14,3 +15,35 @@ import { RoughArrow } from "@/components/primitives/rough-arrow";
 >
   <RoughArrow x1={12} y1={70} x2={180} y2={20} />
 </PreviewContainer>
+
+## Installation
+
+Primitives are bundled with any Crumble component install. To use standalone, copy `components/primitives/rough-arrow.tsx` into your project.
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'curvature', type: "number", default: undefined, description: "Controls the bend amount." },
+  { prop: 'height', type: "number", default: undefined, description: "Sets the rendered height in pixels." },
+  { prop: 'id', type: "string", default: undefined, description: "Controls the `id` behavior." },
+  { prop: 'stroke', type: "string", default: undefined, description: "Overrides the stroke color." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'width', type: "number", default: undefined, description: "Sets the rendered width in pixels." },
+  { prop: 'x1', type: "number", default: undefined, description: "Starting X coordinate.", required: true },
+  { prop: 'x2', type: "number", default: undefined, description: "Ending X coordinate.", required: true },
+  { prop: 'y1', type: "number", default: undefined, description: "Starting Y coordinate.", required: true },
+  { prop: 'y2', type: "number", default: undefined, description: "Ending Y coordinate.", required: true },
+]} />
+
+## Accessibility
+
+This primitive is primarily presentational. Keep the underlying content semantic and avoid relying on the sketch overlay alone to communicate meaning.
+
+## Examples
+
+```tsx
+import { RoughArrow } from '@/components/crumble/primitives/rough-arrow'
+
+<RoughArrow x1={12} y1={70} x2={180} y2={20} />
+```

@@ -2,20 +2,16 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
-  type DragEvent,
   type ChangeEvent,
+  type DragEvent,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -47,12 +43,16 @@ export function FileUpload({
   const [dragging, setDragging] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadId = id ?? "file-upload";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawRect, svgRef, theme } = useRough({
+    stableId: uploadId,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const draw = useCallback(() => {
     const svg = svgRef.current;
@@ -66,26 +66,19 @@ export function FileUpload({
     svg.setAttribute("height", String(h));
     svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-    const rc = rough.svg(svg);
     const roughness = dragging ? 2.5 : theme === "crayon" ? 2 : 1;
-    const stroke = dragging
+    const currentStroke = dragging
       ? "var(--cr-stroke)"
-      : disabled
-        ? "var(--cr-stroke-muted)"
-        : "var(--cr-stroke-muted)";
+      : "var(--cr-stroke-muted)";
 
-    svg.appendChild(
-      rc.rectangle(2, 2, w - 4, h - 4, {
-        ...getRoughOptions(theme, "border", {
-          fill: "none",
-          seed: stableSeed(uploadId),
-          stroke,
-        }),
-        roughness,
-        strokeLineDash: [8, 6],
-      }),
-    );
-  }, [disabled, dragging, theme, uploadId]);
+    const rect = drawRect(2, 2, w - 4, h - 4, {
+      fill: "none",
+      roughness,
+      stroke: currentStroke,
+      strokeLineDash: [8, 6],
+    });
+    if (rect) svg.appendChild(rect);
+  }, [disabled, dragging, drawRect, svgRef, theme]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -132,24 +125,61 @@ export function FileUpload({
           dragging && "bg-muted/30",
         )}
         onClick={() => !disabled && inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (!disabled) setDragging(true);
+        }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
       >
-        <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+        <svg
+          ref={externalSvgRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-visible"
+        />
 
-        {/* Upload icon — rough drawn arrow pointing up into a line */}
-        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" className="text-muted-foreground">
-          <line x1="16" y1="22" x2="16" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <polyline points="10,14 16,8 22,14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <line x1="6" y1="26" x2="26" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <svg
+          aria-hidden="true"
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          className="text-muted-foreground"
+        >
+          <line
+            x1="16"
+            y1="22"
+            x2="16"
+            y2="8"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <polyline
+            points="10,14 16,8 22,14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <line
+            x1="6"
+            y1="26"
+            x2="26"
+            y2="26"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
 
         <div className="relative text-center">
           {files.length > 0 ? (
             <div className="flex flex-col gap-0.5">
               {files.map((f, i) => (
-                <span key={i} className="text-sm font-medium text-foreground">{f.name}</span>
+                <span key={i} className="text-sm font-medium text-foreground">
+                  {f.name}
+                </span>
               ))}
             </div>
           ) : (

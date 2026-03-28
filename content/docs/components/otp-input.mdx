@@ -4,6 +4,8 @@ description: A row of hand-drawn single-character boxes for one-time passwords.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { OtpInput } from "@/registry/new-york/ui/otp-input";
 
 <PreviewContainer
@@ -17,9 +19,20 @@ import { OtpInput } from "@/registry/new-york/ui/otp-input";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/otp-input.json
-```
+<InstallTabs slug="otp-input" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'length', type: "number", default: "6", description: "Controls the `length` behavior." },
+  { prop: 'onChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the value changes." },
+  { prop: 'onComplete', type: "(value: string) => void", default: undefined, description: "Optional callback for component events." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## PIN mask
 
@@ -50,3 +63,15 @@ npx shadcn add https://crumble.dev/r/otp-input.json
     <OtpInput length={4} theme="crayon" />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+OtpInput splits the code into multiple native inputs while still exposing each digit position to assistive technologies. Provide surrounding instructions so users know what code is expected and where it came from.
+
+## Examples
+
+```tsx
+import { OtpInput } from '@/components/crumble/ui/otp-input'
+
+<OtpInput length={6} />
+```

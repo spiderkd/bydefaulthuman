@@ -3,9 +3,11 @@ title: Bar Chart
 description: A hand-drawn bar chart with hachure-filled bars and animated mount.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
-import { BarChart } from "@/registry/new-york/ui/bar-chart"
-import { BarChartRevenueDemo } from "@/components/demos/bar-chart-demo"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
+import { BarChart } from "@/registry/new-york/ui/bar-chart";
+import { BarChartRevenueDemo } from "@/components/demos/bar-chart-demo";
 
 <PreviewContainer
   componentName="bar-chart"
@@ -36,9 +38,70 @@ import { BarChartRevenueDemo } from "@/components/demos/bar-chart-demo"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/bar-chart.json
-```
+<InstallTabs slug="bar-chart" />
+
+## Props
+
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnMount",
+      type: "boolean",
+      default: "true",
+      description: "Animates the component when it first renders.",
+    },
+    {
+      prop: "axisLabel",
+      type: "string",
+      default: undefined,
+      description: "Controls the `axisLabel` behavior.",
+    },
+    {
+      prop: "data",
+      type: "BarChartDataPoint[]",
+      default: undefined,
+      description: "Data used to render the component.",
+      required: true,
+    },
+    {
+      prop: "formatValue",
+      type: "(v: number) => string",
+      default: undefined,
+      description: "Formats the displayed numeric value.",
+    },
+    {
+      prop: "height",
+      type: "number",
+      default: "240",
+      description: "Sets the rendered height in pixels.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "showGrid",
+      type: "boolean",
+      default: "true",
+      description: "Shows background grid lines.",
+    },
+    {
+      prop: "showValues",
+      type: "boolean",
+      default: "true",
+      description: "Controls the `showValues` behavior.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Custom colors and format
 
@@ -60,26 +123,22 @@ Per-bar colors via the `color` field. `formatValue` must come from a client comp
   <BarChartRevenueDemo />
 </PreviewContainer>
 
-## Themes
+## Accessibility
 
-<PreviewContainer
-  componentName="bar-chart"
-  code={`<BarChart theme="crayon" data={[
-  { label: "A", value: 30 },
-  { label: "B", value: 60 },
-  { label: "C", value: 45 },
-  { label: "D", value: 75 },
-]} />`}
->
-  <div className="w-full">
-    <BarChart
-      theme="crayon"
-      data={[
-        { label: "A", value: 30 },
-        { label: "B", value: 60 },
-        { label: "C", value: 45 },
-        { label: "D", value: 75 },
-      ]}
-    />
-  </div>
-</PreviewContainer>
+Charts are visual summaries, so do not rely on them as the only place important numbers appear. Provide nearby text or a data table when exact values matter for decision-making.
+
+## Examples
+
+```tsx
+import { BarChart } from "@/components/crumble/ui/bar-chart";
+
+<BarChart
+  data={[
+    { label: "Mon", value: 40 },
+    { label: "Tue", value: 65 },
+    { label: "Wed", value: 55 },
+    { label: "Thu", value: 80 },
+    { label: "Fri", value: 70 },
+  ]}
+/>;
+```

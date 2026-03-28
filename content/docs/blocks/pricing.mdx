@@ -1,0 +1,49 @@
+---
+title: Pricing Block
+description: A three-tier pricing grid built from Card, Badge, Button, Separator, and RoughHighlight.
+---
+
+import { PricingCardBlockDemo } from "@/components/block/demos/PricingCardBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="card"
+  code={`import { PricingCardBlock } from '@/components/block/PricingCardBlock'
+
+<PricingCardBlock />`}
+>
+  <PricingCardBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/card.json
+npx shadcn add https://crumble.dev/r/badge.json
+npx shadcn add https://crumble.dev/r/button.json
+npx shadcn add https://crumble.dev/r/separator.json
+```
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'eyebrow', type: "string", default: undefined, description: "Small label above the heading." },
+  { prop: 'heading', type: "string", default: undefined, description: "Heading text before the highlight." },
+  { prop: 'headingHighlight', type: "string", default: undefined, description: "Highlighted word in the heading." },
+  { prop: 'highlightColor', type: "string", default: undefined, description: "Highlight accent color." },
+  { prop: 'onSelect', type: "(tier: PricingTier) => void", default: undefined, description: "Callback fired when a tier is selected." },
+  { prop: 'tiers', type: "PricingTier[]", default: undefined, description: "Pricing tiers rendered by the block." },
+]} />
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { PricingCardBlock } from '@/components/block/PricingCardBlock'
+
+<PricingCardBlock />
+```

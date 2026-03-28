@@ -9,11 +9,10 @@ import {
   useState,
   type HTMLAttributes,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
   stableSeed,
@@ -128,6 +127,12 @@ export function AccordionItem({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const borderSvgRef = useRef<SVGSVGElement>(null);
+  const { drawRect } = useRough({
+    variant: "interactive",
+    stableId: `accordion-border-${value}-${isOpen ? "open" : "closed"}`,
+    svgRef: borderSvgRef,
+    theme,
+  });
 
   const drawBorder = useCallback(
     (reseed = false) => {
@@ -144,17 +149,12 @@ export function AccordionItem({
       svg.setAttribute("height", String(h));
       svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-      const rc = rough.svg(svg);
-
       // Stable seed so the border doesn't jump on every render,
       // but re-seeds on hover for the hand-drawn re-sketch feel.
-      const seed = reseed
-        ? randomSeed()
-        : stableSeed(`accordion-border-${value}-${isOpen ? "open" : "closed"}`);
+      const extraSeed = reseed ? { seed: randomSeed() } : {};
 
       // "interactive" variant gives the most aggressive roughness.
-      const opts = getRoughOptions(theme, "interactive", {
-        seed,
+      const opts = {
         stroke: "var(--cr-stroke, currentColor)",
         strokeWidth: theme === "crayon" ? 2.5 : theme === "ink" ? 1.8 : 1.5,
         roughness: theme === "crayon" ? 3.2 : theme === "ink" ? 1.0 : 2.0,
@@ -165,11 +165,13 @@ export function AccordionItem({
         fillWeight: theme === "crayon" ? 1.0 : 0.5,
         hachureGap: theme === "pencil" ? 9 : theme === "crayon" ? 7 : 11,
         hachureAngle: -41,
-      });
+        ...extraSeed,
+      };
 
       // Inset so the wobbly stroke doesn't clip at the container edge.
       const pad = theme === "crayon" ? 4 : 3;
-      const rect = rc.rectangle(pad, pad, w - pad * 2, h - pad * 2, opts);
+      const rect = drawRect(pad, pad, w - pad * 2, h - pad * 2, opts);
+      if (!rect) return;
       // `fillOpacity` is not in rough's Options type — patch it as an SVG
       // presentation attribute on the generated fill paths after drawing.
       if (isOpen) {
@@ -181,7 +183,7 @@ export function AccordionItem({
       }
       svg.appendChild(rect);
     },
-    [isOpen, theme, value],
+    [drawRect, isOpen, theme],
   );
 
   useEffect(() => {
@@ -237,6 +239,18 @@ export function AccordionTrigger({
 
   const chevronRef = useRef<SVGSVGElement>(null);
   const tickRef = useRef<SVGSVGElement>(null);
+  const { drawLine: drawChevronLine } = useRough({
+    variant: "interactive",
+    stableId: `chev-${value}`,
+    svgRef: chevronRef,
+    theme,
+  });
+  const { drawLine: drawTickLine } = useRough({
+    variant: "border",
+    stableId: `tick-${value}`,
+    svgRef: tickRef,
+    theme,
+  });
 
   // ── Chevron ──────────────────────────────────────────────────────────────
 
@@ -250,42 +264,43 @@ export function AccordionTrigger({
       svg.setAttribute("height", "24");
       svg.setAttribute("viewBox", "0 0 24 24");
 
-      const rc = rough.svg(svg);
       const mkSeed = (suffix: string) =>
         reseed ? randomSeed() : stableSeed(`chev-${suffix}-${value}`);
 
-      const baseOpts = getRoughOptions(theme, "interactive", {
+      const baseOpts = {
         stroke: "currentColor",
         strokeWidth: theme === "crayon" ? 2.4 : theme === "ink" ? 2.0 : 1.6,
         roughness: theme === "crayon" ? 3.0 : theme === "ink" ? 0.9 : 2.2,
         bowing: theme === "crayon" ? 2.8 : theme === "ink" ? 0.7 : 1.8,
-      });
+      };
 
       if (isOpen) {
-        svg.appendChild(
-          rc.line(3, 16, 12, 7, { ...baseOpts, seed: mkSeed("ul") }),
-        );
-        svg.appendChild(
-          rc.line(12, 7, 21, 16, {
-            ...baseOpts,
-            seed: mkSeed("ur"),
-            strokeWidth: (baseOpts.strokeWidth ?? 1.6) * 0.9,
-          }),
-        );
+        const ul = drawChevronLine(3, 16, 12, 7, {
+          ...baseOpts,
+          seed: mkSeed("ul"),
+        });
+        const ur = drawChevronLine(12, 7, 21, 16, {
+          ...baseOpts,
+          seed: mkSeed("ur"),
+          strokeWidth: (baseOpts.strokeWidth ?? 1.6) * 0.9,
+        });
+        if (ul) svg.appendChild(ul);
+        if (ur) svg.appendChild(ur);
       } else {
-        svg.appendChild(
-          rc.line(3, 8, 12, 17, { ...baseOpts, seed: mkSeed("dl") }),
-        );
-        svg.appendChild(
-          rc.line(12, 17, 21, 8, {
-            ...baseOpts,
-            seed: mkSeed("dr"),
-            strokeWidth: (baseOpts.strokeWidth ?? 1.6) * 0.9,
-          }),
-        );
+        const dl = drawChevronLine(3, 8, 12, 17, {
+          ...baseOpts,
+          seed: mkSeed("dl"),
+        });
+        const dr = drawChevronLine(12, 17, 21, 8, {
+          ...baseOpts,
+          seed: mkSeed("dr"),
+          strokeWidth: (baseOpts.strokeWidth ?? 1.6) * 0.9,
+        });
+        if (dl) svg.appendChild(dl);
+        if (dr) svg.appendChild(dr);
       }
     },
-    [isOpen, theme, value],
+    [drawChevronLine, isOpen, theme, value],
   );
 
   // ── Left tick mark ────────────────────────────────────────────────────────
@@ -302,26 +317,20 @@ export function AccordionTrigger({
       svg.setAttribute("height", "22");
       svg.setAttribute("viewBox", "0 0 6 22");
 
-      const rc = rough.svg(svg);
-      const tickEl = rc.line(
-        3,
-        1,
-        3,
-        21,
-        getRoughOptions(theme, "border", {
-          seed: reseed ? randomSeed() : stableSeed(`tick-${value}-${isOpen}`),
-          stroke: isOpen
-            ? "var(--cr-stroke, currentColor)"
-            : "var(--cr-stroke-muted, currentColor)",
-          strokeWidth: theme === "crayon" ? 2.0 : theme === "ink" ? 1.4 : 1.2,
-          roughness: theme === "crayon" ? 2.8 : theme === "ink" ? 0.8 : 2.0,
-        }),
-      );
+      const tickEl = drawTickLine(3, 1, 3, 21, {
+        seed: reseed ? randomSeed() : stableSeed(`tick-${value}-${isOpen}`),
+        stroke: isOpen
+          ? "var(--cr-stroke, currentColor)"
+          : "var(--cr-stroke-muted, currentColor)",
+        strokeWidth: theme === "crayon" ? 2.0 : theme === "ink" ? 1.4 : 1.2,
+        roughness: theme === "crayon" ? 2.8 : theme === "ink" ? 0.8 : 2.0,
+      });
+      if (!tickEl) return;
       // `opacity` is not in rough's Options type — set it on the element directly.
       tickEl.setAttribute("opacity", isOpen ? "1" : "0.4");
       svg.appendChild(tickEl);
     },
-    [isOpen, theme, value],
+    [drawTickLine, isOpen, theme, value],
   );
 
   useEffect(() => {
@@ -400,6 +409,12 @@ export function AccordionContent({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const underlineSvgRef = useRef<SVGSVGElement>(null);
+  const { drawLine } = useRough({
+    variant: "border",
+    stableId: `accordion-underline-${value}`,
+    svgRef: underlineSvgRef,
+    theme,
+  });
 
   const drawUnderline = useCallback(() => {
     const container = containerRef.current;
@@ -412,26 +427,18 @@ export function AccordionContent({
     svg.setAttribute("height", "8");
     svg.setAttribute("viewBox", `0 0 ${w} 8`);
 
-    const rc = rough.svg(svg);
-
     // Short inset line so it reads as an annotation, not a full-width divider.
     const inset = Math.min(32, w * 0.08);
-    const lineEl = rc.line(
-      inset,
-      4,
-      w - inset,
-      4,
-      getRoughOptions(theme, "border", {
-        seed: stableSeed(`accordion-underline-${value}`),
-        stroke: "var(--cr-stroke-muted, currentColor)",
-        strokeWidth: theme === "crayon" ? 1.8 : theme === "ink" ? 1.4 : 1.0,
-        roughness: theme === "crayon" ? 2.4 : theme === "ink" ? 0.6 : 1.6,
-      }),
-    );
+    const lineEl = drawLine(inset, 4, w - inset, 4, {
+      stroke: "var(--cr-stroke-muted, currentColor)",
+      strokeWidth: theme === "crayon" ? 1.8 : theme === "ink" ? 1.4 : 1.0,
+      roughness: theme === "crayon" ? 2.4 : theme === "ink" ? 0.6 : 1.6,
+    });
+    if (!lineEl) return;
     // `opacity` is not in rough's Options type — set it on the element directly.
     lineEl.setAttribute("opacity", "0.45");
     svg.appendChild(lineEl);
-  }, [theme, value]);
+  }, [drawLine, theme]);
 
   useEffect(() => {
     if (!isOpen) return;

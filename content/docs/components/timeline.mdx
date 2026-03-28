@@ -4,6 +4,8 @@ description: A vertical event list with rough circle nodes and connecting lines.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Timeline, TimelineItem } from "@/registry/new-york/ui/timeline";
 import { TimelineDemo } from "@/components/demos/TimelineDemo";
 
@@ -12,6 +14,16 @@ import { TimelineDemo } from "@/components/demos/TimelineDemo";
 <PreviewContainer componentName="timeline">
   <TimelineDemo />
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="timeline" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 The demo above auto-plays on mount and exposes a **Replay** button. It drives
 status changes through a plain `setTimeout` stagger — no extra dependencies
@@ -134,11 +146,7 @@ export function TimelineDemo() {
   </div>
 </PreviewContainer>
 
-## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/timeline.json
-```
 
 ## Statuses
 
@@ -164,3 +172,13 @@ npx shadcn add https://crumble.dev/r/timeline.json
     </Timeline>
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Timeline is primarily visual, so the text inside each item should still make sense when read linearly. Include timestamps or status text directly in the item copy when chronology matters.
+
+## Examples
+
+```tsx
+
+```

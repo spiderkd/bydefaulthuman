@@ -2,19 +2,15 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
   type ReactNode,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -32,7 +28,6 @@ export interface TooltipProps extends CrumbleColorProps {
 }
 
 const ARROW = 8;
-const PAD = 8;
 
 export function Tooltip({
   children,
@@ -49,11 +44,15 @@ export function Tooltip({
   const [visible, setVisible] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const tooltipId = id ?? "tooltip";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawPath, drawRect, svgRef } = useRough({
+    stableId: tooltipId,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const draw = useCallback(() => {
     const tooltip = tooltipRef.current;
@@ -64,8 +63,6 @@ export function Tooltip({
 
     const w = tooltip.offsetWidth;
     const h = tooltip.offsetHeight;
-
-    // SVG is sized to include space for the arrow
     const svgW = side === "left" || side === "right" ? w + ARROW : w;
     const svgH = side === "top" || side === "bottom" ? h + ARROW : h;
 
@@ -73,27 +70,15 @@ export function Tooltip({
     svg.setAttribute("height", String(svgH));
     svg.setAttribute("viewBox", `0 0 ${svgW} ${svgH}`);
 
-    const rc = rough.svg(svg);
-    const opts = getRoughOptions(theme, "border", {
-      fill: "var(--popover)",
-      fillStyle: "solid",
-      seed: stableSeed(tooltipId),
-      stroke: "var(--cr-stroke)",
-    });
-
-    // Box (offset to leave room for arrow)
     const bx = side === "right" ? ARROW : 0;
     const by = side === "bottom" ? ARROW : 0;
-    svg.appendChild(rc.rectangle(bx + 1, by + 1, w - 2, h - 2, opts));
-
-    // Arrow triangle
-    const arrowOpts = {
-      ...opts,
-      roughness: 0.8,
-      stroke: "var(--cr-stroke)",
+    const box = drawRect(bx + 1, by + 1, w - 2, h - 2, {
       fill: "var(--popover)",
-      fillStyle: "solid" as const,
-    };
+      fillStyle: "solid",
+      stroke: "var(--cr-stroke)",
+    });
+    if (box) svg.appendChild(box);
+
     let arrowPath = "";
     if (side === "top") {
       const mx = w / 2;
@@ -108,8 +93,15 @@ export function Tooltip({
       const my = h / 2;
       arrowPath = `M ${ARROW + 1} ${my - ARROW} L 1 ${my} L ${ARROW + 1} ${my + ARROW}`;
     }
-    svg.appendChild(rc.path(arrowPath, arrowOpts));
-  }, [side, theme, tooltipId]);
+
+    const arrow = drawPath(arrowPath, {
+      fill: "var(--popover)",
+      fillStyle: "solid",
+      roughness: 0.8,
+      stroke: "var(--cr-stroke)",
+    });
+    if (arrow) svg.appendChild(arrow);
+  }, [drawPath, drawRect, side, svgRef]);
 
   useEffect(() => {
     if (visible) {
@@ -150,7 +142,7 @@ export function Tooltip({
         >
           <div ref={tooltipRef} className="relative">
             <svg
-              ref={svgRef}
+              ref={externalSvgRef}
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 overflow-visible"
             />

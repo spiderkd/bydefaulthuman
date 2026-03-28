@@ -1,4 +1,4 @@
 {
   "title": "Crumble",
-  "pages": ["index", "getting-started", "primitives", "components"]
+  "pages": ["index", "getting-started", "primitives", "components", "blocks"]
 }

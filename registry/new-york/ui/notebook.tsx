@@ -1,17 +1,9 @@
 "use client";
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  type HTMLAttributes,
-} from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef, type HTMLAttributes } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -19,8 +11,7 @@ import {
 } from "@/lib/rough";
 
 export interface NotebookProps
-  extends HTMLAttributes<HTMLDivElement>,
-    CrumbleColorProps {
+  extends HTMLAttributes<HTMLDivElement>, CrumbleColorProps {
   id?: string;
   lineColor?: string;
   lineSpacing?: number;
@@ -35,7 +26,7 @@ export function Notebook({
   fill,
   id,
   lineColor,
-  lineSpacing = 28,
+  lineSpacing = 24,
   marginColor,
   showMargin = true,
   stroke,
@@ -44,26 +35,39 @@ export function Notebook({
   theme: themeProp,
   ...props
 }: NotebookProps) {
-  const containerRef   = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const linesCanvasRef = useRef<SVGSVGElement>(null);
-  const borderSvgRef   = useRef<SVGSVGElement>(null);
+  const borderSvgRef = useRef<SVGSVGElement>(null);
   const notebookId = id ?? "notebook";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
+  const { drawRect: drawBorder, theme } = useRough({
+    variant: "border",
+    stableId: notebookId,
+    svgRef: borderSvgRef,
+    theme: themeProp,
+  });
+  const { drawLine: drawRuledLine } = useRough({
+    variant: "border",
+    svgRef: linesCanvasRef,
+    theme: themeProp,
+  });
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
 
   const MARGIN_X = showMargin ? 40 : 0;
 
   const draw = useCallback(() => {
-    const container   = containerRef.current;
-    const linesSvg    = linesCanvasRef.current;
-    const borderSvg   = borderSvgRef.current;
+    const container = containerRef.current;
+    const linesSvg = linesCanvasRef.current;
+    const borderSvg = borderSvgRef.current;
     if (!container || !linesSvg || !borderSvg) return;
 
     const w = container.offsetWidth;
     const h = container.offsetHeight;
 
-    const lc = lineColor ?? (theme === "ink" ? "oklch(0.75 0.06 240 / 40%)" : "oklch(0.72 0.06 240 / 35%)");
+    const lc =
+      lineColor ??
+      (theme === "ink"
+        ? "oklch(0.75 0.06 240 / 40%)"
+        : "oklch(0.72 0.06 240 / 35%)");
     const mc = marginColor ?? "oklch(0.70 0.14 20 / 50%)";
 
     // Border
@@ -71,49 +75,51 @@ export function Notebook({
     borderSvg.setAttribute("width", String(w));
     borderSvg.setAttribute("height", String(h));
     borderSvg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-    const rcBorder = rough.svg(borderSvg);
-    borderSvg.appendChild(
-      rcBorder.rectangle(1, 1, w - 2, h - 2, getRoughOptions(theme, "border", {
-        fill: "none",
-        seed: stableSeed(notebookId),
-        stroke: "var(--cr-stroke-muted)",
-        strokeWidth: theme === "crayon" ? 2 : 1,
-      })),
-    );
+    const borderEl = drawBorder(1, 1, w - 2, h - 2, {
+      fill: "none",
+      stroke: "var(--cr-stroke-muted)",
+      strokeWidth: theme === "crayon" ? 2 : 1,
+    });
+    if (borderEl) borderSvg.appendChild(borderEl);
 
     // Ruled lines + margin
     linesSvg.replaceChildren();
     linesSvg.setAttribute("width", String(w));
     linesSvg.setAttribute("height", String(h));
     linesSvg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-    const rcLines = rough.svg(linesSvg);
-
-    const lineOpts = getRoughOptions(theme, "border", {
-      roughness: theme === "pencil" ? 0.3 : theme === "ink" ? 0.1 : 0.5,
-      stroke: lc,
-      strokeWidth: 0.6,
-    });
-
     // Draw horizontal ruled lines starting after header area
     const startY = lineSpacing + 8;
     for (let y = startY; y < h - 8; y += lineSpacing) {
-      linesSvg.appendChild(
-        rcLines.line(8, y, w - 8, y, { ...lineOpts, seed: stableSeed(`${notebookId}-line-${Math.round(y)}`) }),
-      );
+      const lineEl = drawRuledLine(8, y, w - 8, y, {
+        seed: stableSeed(`${notebookId}-line-${Math.round(y)}`),
+        roughness: theme === "pencil" ? 0.3 : theme === "ink" ? 0.1 : 0.5,
+        stroke: lc,
+        strokeWidth: 0.6,
+      });
+      if (lineEl) linesSvg.appendChild(lineEl);
     }
 
     // Margin vertical line
     if (showMargin) {
-      const marginOpts = getRoughOptions(theme, "border", {
+      const marginLine = drawRuledLine(MARGIN_X, 8, MARGIN_X, h - 8, {
+        seed: stableSeed(`${notebookId}-margin`),
         roughness: theme === "pencil" ? 0.4 : 0.2,
         stroke: mc,
         strokeWidth: theme === "crayon" ? 1.5 : 0.8,
       });
-      linesSvg.appendChild(
-        rcLines.line(MARGIN_X, 8, MARGIN_X, h - 8, { ...marginOpts, seed: stableSeed(`${notebookId}-margin`) }),
-      );
+      if (marginLine) linesSvg.appendChild(marginLine);
     }
-  }, [lineColor, lineSpacing, marginColor, notebookId, showMargin, theme, MARGIN_X]);
+  }, [
+    MARGIN_X,
+    drawBorder,
+    drawRuledLine,
+    lineColor,
+    lineSpacing,
+    marginColor,
+    notebookId,
+    showMargin,
+    theme,
+  ]);
 
   useEffect(() => {
     const rid = requestAnimationFrame(() => draw());
@@ -136,12 +142,20 @@ export function Notebook({
       {...props}
     >
       {/* Ruled lines layer (behind content) */}
-      <svg ref={linesCanvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={linesCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
       {/* Border layer */}
-      <svg ref={borderSvgRef}   aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" />
+      <svg
+        ref={borderSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+      />
       {/* Content — padded to respect margin and line spacing */}
       <div
-        className="relative"
+        className="relative font-[family-name:var(--font-display)] "
         style={{
           paddingLeft: MARGIN_X + 12,
           paddingRight: 16,

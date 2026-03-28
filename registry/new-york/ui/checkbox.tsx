@@ -2,15 +2,12 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   type ChangeEvent,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import {
-  CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
   stableSeed,
@@ -45,13 +42,20 @@ export function Checkbox({
   strokeMuted,
   theme: themeProp,
 }: CheckboxProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
   const internalChecked = useRef(defaultChecked ?? false);
   const inputId =
     id ?? `checkbox-${label?.toLowerCase().replace(/\s+/g, "-") ?? "field"}`;
-  const { animateOnHover, theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const {
+    animateOnHover,
+    drawLine,
+    drawRect,
+    svgRef,
+  } = useRough({
+    stableId: inputId,
+    theme: themeProp,
+    variant: "interactive",
+  });
 
   const draw = useCallback(
     (isOn: boolean, reseed = false) => {
@@ -60,30 +64,37 @@ export function Checkbox({
 
       svg.replaceChildren();
 
-      const renderer = rough.svg(svg);
-      const seed = reseed ? randomSeed() : stableSeed(inputId);
-      const options = getRoughOptions(theme, "interactive", {
+      const baseOptions = {
         fill: "none",
-        seed,
+        seed: reseed ? randomSeed() : undefined,
         stroke: disabled ? "var(--cr-stroke-muted)" : "var(--cr-stroke)",
-      });
+      };
 
-      svg.appendChild(renderer.rectangle(1, 1, SIZE - 2, SIZE - 2, options));
+      const box = drawRect(1, 1, SIZE - 2, SIZE - 2, baseOptions);
+      if (box) svg.appendChild(box);
 
       if (isOn) {
         const tickOptions = {
-          ...options,
-          strokeWidth: (options.strokeWidth ?? 1) * 1.5,
+          ...baseOptions,
+          seed: reseed ? randomSeed() : stableSeed(`${inputId}-tick`),
+          strokeWidth: 1.8,
         };
-        svg.appendChild(
-          renderer.line(3, SIZE / 2 + 1, SIZE / 2 - 1, SIZE - 4, tickOptions),
+        const left = drawLine(3, SIZE / 2 + 1, SIZE / 2 - 1, SIZE - 4, tickOptions);
+        const right = drawLine(
+          SIZE / 2 - 1,
+          SIZE - 4,
+          SIZE - 3,
+          3,
+          {
+            ...tickOptions,
+            seed: reseed ? randomSeed() : stableSeed(`${inputId}-tick-r`),
+          },
         );
-        svg.appendChild(
-          renderer.line(SIZE / 2 - 1, SIZE - 4, SIZE - 3, 3, tickOptions),
-        );
+        if (left) svg.appendChild(left);
+        if (right) svg.appendChild(right);
       }
     },
-    [disabled, inputId, theme],
+    [disabled, drawLine, drawRect, inputId, svgRef],
   );
 
   useEffect(() => {

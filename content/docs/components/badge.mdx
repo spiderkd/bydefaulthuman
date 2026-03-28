@@ -4,6 +4,8 @@ description: A hand-drawn label badge with rough border and semantic variants.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Badge } from "@/registry/new-york/ui/badge"
 
 <PreviewContainer
@@ -17,9 +19,18 @@ import { Badge } from "@/registry/new-york/ui/badge"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/badge.json
-```
+<InstallTabs slug="badge" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
+  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'variant', type: "BadgeVariant", default: "\"default\"", description: "Controls the `variant` behavior." },
+]} />
 
 ## Variants
 
@@ -65,3 +76,15 @@ Pass `animateOnHover` to redraw the border on hover.
 >
   <Badge animateOnHover>Hover me</Badge>
 </PreviewContainer>
+
+## Accessibility
+
+Badge is decorative by default and has no implicit interactive semantics. If you use it to convey status alone, repeat the same state in nearby text for screen-reader users.
+
+## Examples
+
+```tsx
+import { Badge } from '@/components/crumble/ui/badge'
+
+<Badge>Default</Badge>
+```

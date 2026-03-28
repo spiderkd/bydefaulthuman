@@ -1,0 +1,51 @@
+---
+title: Metrics Comparison Block
+description: Tabbed chart block combining StatCard, LineChart, and PieChart for switching between metric views.
+---
+
+import { MetricsComparisonBlockDemo } from "@/components/block/demos/MetricsComparisonBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="line-chart"
+  code={`import { MetricsComparisonBlock } from '@/components/block/MetricsComparisonBlock'
+
+<MetricsComparisonBlock />`}
+>
+  <MetricsComparisonBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/stat-card.json
+npx shadcn add https://crumble.dev/r/line-chart.json
+npx shadcn add https://crumble.dev/r/pie-chart.json
+npx shadcn add https://crumble.dev/r/tabs.json
+npx shadcn add https://crumble.dev/r/card.json
+```
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'lineLabels', type: "string[]", default: undefined, description: "Labels for the line chart axis." },
+  { prop: 'lineSeries', type: "LineSeries[]", default: undefined, description: "Series data for the line chart." },
+  { prop: 'pieData', type: "PieSlice[]", default: undefined, description: "Slice data for the pie chart." },
+  { prop: 'stats', type: "DashboardStat[]", default: undefined, description: "Stat card data for the block." },
+  { prop: 'tab1Label', type: "string", default: undefined, description: "First tab label." },
+  { prop: 'tab2Label', type: "string", default: undefined, description: "Second tab label." },
+  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
+]} />
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { MetricsComparisonBlock } from '@/components/block/MetricsComparisonBlock'
+
+<MetricsComparisonBlock />
+```

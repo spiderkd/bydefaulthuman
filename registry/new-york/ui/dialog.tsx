@@ -9,18 +9,15 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
-
-// ---------- context ----------
 
 interface DialogContextValue {
   onClose: () => void;
@@ -31,8 +28,6 @@ const DialogContext = createContext<DialogContextValue>({
   onClose: () => {},
   theme: "pencil",
 });
-
-// ---------- root ----------
 
 export interface DialogProps extends CrumbleColorProps {
   children: ReactNode;
@@ -61,17 +56,17 @@ export function Dialog({
   );
 }
 
-// ---------- trigger ----------
-
-export function DialogTrigger({ children, className, ...props }: HTMLAttributes<HTMLSpanElement>) {
+export function DialogTrigger({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement>) {
   return (
     <span className={cn("inline-flex", className)} {...props}>
       {children}
     </span>
   );
 }
-
-// ---------- content (uses native <dialog>) ----------
 
 export type DialogSize = "sm" | "md" | "lg" | "xl";
 
@@ -98,38 +93,42 @@ export function DialogContent({
 }: DialogContentProps) {
   const { onClose, theme } = useContext(DialogContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const panelRef  = useRef<HTMLDivElement>(null);
-  const svgRef    = useRef<SVGSVGElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawRect, svgRef } = useRough({
+    svgRef: externalSvgRef,
+    theme,
+    variant: "border",
+  });
 
-  // Sync open state with native dialog
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
     if (open) {
       if (!el.open) el.showModal();
-    } else {
-      if (el.open) el.close();
+    } else if (el.open) {
+      el.close();
     }
   }, [open]);
 
-  // Native Escape key via dialog cancel event
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
-    const handler = (e: Event) => { e.preventDefault(); onClose(); };
+    const handler = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
     el.addEventListener("cancel", handler);
     return () => el.removeEventListener("cancel", handler);
   }, [onClose]);
 
-  // Click backdrop to close (click on <dialog> itself = backdrop)
   const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     if (e.target === dialogRef.current) onClose();
   };
 
-  // Draw rough border — fresh seed each open so it redraws with new wobble
   const draw = useCallback(() => {
     const panel = panelRef.current;
-    const svg   = svgRef.current;
+    const svg = svgRef.current;
     if (!panel || !svg) return;
 
     svg.replaceChildren();
@@ -139,16 +138,14 @@ export function DialogContent({
     svg.setAttribute("height", String(h));
     svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-    const rc = rough.svg(svg);
-    svg.appendChild(
-      rc.rectangle(1, 1, w - 2, h - 2, getRoughOptions(theme, "border", {
-        fill: "none",
-        seed: randomSeed(), // fresh every open — new wobble each time
-        stroke: "var(--cr-stroke)",
-        strokeWidth: theme === "crayon" ? 2.5 : theme === "ink" ? 1.5 : 1,
-      })),
-    );
-  }, [theme]);
+    const rect = drawRect(1, 1, w - 2, h - 2, {
+      fill: "none",
+      seed: randomSeed(),
+      stroke: "var(--cr-stroke)",
+      strokeWidth: theme === "crayon" ? 2.5 : theme === "ink" ? 1.5 : 1,
+    });
+    if (rect) svg.appendChild(rect);
+  }, [drawRect, svgRef, theme]);
 
   useEffect(() => {
     if (open) {
@@ -167,11 +164,10 @@ export function DialogContent({
 
   return (
     <>
-      {/* Keyframes injected once */}
       <style>{`
         @keyframes crumble-dialog-in {
           from { opacity: 0; transform: scale(0.96) translateY(6px); }
-          to   { opacity: 1; transform: scale(1)    translateY(0); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
         dialog.crumble-dialog::backdrop {
           background: rgba(0,0,0,0.45);
@@ -179,7 +175,7 @@ export function DialogContent({
         }
         @keyframes crumble-backdrop-in {
           from { opacity: 0; }
-          to   { opacity: 1; }
+          to { opacity: 1; }
         }
       `}</style>
 
@@ -194,14 +190,19 @@ export function DialogContent({
       >
         <div
           ref={panelRef}
-          className={cn(
-            "relative bg-background p-6",
-            className,
-          )}
-          style={{ animation: open ? "crumble-dialog-in 200ms cubic-bezier(0.16,1,0.3,1) forwards" : undefined }}
+          className={cn("relative bg-background p-6", className)}
+          style={{
+            animation: open
+              ? "crumble-dialog-in 200ms cubic-bezier(0.16,1,0.3,1) forwards"
+              : undefined,
+          }}
           {...props}
         >
-          <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" />
+          <svg
+            ref={externalSvgRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+          />
           <div className="relative">
             {showClose ? (
               <button
@@ -211,8 +212,8 @@ export function DialogContent({
                 className="absolute -top-1 right-0 text-muted-foreground hover:text-foreground outline-none transition-colors"
               >
                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
-                  <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="13" y1="3" x2="3"  y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </button>
             ) : null}
@@ -224,20 +225,53 @@ export function DialogContent({
   );
 }
 
-// ---------- slots ----------
-
-export function DialogHeader({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("mb-4 flex flex-col gap-1", className)} {...props}>{children}</div>;
+export function DialogHeader({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("mb-4 flex flex-col gap-1", className)} {...props}>
+      {children}
+    </div>
+  );
 }
 
-export function DialogTitle({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={cn("text-base font-semibold leading-none text-foreground", className)} {...(props as object)}>{children}</h2>;
+export function DialogTitle({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h2
+      className={cn("text-base font-semibold leading-none text-foreground", className)}
+      {...(props as object)}
+    >
+      {children}
+    </h2>
+  );
 }
 
-export function DialogDescription({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-muted-foreground", className)} {...(props as object)}>{children}</p>;
+export function DialogDescription({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p className={cn("text-sm text-muted-foreground", className)} {...(props as object)}>
+      {children}
+    </p>
+  );
 }
 
-export function DialogFooter({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("mt-6 flex justify-end gap-2", className)} {...props}>{children}</div>;
+export function DialogFooter({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("mt-6 flex justify-end gap-2", className)} {...props}>
+      {children}
+    </div>
+  );
 }

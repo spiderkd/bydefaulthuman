@@ -132,3 +132,17 @@ import { Scribble } from "@/registry/new-york/ui/scribble";
     avoided.
   </p>
 </PreviewContainer>
+
+## Accessibility
+
+Scribble is decorative and its SVG should not be the only place meaning lives. Keep the underlying content readable without the overlay and avoid using it to hide essential text.
+
+## Examples
+
+```tsx
+import { Scribble } from "@/components/scribble"
+
+<Scribble>
+  <span className="text-base font-medium">Scribbled text</span>
+</Scribble>
+```

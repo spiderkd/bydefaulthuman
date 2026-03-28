@@ -1,0 +1,65 @@
+---
+title: Kanban Board Block
+description: A sprint board with add, move, delete, inline edit, search, and priority filter built from Card, Badge, Avatar, StickyNote, Input, Select, Tooltip, and Button.
+---
+
+import { KanbanColumnBlockDemo } from "@/components/block/demos/KanbanColumnBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="card"
+  code={`import { KanbanColumnBlock } from '@/components/block/KanbanColumnBlock'
+
+<KanbanColumnBlock />`}
+>
+  <KanbanColumnBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/card.json
+npx shadcn add https://crumble.dev/r/badge.json
+npx shadcn add https://crumble.dev/r/avatar.json
+npx shadcn add https://crumble.dev/r/sticky-note.json
+npx shadcn add https://crumble.dev/r/input.json
+npx shadcn add https://crumble.dev/r/select.json
+npx shadcn add https://crumble.dev/r/tooltip.json
+npx shadcn add https://crumble.dev/r/button.json
+npx shadcn add https://crumble.dev/r/textarea.json
+```
+
+## Features
+
+- Add task with an inline form per column
+- Move task across columns with hover actions
+- Delete task from any column
+- Inline edit by clicking a task title
+- Search filters tasks across all columns
+- Priority filter narrows the board globally
+- `onBoardChange` fires the full updated board after every mutation
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'addTaskLabel', type: "string", default: undefined, description: "Label for the add task action." },
+  { prop: 'emptyStateLabel', type: "string", default: undefined, description: "Text shown when no tasks match filters." },
+  { prop: 'initialColumns', type: "KanbanColumn[]", default: undefined, description: "Initial board columns." },
+  { prop: 'onBoardChange', type: "(columns: KanbanColumn[]) => void", default: undefined, description: "Callback fired after any board mutation." },
+  { prop: 'priorityFilterLabel', type: "string", default: undefined, description: "Prefix used in the priority filter." },
+  { prop: 'searchPlaceholder', type: "string", default: undefined, description: "Search input placeholder." },
+  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
+]} />
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { KanbanColumnBlock } from '@/components/block/KanbanColumnBlock'
+
+<KanbanColumnBlock />
+```

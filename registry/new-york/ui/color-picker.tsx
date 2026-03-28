@@ -1,22 +1,28 @@
 "use client";
 
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
-  randomSeed,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
 
 const SWATCHES = [
-  "#ef4444", "#f97316", "#eab308", "#22c55e",
-  "#06b6d4", "#3b82f6", "#8b5cf6", "#ec4899",
-  "#ffffff", "#d1d5db", "#6b7280", "#111827",
+  "#ef4444",
+  "#f97316",
+  "#eab308",
+  "#22c55e",
+  "#06b6d4",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ec4899",
+  "#ffffff",
+  "#d1d5db",
+  "#6b7280",
+  "#111827",
 ];
 
 export interface ColorPickerProps extends CrumbleColorProps {
@@ -43,8 +49,14 @@ function Swatch({
   swatchId: string;
   theme: CrumbleTheme;
 }) {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const SIZE = 28;
+  const { drawCircle, svgRef } = useRough({
+    stableId: swatchId,
+    svgRef: externalSvgRef,
+    theme,
+    variant: isSelected ? "interactive" : "border",
+  });
 
   const draw = useCallback(
     (hover = false) => {
@@ -58,17 +70,14 @@ function Swatch({
 
       if (!isSelected && !hover) return;
 
-      const rc = rough.svg(svg);
-      svg.appendChild(
-        rc.circle(SIZE / 2, SIZE / 2, SIZE - 3, getRoughOptions(theme, isSelected ? "interactive" : "border", {
-          fill: "none",
-          seed: stableSeed(swatchId),
-          stroke: color === "#ffffff" ? "#d1d5db" : color,
-          strokeWidth: isSelected ? 2 : 1,
-        })),
-      );
+      const circle = drawCircle(SIZE / 2, SIZE / 2, SIZE - 3, {
+        fill: "none",
+        stroke: color === "#ffffff" ? "#d1d5db" : color,
+        strokeWidth: isSelected ? 2 : 1,
+      });
+      if (circle) svg.appendChild(circle);
     },
-    [color, isSelected, swatchId, theme],
+    [color, drawCircle, isSelected, svgRef],
   );
 
   useEffect(() => {
@@ -91,7 +100,11 @@ function Swatch({
         className="absolute inset-1 rounded-full border border-black/10"
         style={{ background: color }}
       />
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
     </button>
   );
 }
@@ -117,6 +130,12 @@ export function ColorPicker({
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawRect } = useRough({
+    stableId: `${pickerId}-input`,
+    svgRef: inputSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const value = controlledValue ?? internalValue;
 
@@ -132,15 +151,17 @@ export function ColorPicker({
     svg.setAttribute("height", String(H));
     svg.setAttribute("viewBox", `0 0 ${w} ${H}`);
 
-    const rc = rough.svg(svg);
-    svg.appendChild(rc.rectangle(1, 1, w - 2, H - 2, getRoughOptions(theme, "border", {
+    const rect = drawRect(1, 1, w - 2, H - 2, {
       fill: "none",
-      seed: stableSeed(`${pickerId}-input`),
       stroke: "var(--cr-stroke-muted)",
-    })));
-  }, [pickerId, theme]);
+    });
+    if (rect) svg.appendChild(rect);
+  }, [drawRect]);
 
-  useEffect(() => { drawInput(); }, [drawInput]);
+  useEffect(() => {
+    drawInput();
+  }, [drawInput]);
+
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
@@ -172,7 +193,6 @@ export function ColorPicker({
         </span>
       ) : null}
 
-      {/* Swatch grid */}
       <div className="grid grid-cols-6 gap-1.5">
         {swatches.map((color) => (
           <Swatch
@@ -186,11 +206,17 @@ export function ColorPicker({
         ))}
       </div>
 
-      {/* Hex input */}
       <div ref={wrapperRef} className="relative" style={{ height: 36 }}>
-        <svg ref={inputSvgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+        <svg
+          ref={inputSvgRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-visible"
+        />
         <div className="absolute inset-0 flex items-center gap-2 px-2">
-          <div className="h-5 w-5 shrink-0 rounded-full border border-black/10" style={{ background: value }} />
+          <div
+            className="h-5 w-5 shrink-0 rounded-full border border-black/10"
+            style={{ background: value }}
+          />
           <input
             type="text"
             value={hexInput}

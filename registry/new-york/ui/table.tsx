@@ -9,28 +9,25 @@ import {
   type TdHTMLAttributes,
   type ThHTMLAttributes,
 } from "react";
-import rough from "roughjs";
+import { createContext } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
-
-// ---------- context ----------
-
-import { createContext } from "react";
 
 interface TableContextValue {
   rowIndex: number;
   theme: CrumbleTheme;
 }
-const TableContext = createContext<TableContextValue>({ rowIndex: 0, theme: "pencil" });
 
-// ---------- Table root ----------
+const TableContext = createContext<TableContextValue>({
+  rowIndex: 0,
+  theme: "pencil",
+});
 
 export interface TableProps
   extends HTMLAttributes<HTMLDivElement>,
@@ -51,7 +48,11 @@ export function Table({
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
   return (
-    <div className={cn("w-full overflow-auto", className)} style={roughStyle} {...props}>
+    <div
+      className={cn("w-full overflow-auto", className)}
+      style={roughStyle}
+      {...props}
+    >
       <table className="w-full border-collapse">
         <TableContext.Provider value={{ rowIndex: 0, theme }}>
           {children}
@@ -61,9 +62,11 @@ export function Table({
   );
 }
 
-// ---------- Header ----------
-
-export function TableHeader({ children, className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
+export function TableHeader({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead className={cn("", className)} {...(props as object)}>
       {children}
@@ -71,9 +74,11 @@ export function TableHeader({ children, className, ...props }: HTMLAttributes<HT
   );
 }
 
-// ---------- Body ----------
-
-export function TableBody({ children, className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
+export function TableBody({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tbody className={cn("", className)} {...(props as object)}>
       {children}
@@ -81,16 +86,25 @@ export function TableBody({ children, className, ...props }: HTMLAttributes<HTML
   );
 }
 
-// ---------- Row ----------
-
 export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
   index?: number;
 }
 
-export function TableRow({ children, className, index = 0, ...props }: TableRowProps) {
+export function TableRow({
+  children,
+  className,
+  index = 0,
+  ...props
+}: TableRowProps) {
   const { theme } = useContext(TableContext);
   const rowRef = useRef<HTMLTableRowElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawLine, svgRef } = useRough({
+    stableId: `table-row-${index}`,
+    svgRef: externalSvgRef,
+    theme,
+    variant: "border",
+  });
 
   const draw = useCallback(() => {
     const row = rowRef.current;
@@ -103,15 +117,12 @@ export function TableRow({ children, className, index = 0, ...props }: TableRowP
     svg.setAttribute("height", "6");
     svg.setAttribute("viewBox", `0 0 ${w} 6`);
 
-    const rc = rough.svg(svg);
-    svg.appendChild(
-      rc.line(0, 3, w, 3, getRoughOptions(theme, "border", {
-        seed: stableSeed(`table-row-${index}`),
-        stroke: "var(--cr-stroke-muted)",
-        strokeWidth: theme === "crayon" ? 1.5 : 0.8,
-      })),
-    );
-  }, [index, theme]);
+    const line = drawLine(0, 3, w, 3, {
+      stroke: "var(--cr-stroke-muted)",
+      strokeWidth: theme === "crayon" ? 1.5 : 0.8,
+    });
+    if (line) svg.appendChild(line);
+  }, [drawLine, svgRef, theme]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -134,22 +145,27 @@ export function TableRow({ children, className, index = 0, ...props }: TableRowP
         {...(props as object)}
       >
         {children}
-        {/* Rough separator line at row bottom */}
         <td
           className="p-0 absolute bottom-0 left-0 right-0 pointer-events-none"
           style={{ height: 6 }}
           aria-hidden="true"
         >
-          <svg ref={svgRef} aria-hidden="true" className="overflow-visible absolute inset-0" />
+          <svg
+            ref={externalSvgRef}
+            aria-hidden="true"
+            className="overflow-visible absolute inset-0"
+          />
         </td>
       </tr>
     </TableContext.Provider>
   );
 }
 
-// ---------- Head cell ----------
-
-export function TableHead({ children, className, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
+export function TableHead({
+  children,
+  className,
+  ...props
+}: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
       className={cn(
@@ -163,9 +179,11 @@ export function TableHead({ children, className, ...props }: ThHTMLAttributes<HT
   );
 }
 
-// ---------- Data cell ----------
-
-export function TableCell({ children, className, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
+export function TableCell({
+  children,
+  className,
+  ...props
+}: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
       className={cn("px-3 py-3 text-sm text-foreground", className)}
@@ -176,9 +194,11 @@ export function TableCell({ children, className, ...props }: TdHTMLAttributes<HT
   );
 }
 
-// ---------- Caption ----------
-
-export function TableCaption({ children, className, ...props }: HTMLAttributes<HTMLTableCaptionElement>) {
+export function TableCaption({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLTableCaptionElement>) {
   return (
     <caption
       className={cn("mt-2 text-xs text-muted-foreground text-center", className)}

@@ -7,13 +7,8 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import rough from "roughjs";
 import { cn } from "@/lib/utils";
-import {
-  getRoughOptions,
-  stableSeed,
-  type CrumbleTheme,
-} from "@/lib/rough";
+import { type CrumbleTheme } from "@/lib/rough";
 import { useRough } from "@/hooks/use-rough";
 
 export type HighlightType =
@@ -67,8 +62,13 @@ export function RoughHighlight({
   type = "underline",
 }: RoughHighlightProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const { animateOnMount, theme } = useRough({ theme: themeProp });
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { animateOnMount, drawPath, getOptions, rc, svgRef, theme } = useRough({
+    stableId: id,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
   const shouldAnimate = animate && animateOnMount;
   const duration =
     animationDuration ??
@@ -85,54 +85,70 @@ export function RoughHighlight({
     const width = container.offsetWidth;
     const height = container.offsetHeight;
     const pad = 4;
+    const borderOptions = {
+      stroke: color,
+      strokeWidth: theme === "crayon" ? 3 : theme === "ink" ? 2 : 1,
+    };
 
     svg.setAttribute("width", String(width));
     svg.setAttribute("height", String(height + 8));
     svg.setAttribute("viewBox", `0 0 ${width} ${height + 8}`);
 
-    const rc = rough.svg(svg);
-    const options = getRoughOptions(theme, "border", {
-      seed: id ? stableSeed(id) : undefined,
-      stroke: color,
-      strokeWidth: theme === "crayon" ? 3 : theme === "ink" ? 2 : 1,
-    });
-
     let node: SVGGElement | null = null;
 
     switch (type) {
       case "underline":
-        node = rc.line(-pad, height + 2, width + pad, height + 2, options) as SVGGElement;
+        node = drawPath(
+          `M ${-pad} ${height + 2} L ${width + pad} ${height + 2}`,
+          borderOptions,
+        ) as SVGGElement;
         break;
       case "box":
-        node = rc.rectangle(-pad, -pad, width + pad * 2, height + pad * 2, {
-          ...options,
-          fill: "none",
-        }) as SVGGElement;
+        node = drawPath(
+          `M ${-pad} ${-pad} L ${width + pad} ${-pad} L ${width + pad} ${height + pad} L ${-pad} ${height + pad} Z`,
+          { ...borderOptions, fill: "none" },
+        ) as SVGGElement;
         break;
       case "circle":
-        node = rc.ellipse(width / 2, height / 2, width + pad * 3, height + pad * 3, {
-          ...options,
-          fill: "none",
-        }) as SVGGElement;
+        node = rc.current?.ellipse(
+          width / 2,
+          height / 2,
+          width + pad * 3,
+          height + pad * 3,
+          getOptions({ ...borderOptions, fill: "none" }),
+        ) as SVGGElement | null;
         break;
       case "highlight":
-        node = rc.rectangle(-pad, 0, width + pad * 2, height, {
-          ...options,
-          fill: color,
-          fillStyle: "solid",
-          fillWeight: 1,
-          roughness: 1.5,
-          stroke: "none",
-        }) as SVGGElement;
-        node.style.opacity = String(opacity);
+        node = drawPath(
+          `M ${-pad} 0 L ${width + pad} 0 L ${width + pad} ${height} L ${-pad} ${height} Z`,
+          {
+            ...borderOptions,
+            fill: color,
+            fillStyle: "solid",
+            fillWeight: 1,
+            roughness: 1.5,
+            stroke: "none",
+          },
+        ) as SVGGElement;
+        if (node) node.style.opacity = String(opacity);
         break;
       case "strike-through":
-        node = rc.line(-pad, height / 2, width + pad, height / 2, options) as SVGGElement;
+        node = drawPath(
+          `M ${-pad} ${height / 2} L ${width + pad} ${height / 2}`,
+          borderOptions,
+        ) as SVGGElement;
         break;
       case "bracket": {
-        const left = rc.line(-pad, 0, -pad, height, options) as SVGGElement;
-        const right = rc.line(width + pad, 0, width + pad, height, options) as SVGGElement;
+        const left = drawPath(
+          `M ${-pad} 0 L ${-pad} ${height}`,
+          borderOptions,
+        ) as SVGGElement;
+        const right = drawPath(
+          `M ${width + pad} 0 L ${width + pad} ${height}`,
+          borderOptions,
+        ) as SVGGElement;
 
+        if (!left || !right) return;
         svg.append(left, right);
 
         if (shouldAnimate) {
@@ -145,12 +161,24 @@ export function RoughHighlight({
         return;
     }
 
+    if (!node) return;
     svg.appendChild(node);
 
     if (shouldAnimate) {
       animateGroup(node, duration);
     }
-  }, [color, duration, id, opacity, shouldAnimate, theme, type]);
+  }, [
+    color,
+    drawPath,
+    duration,
+    getOptions,
+    opacity,
+    rc,
+    shouldAnimate,
+    svgRef,
+    theme,
+    type,
+  ]);
 
   useEffect(() => {
     draw();
@@ -174,11 +202,16 @@ export function RoughHighlight({
     >
       {children}
       <svg
-        ref={svgRef}
+        ref={externalSvgRef}
         aria-hidden="true"
         className="pointer-events-none absolute -left-1 overflow-visible"
         style={{
-          top: type === "underline" ? undefined : type === "highlight" ? 0 : "-4px",
+          top:
+            type === "underline"
+              ? undefined
+              : type === "highlight"
+                ? 0
+                : "-4px",
         }}
       />
     </span>

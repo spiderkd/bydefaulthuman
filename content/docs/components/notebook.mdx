@@ -4,6 +4,8 @@ description: A hand-drawn lined paper container with ruled lines and a red margi
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Notebook } from "@/registry/new-york/ui/notebook"
 
 <PreviewContainer
@@ -25,9 +27,18 @@ import { Notebook } from "@/registry/new-york/ui/notebook"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/notebook.json
-```
+<InstallTabs slug="notebook" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'lineColor', type: "string", default: undefined, description: "Overrides the notebook line color." },
+  { prop: 'lineSpacing', type: "number", default: "24", description: "Controls the spacing between notebook lines." },
+  { prop: 'marginColor', type: "string", default: undefined, description: "Overrides the notebook margin color." },
+  { prop: 'showMargin', type: "boolean", default: "true", description: "Shows the notebook margin line." },
+  { prop: 'theme', type: "CrumbleTheme", default: "== \"ink\"", description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Without margin
 
@@ -96,3 +107,18 @@ npx shadcn add https://crumble.dev/r/notebook.json
     </Notebook>
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Notebook is a decorative layout primitive. The ruled lines and margin are visual only, so all meaningful content must remain readable in the text children themselves.
+
+## Examples
+
+```tsx
+import { Notebook } from '@/components/crumble/ui/notebook'
+
+<Notebook>
+  <p>Dear diary,</p>
+  <p>Today I shipped the design system.</p>
+</Notebook>
+```

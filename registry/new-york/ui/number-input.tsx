@@ -8,11 +8,10 @@ import {
   useState,
   type InputHTMLAttributes,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
   CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
   stableSeed,
   type CrumbleColorProps,
@@ -20,8 +19,7 @@ import {
 } from "@/lib/rough";
 
 export interface NumberInputProps
-  extends
-    Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange">,
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange">,
     CrumbleColorProps {
   className?: string;
   defaultValue?: number;
@@ -55,7 +53,13 @@ function StepButton({
   theme: CrumbleTheme;
   btnId: string;
 }) {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
+  const { drawLine, svgRef } = useRough({
+    stableId: btnId,
+    svgRef: externalSvgRef,
+    theme,
+    variant: "interactive",
+  });
 
   const draw = useCallback(() => {
     const svg = svgRef.current;
@@ -65,34 +69,33 @@ function StepButton({
     svg.setAttribute("height", String(HEIGHT));
     svg.setAttribute("viewBox", `0 0 ${BTN_W} ${HEIGHT}`);
 
-    const rc = rough.svg(svg);
-    const opts = getRoughOptions(theme, "interactive", {
+    const stroke = disabled ? "var(--cr-stroke-muted)" : "var(--cr-stroke)";
+    const edgeOptions = {
       fill: "none",
-      seed: stableSeed(btnId),
-      stroke: disabled ? "var(--cr-stroke-muted)" : "var(--cr-stroke)",
-    });
+      stroke,
+    };
 
-    // Only draw the relevant sides of the border
     if (side === "left") {
-      // Left, top, bottom edges + right edge shared with input
-      svg.appendChild(rc.line(1, 1, 1, HEIGHT - 1, opts));
-      svg.appendChild(rc.line(1, 1, BTN_W, 1, opts));
-      svg.appendChild(rc.line(1, HEIGHT - 1, BTN_W, HEIGHT - 1, opts));
+      [drawLine(1, 1, 1, HEIGHT - 1, edgeOptions), drawLine(1, 1, BTN_W, 1, edgeOptions), drawLine(1, HEIGHT - 1, BTN_W, HEIGHT - 1, edgeOptions)]
+        .forEach((line) => line && svg.appendChild(line));
     } else {
-      svg.appendChild(rc.line(0, 1, BTN_W - 1, 1, opts));
-      svg.appendChild(rc.line(BTN_W - 1, 1, BTN_W - 1, HEIGHT - 1, opts));
-      svg.appendChild(rc.line(0, HEIGHT - 1, BTN_W - 1, HEIGHT - 1, opts));
+      [drawLine(0, 1, BTN_W - 1, 1, edgeOptions), drawLine(BTN_W - 1, 1, BTN_W - 1, HEIGHT - 1, edgeOptions), drawLine(0, HEIGHT - 1, BTN_W - 1, HEIGHT - 1, edgeOptions)]
+        .forEach((line) => line && svg.appendChild(line));
     }
 
-    // Symbol
     const cx = BTN_W / 2;
     const cy = HEIGHT / 2;
-    const symOpts = { ...opts, strokeWidth: (opts.strokeWidth ?? 1) * 1.2 };
-    svg.appendChild(rc.line(cx - 5, cy, cx + 5, cy, symOpts)); // horizontal bar (both + and −)
+    const symbolOptions = {
+      stroke,
+      strokeWidth: 1.5,
+    };
+    const h = drawLine(cx - 5, cy, cx + 5, cy, symbolOptions);
+    if (h) svg.appendChild(h);
     if (label === "+") {
-      svg.appendChild(rc.line(cx, cy - 5, cx, cy + 5, symOpts)); // vertical bar
+      const v = drawLine(cx, cy - 5, cx, cy + 5, symbolOptions);
+      if (v) svg.appendChild(v);
     }
-  }, [btnId, disabled, label, side, theme]);
+  }, [disabled, drawLine, side, svgRef]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -113,7 +116,7 @@ function StepButton({
       aria-label={label === "+" ? "increment" : "decrement"}
     >
       <svg
-        ref={svgRef}
+        ref={externalSvgRef}
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-visible"
       />
@@ -141,7 +144,7 @@ export function NumberInput({
 }: NumberInputProps) {
   const [internalValue, setInternalValue] = useState(defaultValue);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const inputSvgRef = useRef<SVGSVGElement>(null);
   const [focused, setFocused] = useState(false);
 
   const value = controlledValue ?? internalValue;
@@ -150,9 +153,15 @@ export function NumberInput({
   const { theme: contextTheme } = useContext(CrumbleContext);
   const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawLine } = useRough({
+    stableId: inputId,
+    svgRef: inputSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const drawBorder = useCallback(() => {
-    const svg = svgRef.current;
+    const svg = inputSvgRef.current;
     const wrapper = wrapperRef.current;
     if (!svg || !wrapper) return;
 
@@ -162,19 +171,23 @@ export function NumberInput({
     svg.setAttribute("height", String(HEIGHT));
     svg.setAttribute("viewBox", `0 0 ${w} ${HEIGHT}`);
 
-    const rc = rough.svg(svg);
-    // Only top and bottom lines — left/right are handled by StepButton borders
-    const opts = getRoughOptions(theme, "border", {
-      seed: stableSeed(inputId),
-      stroke: error
-        ? "var(--cr-stroke-error)"
-        : focused
-          ? "var(--cr-stroke)"
-          : "var(--cr-stroke-muted)",
+    const strokeColor = error
+      ? "var(--cr-stroke-error)"
+      : focused
+        ? "var(--cr-stroke)"
+        : "var(--cr-stroke-muted)";
+
+    const top = drawLine(0, 1, w, 1, {
+      seed: stableSeed(`${inputId}-top`),
+      stroke: strokeColor,
     });
-    svg.appendChild(rc.line(0, 1, w, 1, opts));
-    svg.appendChild(rc.line(0, HEIGHT - 1, w, HEIGHT - 1, opts));
-  }, [error, focused, inputId, theme]);
+    const bottom = drawLine(0, HEIGHT - 1, w, HEIGHT - 1, {
+      seed: stableSeed(`${inputId}-bottom`),
+      stroke: strokeColor,
+    });
+    if (top) svg.appendChild(top);
+    if (bottom) svg.appendChild(bottom);
+  }, [drawLine, error, focused, inputId]);
 
   useEffect(() => {
     drawBorder();
@@ -222,7 +235,7 @@ export function NumberInput({
         />
         <div className="relative flex-1" style={{ height: HEIGHT }}>
           <svg
-            ref={svgRef}
+            ref={inputSvgRef}
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 overflow-visible"
           />

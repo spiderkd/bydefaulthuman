@@ -4,6 +4,8 @@ description: A hand-drawn card container with an optional stacked paper effect.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
@@ -32,9 +34,18 @@ import {
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/card.json
-```
+<InstallTabs slug="card" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'padding', type: "number", default: "20", description: "Adds padding around the component content." },
+  { prop: 'stacked', type: "boolean", default: "false", description: "Controls the `stacked` behavior." },
+  { prop: 'style', type: "CSSProperties", default: undefined, description: "Controls the `style` behavior." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Stacked effect
 
@@ -117,3 +128,18 @@ npx shadcn add https://crumble.dev/r/card.json
     </Card>
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+This component preserves the semantics of the underlying native elements where applicable. Provide visible labels and nearby text when the sketch styling is only decorative reinforcement.
+
+## Examples
+
+```tsx
+import { Card } from '@/components/crumble/ui/card'
+
+<Card padding={20}>
+  <p className="font-medium">Card title</p>
+  <p className="mt-1 text-sm text-muted-foreground">Some content here.</p>
+</Card>
+```

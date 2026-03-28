@@ -1,0 +1,57 @@
+---
+title: Feedback Form Block
+description: An NPS and product feedback form combining Rating, Textarea, Input, Checkbox, and Button.
+---
+
+import { FeedbackFormBlockDemo } from "@/components/block/demos/FeedbackFormBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="rating"
+  code={`import { FeedbackFormBlock } from '@/components/block/FeedbackFormBlock'
+
+<FeedbackFormBlock />`}
+>
+  <FeedbackFormBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/rating.json
+npx shadcn add https://crumble.dev/r/textarea.json
+npx shadcn add https://crumble.dev/r/input.json
+npx shadcn add https://crumble.dev/r/checkbox.json
+npx shadcn add https://crumble.dev/r/button.json
+npx shadcn add https://crumble.dev/r/card.json
+```
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'emailLabel', type: "string", default: undefined, description: "Email field label." },
+  { prop: 'emailPlaceholder', type: "string", default: undefined, description: "Email input placeholder." },
+  { prop: 'messageLabel', type: "string", default: undefined, description: "Textarea label." },
+  { prop: 'messagePlaceholder', type: "string", default: undefined, description: "Textarea placeholder." },
+  { prop: 'onSubmit', type: "(data: FeedbackData) => void | Promise<void>", default: undefined, description: "Callback fired when the form submits." },
+  { prop: 'ratingLabel', type: "string", default: undefined, description: "Label shown above the rating input." },
+  { prop: 'ratingLabels', type: "string[]", default: undefined, description: "Labels matched to rating values." },
+  { prop: 'submitLabel', type: "string", default: undefined, description: "Submit button text." },
+  { prop: 'subscribeLabel', type: "string", default: undefined, description: "Checkbox label." },
+  { prop: 'successBody', type: "string", default: undefined, description: "Body copy shown after submit." },
+  { prop: 'successTitle', type: "string", default: undefined, description: "Title shown after submit." },
+  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
+]} />
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { FeedbackFormBlock } from '@/components/block/FeedbackFormBlock'
+
+<FeedbackFormBlock />
+```

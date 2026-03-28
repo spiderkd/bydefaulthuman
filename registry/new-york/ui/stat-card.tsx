@@ -2,17 +2,14 @@
 
 import {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import rough from "roughjs";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   randomSeed,
   resolveRoughVars,
   stableSeed,
@@ -51,37 +48,51 @@ export function StatCard({
   ...props
 }: StatCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef       = useRef<SVGSVGElement>(null);
-  const trendSvgRef  = useRef<SVGSVGElement>(null);
+  const borderSvgRef = useRef<SVGSVGElement>(null);
+  const trendSvgRef = useRef<SVGSVGElement>(null);
   const cardId = id ?? `stat-${label.toLowerCase().replace(/\s+/g, "-")}`;
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const {
+    animateOnHover: animateFromContext,
+    drawRect,
+    svgRef,
+    theme,
+  } = useRough({
+    stableId: cardId,
+    svgRef: borderSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
+  const { drawLine: drawTrendLine } = useRough({
+    stableId: `${cardId}-trend`,
+    svgRef: trendSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
-  // Card border
-  const draw = useCallback((reseed = false) => {
-    const container = containerRef.current;
-    const svg = svgRef.current;
-    if (!container || !svg) return;
+  const draw = useCallback(
+    (reseed = false) => {
+      const container = containerRef.current;
+      const svg = svgRef.current;
+      if (!container || !svg) return;
 
-    svg.replaceChildren();
-    const w = container.offsetWidth;
-    const h = container.offsetHeight;
-    svg.setAttribute("width", String(w));
-    svg.setAttribute("height", String(h));
-    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+      svg.replaceChildren();
+      const w = container.offsetWidth;
+      const h = container.offsetHeight;
+      svg.setAttribute("width", String(w));
+      svg.setAttribute("height", String(h));
+      svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-    const rc = rough.svg(svg);
-    svg.appendChild(
-      rc.rectangle(1, 1, w - 2, h - 2, getRoughOptions(theme, "border", {
+      const rect = drawRect(1, 1, w - 2, h - 2, {
         fill: "none",
-        seed: reseed ? randomSeed() : stableSeed(cardId),
+        seed: reseed ? randomSeed() : undefined,
         stroke: "var(--cr-stroke-muted)",
-      })),
-    );
-  }, [cardId, theme]);
+      });
+      if (rect) svg.appendChild(rect);
+    },
+    [drawRect, svgRef],
+  );
 
-  // Trend arrow
   const drawTrend = useCallback(() => {
     const svg = trendSvgRef.current;
     if (!svg || !trend || trend === "flat") return;
@@ -91,28 +102,37 @@ export function StatCard({
     svg.setAttribute("height", "16");
     svg.setAttribute("viewBox", "0 0 16 16");
 
-    const rc = rough.svg(svg);
-    const color = trend === "up"
-      ? "oklch(0.5 0.15 145)"  // green
-      : "var(--cr-stroke-error)";
-
-    const opts = getRoughOptions(theme, "border", {
-      seed: stableSeed(`${cardId}-trend`),
+    const color =
+      trend === "up" ? "oklch(0.5 0.15 145)" : "var(--cr-stroke-error)";
+    const baseOpts = {
       stroke: color,
       strokeWidth: theme === "crayon" ? 2 : 1.3,
-    });
+    };
 
     if (trend === "up") {
-      svg.appendChild(rc.line(3, 12, 8, 4,  opts));
-      svg.appendChild(rc.line(8, 4,  13, 12, { ...opts, seed: stableSeed(`${cardId}-trend-r`) }));
+      const left = drawTrendLine(3, 12, 8, 4, baseOpts);
+      const right = drawTrendLine(8, 4, 13, 12, {
+        ...baseOpts,
+        seed: stableSeed(`${cardId}-trend-r`),
+      });
+      if (left) svg.appendChild(left);
+      if (right) svg.appendChild(right);
     } else {
-      svg.appendChild(rc.line(3, 4,  8, 12, opts));
-      svg.appendChild(rc.line(8, 12, 13, 4, { ...opts, seed: stableSeed(`${cardId}-trend-r`) }));
+      const left = drawTrendLine(3, 4, 8, 12, baseOpts);
+      const right = drawTrendLine(8, 12, 13, 4, {
+        ...baseOpts,
+        seed: stableSeed(`${cardId}-trend-r`),
+      });
+      if (left) svg.appendChild(left);
+      if (right) svg.appendChild(right);
     }
-  }, [cardId, theme, trend]);
+  }, [cardId, drawTrendLine, theme, trend]);
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => { draw(); drawTrend(); });
+    const id = requestAnimationFrame(() => {
+      draw();
+      drawTrend();
+    });
     return () => cancelAnimationFrame(id);
   }, [draw, drawTrend]);
 
@@ -125,27 +145,45 @@ export function StatCard({
   }, [draw]);
 
   const trendColor =
-    trend === "up" ? "text-[oklch(0.5_0.15_145)]" :
-    trend === "down" ? "text-destructive" :
-    "text-muted-foreground";
+    trend === "up"
+      ? "text-[oklch(0.5_0.15_145)]"
+      : trend === "down"
+        ? "text-destructive"
+        : "text-muted-foreground";
 
   return (
     <div
       ref={containerRef}
       className={cn("relative p-5 min-w-[160px]", className)}
       style={roughStyle}
-      onMouseEnter={() => { if (animateOnHover) draw(true); }}
-      onMouseLeave={() => { if (animateOnHover) draw(false); }}
+      onMouseEnter={() => {
+        if (animateOnHover && animateFromContext) draw(true);
+      }}
+      onMouseLeave={() => {
+        if (animateOnHover && animateFromContext) draw(false);
+      }}
       {...props}
     >
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" />
+      <svg
+        ref={borderSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+      />
       <div className="relative flex flex-col gap-1">
-        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </p>
         <p className="text-3xl font-semibold tabular-nums text-foreground">{value}</p>
-        {(trend || trendLabel || description) ? (
+        {trend || trendLabel || description ? (
           <div className="flex items-center gap-1.5 mt-0.5">
             {trend ? (
-              <svg ref={trendSvgRef} aria-hidden="true" width="16" height="16" className="overflow-visible flex-shrink-0" />
+              <svg
+                ref={trendSvgRef}
+                aria-hidden="true"
+                width="16"
+                height="16"
+                className="overflow-visible flex-shrink-0"
+              />
             ) : null}
             {trendLabel ? (
               <span className={cn("text-xs", trendColor)}>{trendLabel}</span>

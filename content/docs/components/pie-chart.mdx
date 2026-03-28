@@ -4,6 +4,8 @@ description: A hand-drawn pie or donut chart with hachure-filled slices and d3-s
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { PieChart } from "@/registry/new-york/ui/pie-chart";
 import { PieChartSourcesDemo } from "@/components/demos/pie-chart-demo";
 
@@ -32,10 +34,21 @@ import { PieChartSourcesDemo } from "@/components/demos/pie-chart-demo";
 
 ## Installation
 
-```bash
-npm install d3-shape d3-scale
-npx shadcn add https://crumble.dev/r/pie-chart.json
-```
+<InstallTabs slug="pie-chart" peerDeps={["d3-shape", "d3-scale"]} />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animateOnMount', type: "boolean", default: "true", description: "Animates the component when it first renders." },
+  { prop: 'data', type: "PieChartSlice[]", default: undefined, description: "Data used to render the component.", required: true },
+  { prop: 'donut', type: "boolean", default: "false", description: "Renders the pie chart as a donut." },
+  { prop: 'formatValue', type: "(v: number, total: number) => string", default: "(v", description: "Formats the displayed numeric value." },
+  { prop: 'height', type: "number", default: "260", description: "Sets the rendered height in pixels." },
+  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
+  { prop: 'showLabels', type: "boolean", default: "true", description: "Shows labels directly on the chart." },
+  { prop: 'showLegend', type: "boolean", default: "true", description: "Shows the chart legend." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+]} />
 
 ## Donut variant
 
@@ -124,3 +137,21 @@ npx shadcn add https://crumble.dev/r/pie-chart.json
     />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+PieChart conveys proportion visually, so provide supporting labels or summaries in text when the slice breakdown is important. Avoid relying on color alone to distinguish categories.
+
+## Examples
+
+```tsx
+import { PieChart } from '@/components/crumble/ui/pie-chart'
+
+<PieChart
+  data={[
+    { label: "Design",      value: 40 },
+    { label: "Engineering", value: 35 },
+    { label: "Marketing",   value: 25 },
+  ]}
+/>
+```

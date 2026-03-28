@@ -116,8 +116,35 @@ export function useRough({
     [getOptions, getRenderer],
   );
 
+  const drawPolygon = useCallback(
+    (points: [number, number][], extra?: Partial<Options>) => {
+      const rc = getRenderer();
+      if (!rc) return null;
+
+      return rc.polygon(points, getOptions(extra));
+    },
+    [getOptions, getRenderer],
+  );
+
+  const drawEllipse = useCallback(
+    (
+      cx: number,
+      cy: number,
+      width: number,
+      height: number,
+      extra?: Partial<Options>,
+    ) => {
+      const rc = getRenderer();
+      if (!rc) return null;
+
+      return rc.ellipse(cx, cy, width, height, getOptions(extra));
+    },
+    [getOptions, getRenderer],
+  );
   return {
     animateOnHover,
+    drawEllipse,
+    drawPolygon,
     animateOnMount,
     drawCircle,
     drawLine,

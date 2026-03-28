@@ -1,0 +1,47 @@
+---
+title: Onboarding Stepper Block
+description: A multi-step onboarding wizard with a hand-drawn progress bar and timeline steps.
+---
+
+import { OnboardingStepperBlockDemo } from "@/components/block/demos/OnboardingStepperBlockDemo";
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
+
+<PreviewContainer
+  componentName="progress"
+  code={`import { OnboardingStepperBlock } from '@/components/block/OnboardingStepperBlock'
+
+<OnboardingStepperBlock />`}
+>
+  <OnboardingStepperBlockDemo />
+</PreviewContainer>
+
+## Installation
+
+```bash
+npx shadcn add https://crumble.dev/r/progress.json
+npx shadcn add https://crumble.dev/r/timeline.json
+npx shadcn add https://crumble.dev/r/button.json
+npx shadcn add https://crumble.dev/r/card.json
+```
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'onComplete', type: "() => void", default: undefined, description: "Callback fired when the final step completes." },
+  { prop: 'onStepChange', type: "(stepIndex: number) => void", default: undefined, description: "Callback fired when the active step changes." },
+  { prop: 'steps', type: "OnboardingStep[]", default: undefined, description: "Stepper steps rendered in order." },
+  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
+]} />
+
+## Accessibility
+
+This block is composed from accessible Crumble components. Preserve visible labels, button text, and supporting copy when adapting it so the layout remains understandable without the visual styling.
+
+## Examples
+
+```tsx
+import { OnboardingStepperBlock } from '@/components/block/OnboardingStepperBlock'
+
+<OnboardingStepperBlock />
+```

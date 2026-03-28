@@ -4,6 +4,8 @@ description: A hand-drawn text input with box or underline style.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { Input } from "@/registry/new-york/ui/input"
 
 <PreviewContainer
@@ -19,9 +21,21 @@ import { Input } from "@/registry/new-york/ui/input"
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/input.json
-```
+<InstallTabs slug="input" />
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'error', type: "string", default: undefined, description: "Error message shown below the component." },
+  { prop: 'inputStyle', type: "InputStyle", default: "\"box\"", description: "Controls the `inputStyle` behavior." },
+  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'value', type: "string", default: undefined, description: "Controlled input value." },
+  { prop: 'defaultValue', type: "string", default: undefined, description: "Initial uncontrolled value." },
+  { prop: 'placeholder', type: "string", default: undefined, description: "Placeholder text." },
+  { prop: 'disabled', type: "boolean", default: undefined, description: "Disables the input." },
+  { prop: 'onChange', type: "(event) => void", default: undefined, description: "Change handler." },
+]} />
 
 ## Styles
 
@@ -72,3 +86,15 @@ npx shadcn add https://crumble.dev/r/input.json
     <Input label="Crayon" placeholder="crayon" theme="crayon" />
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+Input renders a native text input with a real associated `label` when provided. Error text stays in the document flow, so you can connect it to form-level validation messaging as needed.
+
+## Examples
+
+```tsx
+import { Input } from '@/components/crumble/ui/input'
+
+<Input label="Name" placeholder="Enter your name" />
+```

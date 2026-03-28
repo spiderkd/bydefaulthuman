@@ -1,13 +1,10 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useRef } from "react";
-import rough from "roughjs";
+import { useCallback, useEffect, useRef } from "react";
+import { useRough } from "@/hooks/use-rough";
 import { cn } from "@/lib/utils";
 import {
-  CrumbleContext,
-  getRoughOptions,
   resolveRoughVars,
-  stableSeed,
   type CrumbleColorProps,
   type CrumbleTheme,
 } from "@/lib/rough";
@@ -31,11 +28,15 @@ export function Separator({
   theme: themeProp,
 }: SeparatorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const externalSvgRef = useRef<SVGSVGElement>(null);
   const sepId = id ?? "separator";
-  const { theme: contextTheme } = useContext(CrumbleContext);
-  const theme = themeProp ?? contextTheme;
   const roughStyle = resolveRoughVars({ stroke, strokeMuted, fill });
+  const { drawLine, svgRef } = useRough({
+    stableId: sepId,
+    svgRef: externalSvgRef,
+    theme: themeProp,
+    variant: "border",
+  });
 
   const draw = useCallback(() => {
     const container = containerRef.current;
@@ -52,26 +53,30 @@ export function Separator({
     svg.setAttribute("height", String(h));
     svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-    const rc = rough.svg(svg);
-    const opts = getRoughOptions(theme, "border", {
-      seed: stableSeed(sepId),
-      stroke: "var(--cr-stroke-muted)",
-    });
-
     if (isH && label) {
-      // Label in the middle — draw two line segments
       const mid = w / 2;
       const gap = 8;
-      // Rough estimate of label width — draw lines up to roughly the label edges
       const labelW = label.length * 7 + 16;
-      svg.appendChild(rc.line(2, 10, mid - labelW / 2 - gap, 10, opts));
-      svg.appendChild(rc.line(mid + labelW / 2 + gap, 10, w - 2, 10, opts));
+      const left = drawLine(2, 10, mid - labelW / 2 - gap, 10, {
+        stroke: "var(--cr-stroke-muted)",
+      });
+      const right = drawLine(mid + labelW / 2 + gap, 10, w - 2, 10, {
+        stroke: "var(--cr-stroke-muted)",
+      });
+      if (left) svg.appendChild(left);
+      if (right) svg.appendChild(right);
     } else if (isH) {
-      svg.appendChild(rc.line(2, 10, w - 2, 10, opts));
+      const line = drawLine(2, 10, w - 2, 10, {
+        stroke: "var(--cr-stroke-muted)",
+      });
+      if (line) svg.appendChild(line);
     } else {
-      svg.appendChild(rc.line(10, 2, 10, h - 2, opts));
+      const line = drawLine(10, 2, 10, h - 2, {
+        stroke: "var(--cr-stroke-muted)",
+      });
+      if (line) svg.appendChild(line);
     }
-  }, [label, orientation, sepId, theme]);
+  }, [drawLine, label, orientation, svgRef]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => draw());
@@ -100,7 +105,11 @@ export function Separator({
       )}
       style={roughStyle}
     >
-      <svg ref={svgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-visible" />
+      <svg
+        ref={externalSvgRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+      />
       {label ? (
         <span className="relative bg-background px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           {label}

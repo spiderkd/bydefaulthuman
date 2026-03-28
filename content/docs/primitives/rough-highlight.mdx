@@ -4,6 +4,7 @@ description: Wrap any text with a hand-drawn annotation.
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { PropsTable } from "@/components/mdx/PropsTable";
 import { RoughHighlight } from "@/components/primitives/rough-highlight";
 
 <PreviewContainer
@@ -22,6 +23,27 @@ import { RoughHighlight } from "@/components/primitives/rough-highlight";
     text with a rough annotation.
   </p>
 </PreviewContainer>
+
+## Installation
+
+Primitives are bundled with any Crumble component install. To use standalone, copy `components/primitives/rough-highlight.tsx` into your project.
+
+## Props
+
+<PropsTable rows={[
+  { prop: 'animate', type: "boolean", default: undefined, description: "Controls the `animate` behavior." },
+  { prop: 'animationDuration', type: "number", default: undefined, description: "Controls the `animationDuration` behavior." },
+  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
+  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
+  { prop: 'color', type: "string", default: undefined, description: "Overrides the sketch color." },
+  { prop: 'id', type: "string", default: undefined, description: "Controls the `id` behavior." },
+  { prop: 'opacity', type: "number", default: undefined, description: "Controls the SVG opacity." },
+  { prop: 'style', type: "CSSProperties", default: undefined, description: "Inline styles applied to the wrapper." },
+  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
+  { prop: 'type', type: "HighlightType", default: undefined, description: "Controls the visual variant." },
+]} />
+
+
 
 ## All types
 
@@ -49,3 +71,17 @@ import { RoughHighlight } from "@/components/primitives/rough-highlight";
     </p>
   </div>
 </PreviewContainer>
+
+## Accessibility
+
+This primitive is primarily presentational. Keep the underlying content semantic and avoid relying on the sketch overlay alone to communicate meaning.
+
+## Examples
+
+```tsx
+import { RoughHighlight } from '@/components/crumble/primitives/rough-highlight'
+
+<p>
+  This is <RoughHighlight type="highlight" color="#fbbf24">highlighted</RoughHighlight> text.
+</p>
+```
