@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Card } from "@/registry/new-york/ui/card";
 import { StatCard } from "@/registry/new-york/ui/stat-card";
@@ -9,7 +8,6 @@ import { Sparkline } from "@/registry/new-york/ui/sparkline";
 import { BarChart } from "@/registry/new-york/ui/bar-chart";
 import { LineChart } from "@/registry/new-york/ui/line-chart";
 import { PieChart } from "@/registry/new-york/ui/pie-chart";
-import { Slider } from "@/registry/new-york/ui/slider";
 
 // ─── data ─────────────────────────────────────────────────────────────────────
 
@@ -79,23 +77,22 @@ function Label({ children }: { children: string }) {
   );
 }
 
-// Cell: outer Card wrapper + hover "docs →" pill
-// overflow-visible on the outer div so Rough SVG strokes aren't clipped
 function Cell({
   children,
   href,
   className = "",
+  cardClassName = "",
 }: {
   children: React.ReactNode;
   href: string;
   className?: string;
+  cardClassName?: string;
 }) {
   return (
     <div className={`group relative ${className}`}>
-      {/* overflow-visible so rough SVG borders aren't clipped at edges */}
       <Card
         padding={20}
-        className="h-full w-full"
+        className={`h-full w-full   ${cardClassName}`}
         style={{ overflow: "visible" }}
       >
         {children}
@@ -110,20 +107,72 @@ function Cell({
   );
 }
 
+// ─── StatCards container — shares the Cell hover pill pattern ─────────────────
+
+function StatCardsCell() {
+  return (
+    <div className="group relative col-span-1 md:col-span-2">
+      <div className="flex h-full flex-col gap-5 rounded-sm border border-border/30 p-5">
+        {/* <Label>stat cards</Label> */}
+        <StatCard
+          label="Revenue"
+          value="$48,200"
+          trend="up"
+          trendLabel="+12.5% this month"
+          theme="pencil"
+          id="stat-rev"
+          className="w-full"
+        />
+        <StatCard
+          label="Active users"
+          value="3,841"
+          trend="up"
+          trendLabel="+8.1% vs last week"
+          theme="pencil"
+          id="stat-usr"
+          className="w-full"
+        />
+        <StatCard
+          label="Churn rate"
+          value="2.4%"
+          trend="down"
+          trendLabel="−0.3% improvement"
+          theme="pencil"
+          id="stat-churn"
+          className="w-full"
+        />
+      </div>
+      <Link
+        href="/docs/components/stat-card"
+        className="pointer-events-none absolute bottom-3 right-3 z-10 rounded border border-border/50 bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100"
+      >
+        docs →
+      </Link>
+    </div>
+  );
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
 
 export function BentoGrid() {
-  const [roughness, setRoughness] = useState(40);
-  const [stroke, setStroke] = useState(2);
-
   return (
-    <div
-      className="grid gap-8"
-      style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
-    >
+    /*
+     * Breakpoint strategy:
+     *   mobile  (< sm)  → 1 column  — every cell stacks full-width
+     *   tablet  (sm–lg) → 2 columns — charts pair up, stat cards span full
+     *   desktop (≥ lg)  → 3 columns — original layout
+     *
+     * We use Tailwind's grid-cols-* classes so the browser handles everything.
+     * The `col-span-*` on individual cells controls spanning at each breakpoint.
+     */
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
       {/* ── Row 1: charts ─────────────────────────────────────────────────── */}
 
-      <Cell href="/docs/components/bar-chart">
+      {/* Bar chart: full width on mobile, 1 col on sm+, 1 col on lg */}
+      <Cell
+        href="/docs/components/bar-chart"
+        className="flex items-center justify-center"
+      >
         <Label>bar chart</Label>
         <BarChart
           data={barData}
@@ -135,7 +184,11 @@ export function BentoGrid() {
         />
       </Cell>
 
-      <Cell href="/docs/components/line-chart">
+      {/* Line chart: full width on mobile, 1 col on sm+, 1 col on lg */}
+      <Cell
+        href="/docs/components/line-chart"
+        className="flex items-center justify-center"
+      >
         <Label>line chart</Label>
         <LineChart
           series={lineSeries}
@@ -148,7 +201,12 @@ export function BentoGrid() {
         />
       </Cell>
 
-      <Cell href="/docs/components/pie-chart">
+      {/* Pie chart: full width on mobile, spans both cols on sm (so it's
+          centred below the pair above), back to 1 col on lg */}
+      <Cell
+        href="/docs/components/pie-chart"
+        className="sm:col-span-2 lg:col-span-1 flex items-center justify-center"
+      >
         <Label>pie chart</Label>
         <PieChart
           data={pieData}
@@ -164,57 +222,26 @@ export function BentoGrid() {
       {/* ── Row 2: data display ───────────────────────────────────────────── */}
 
       {/*
-        Stat cards: StatCard already has its own rough border + p-5 inside.
-        We just need a plain container — no Card wrapper — so there's no
-        double-border and no double-padding crushing the cells.
+        Stat cards:
+          mobile → full width (col-span-1, grid is 1-col so it fills)
+          sm     → col-span-2 (fills the 2-col grid)
+          lg     → col-span-2 (fills 2 of 3 cols, sparklines take the 3rd)
       */}
-      <div className="group relative" style={{ gridColumn: "span 2" }}>
-        <div className="flex h-full flex-col gap-5 rounded-sm border border-border/30 p-5">
-          <Label>stat cards</Label>
-          <StatCard
-            label="Revenue"
-            value="$48,200"
-            trend="up"
-            trendLabel="+12.5% this month"
-            theme="pencil"
-            id="stat-rev"
-            className="w-full"
-          />
-          <StatCard
-            label="Active users"
-            value="3,841"
-            trend="up"
-            trendLabel="+8.1% vs last week"
-            theme="pencil"
-            id="stat-usr"
-            className="w-full"
-          />
-          <StatCard
-            label="Churn rate"
-            value="2.4%"
-            trend="down"
-            trendLabel="−0.3% improvement"
-            theme="pencil"
-            id="stat-churn"
-            className="w-full"
-          />
-        </div>
-        <Link
-          href="/docs/components/stat-card"
-          className="pointer-events-none absolute bottom-3 right-3 z-10 rounded border border-border/50 bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100"
-        >
-          docs →
-        </Link>
-      </div>
+      <StatCardsCell />
 
+      {/* Sparklines: full width on mobile, 1 col on sm+, 1 col on lg */}
       <Cell
         href="/docs/components/sparkline"
-        className="flex items-center justify-center"
+        cardClassName="px-10 py-12"
+        className="flex  items-center justify-center"
       >
         <Label>sparklines</Label>
-        <div className="flex flex-col gap-6 py-1">
+        <div className="w-full">
           {sparkRows.map((s) => (
-            <div key={s.label} className="flex items-center gap-4">
+            <div
+              key={s.label}
+              className="flex items-center gap-4 py-3 first:pt-0 last:pb-0"
+            >
               <span className="w-14 shrink-0 text-[12px] text-muted-foreground">
                 {s.label}
               </span>
@@ -239,16 +266,16 @@ export function BentoGrid() {
         </div>
       </Cell>
 
+      {/* ── Row 3: cards + sticky + distribution ─────────────────────────── */}
+
+      {/* Stacked cards: full width on mobile, 1 col on sm+, 1 col on lg */}
       <Cell
         href="/docs/components/card"
+        cardClassName="p-2"
         className="flex items-center justify-center"
       >
         <Label>card · stacked paper</Label>
-        {/* 
-          Stacked cards also have their own rough borders.
-          Give them full width + enough vertical gap so shadows show.
-        */}
-        <div className="flex flex-col gap-8 py-2">
+        <div className="flex w-full flex-col gap-8 py-2">
           <Card stacked padding={16} className="w-full">
             <p className="text-[13px] font-medium">Q2 roadmap</p>
             <p className="mt-1.5 text-[12px] leading-relaxed text-muted-foreground">
@@ -264,18 +291,13 @@ export function BentoGrid() {
         </div>
       </Cell>
 
-      {/* ── Row 3: interactive ────────────────────────────────────────────── */}
-
-      {/*
-        Sticky notes: use a fixed-height container with overflow-hidden.
-        Notes are smaller and laid out in a flow grid so they never escape.
-      */}
+      {/* Sticky notes: full width on mobile, 1 col on sm+, 1 col on lg */}
       <Cell
         href="/docs/components/sticky-note"
         className="flex items-center justify-center"
       >
         <Label>sticky notes</Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid w-full grid-cols-2 gap-3">
           <StickyNote
             color="yellow"
             title="Ship it"
@@ -319,9 +341,12 @@ export function BentoGrid() {
         </div>
       </Cell>
 
+      {/* Distribution pie: full width on mobile, spans 2 cols on sm
+          (fills the row neatly), 1 col on lg */}
       <Cell
         href="/docs/components/pie-chart"
-        className="flex items-center justify-center"
+        cardClassName="p-2 py-4"
+        className="flex items-center justify-center sm:col-span-2 lg:col-span-1"
       >
         <Label>distribution</Label>
         <PieChart

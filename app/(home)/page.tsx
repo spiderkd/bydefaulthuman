@@ -212,8 +212,7 @@ export default function Page() {
             </RoughHighlight>
           </h2>
           <p className="max-w-sm text-base text-muted-foreground">
-            Every card below is a live component — click, drag, and type for
-            real. Hover any card to jump to its docs.
+            Every card below is a live component
           </p>
         </div>
 
