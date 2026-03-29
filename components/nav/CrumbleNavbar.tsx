@@ -313,83 +313,76 @@ function DarkModeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
-  if (!mounted) return <div className="h-8 w-8" />;
+  if (!mounted) return <div className="h-9 w-9" />;
 
-  // Stroke width driven by crumble theme
   const sw = theme === "crayon" ? 1.8 : theme === "ink" ? 1.4 : 1.1;
 
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="flex h-8 w-8 items-center justify-center text-foreground/70 transition-colors hover:text-foreground"
+      className="relative h-9 w-9 cursor-pointer rounded-sm text-foreground/70 transition-colors hover:text-foreground active:scale-95"
+      style={{ touchAction: "manipulation" }}
     >
-      {isDark ? (
-        // Moon — geometric crescent: large circle with a smaller circle cutting it
-        // Rendered as a proper SVG path so it looks correct in all themes
-        <svg
-          aria-hidden="true"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          className="overflow-visible"
-        >
-          {/* Crescent path: arc of outer circle minus arc of inner offset circle */}
-          <path
-            d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"
-            stroke="currentColor"
-            strokeWidth={sw}
-            strokeLinejoin="round"
-            fill="currentColor"
-            fillOpacity="0.15"
-          />
-        </svg>
-      ) : (
-        // Sun — circle + 8 rays, slightly wobbly via strokeLinecap round
-        <svg
-          aria-hidden="true"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          className="overflow-visible"
-        >
-          <circle
-            cx="8"
-            cy="8"
-            r="3.2"
-            stroke="currentColor"
-            strokeWidth={sw}
-            fill="currentColor"
-            fillOpacity="0.12"
-          />
-          {/* 8 rays at 45° intervals */}
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
-            const rad = (deg * Math.PI) / 180;
-            const x1 = 8 + 4.8 * Math.cos(rad);
-            const y1 = 8 + 4.8 * Math.sin(rad);
-            const x2 = 8 + 6.4 * Math.cos(rad);
-            const y2 = 8 + 6.4 * Math.sin(rad);
-            return (
-              <line
-                key={deg}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke="currentColor"
-                strokeWidth={sw}
-                strokeLinecap="round"
-              />
-            );
-          })}
-        </svg>
-      )}
+      {/* Absolutely centered so the SVG visual center == button click center.
+          overflow-visible rays/strokes bleed outside without shifting layout. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          lineHeight: 0, // kills inline ghost spacing under the svg
+        }}
+      >
+        {isDark ? (
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"
+              stroke="currentColor"
+              strokeWidth={sw}
+              strokeLinejoin="round"
+              fill="currentColor"
+              fillOpacity="0.15"
+            />
+          </svg>
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+            <circle
+              cx="8"
+              cy="8"
+              r="3.2"
+              stroke="currentColor"
+              strokeWidth={sw}
+              fill="currentColor"
+              fillOpacity="0.12"
+            />
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
+              const rad = (deg * Math.PI) / 180;
+              const x1 = 8 + 4.8 * Math.cos(rad);
+              const y1 = 8 + 4.8 * Math.sin(rad);
+              const x2 = 8 + 6.4 * Math.cos(rad);
+              const y2 = 8 + 6.4 * Math.sin(rad);
+              return (
+                <line
+                  key={deg}
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke="currentColor"
+                  strokeWidth={sw}
+                  strokeLinecap="round"
+                />
+              );
+            })}
+          </svg>
+        )}
+      </span>
     </button>
   );
 }
-
 // ─── Vertical divider ─────────────────────────────────────────────────────────
 
 function NavDivider() {
