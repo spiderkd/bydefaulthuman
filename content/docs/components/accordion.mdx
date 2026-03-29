@@ -46,17 +46,96 @@ import {
 
 ## Installation
 
-<InstallTabs slug="accordion" />
+<InstallTabs slug="accordion" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
-  { prop: 'defaultValue', type: "string | string[]", default: undefined, description: "Initial uncontrolled value." },
-  { prop: 'multiple', type: "boolean", default: "false", description: "Allows handling multiple values or files." },
-  { prop: 'onValueChange', type: "(value: string | string[]) => void", default: undefined, description: "Callback fired when the active value changes." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+#### Accordion
+
+<PropsTable
+  rows={[
+    {
+      prop: "defaultValue",
+      type: "string | string[]",
+      description: "Item(s) open by default (uncontrolled).",
+    },
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allow multiple items to be open at once.",
+    },
+    {
+      prop: "animateOnHover",
+      type: "boolean",
+      default: "true",
+      description: "Re-sketches the border on mouse enter.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value: string | string[]) => void",
+      description:
+        "Fires when open items change. Returns array when multiple is true.",
+    },
+    {
+      prop: "theme",
+      type: '"pencil" | "ink" | "crayon"',
+      description: "Overrides the global Crumble theme for this component.",
+    },
+    {
+      prop: "stroke",
+      type: "string",
+      description: "CSS color for the rough stroke.",
+    },
+    {
+      prop: "strokeMuted",
+      type: "string",
+      description:
+        "CSS color for muted strokes. Defaults to a transparent mix of stroke.",
+    },
+    {
+      prop: "fill",
+      type: "string",
+      description: "CSS color for the rough fill.",
+    },
+  ]}
+/>
+#### AccordionItem
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      required: true,
+      description:
+        "Unique identifier for this item, passed to AccordionTrigger and AccordionContent.",
+    },
+  ]}
+/>
+#### AccordionTrigger
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      required: true,
+      description: "Must match the parent AccordionItem value.",
+    },
+  ]}
+/>
+#### AccordionContent
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      required: true,
+      description:
+        "Must match the parent AccordionItem value. Content is hidden when this item is closed.",
+    },
+  ]}
+/>
 
 ## Multiple open
 
@@ -94,7 +173,12 @@ Accordion keeps triggers as real buttons with `aria-expanded`, which is the righ
 ## Examples
 
 ```tsx
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/crumble/ui/accordion'
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/crumble/ui/accordion";
 
 <Accordion>
   <AccordionItem value="a">
@@ -103,5 +187,5 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/
       A hand-drawn React component library built on Rough.js.
     </AccordionContent>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```

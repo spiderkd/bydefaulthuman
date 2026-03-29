@@ -145,7 +145,7 @@ export default function HeroSection() {
         >
           <span className="text-muted-foreground text-[12px]">$</span>
           <code className="font-mono text-[13px] text-muted-foreground">
-            npx shadcn add https://crumble.dev/r/button.json
+            npx shadcn add https://bydefaulthuman.fun/r/button.json
           </code>
         </div>
 

@@ -23,18 +23,51 @@ import { StickyNote } from "@/registry/new-york/ui/sticky-note";
 
 ## Installation
 
-<InstallTabs slug="sticky-note" />
+<InstallTabs slug="sticky-note" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
-  { prop: 'color', type: "StickyNoteColor", default: "\"yellow\"", description: "Overrides the main accent or stroke color." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'rotate', type: "number", default: "0", description: "Controls the `rotate` behavior." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'title', type: "ReactNode", default: undefined, description: "Primary title content." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnHover",
+      type: "boolean",
+      default: "true",
+      description: "Redraws the sketch lines on hover.",
+    },
+    {
+      prop: "color",
+      type: "StickyNoteColor",
+      default: '"yellow"',
+      description: "Overrides the main accent or stroke color.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "rotate",
+      type: "number",
+      default: "0",
+      description: "Controls the `rotate` behavior.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "title",
+      type: "ReactNode",
+      default: undefined,
+      description: "Primary title content.",
+    },
+  ]}
+/>
 
 ## Colors
 
@@ -91,23 +124,6 @@ import { StickyNote } from "@/registry/new-york/ui/sticky-note";
   </div>
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="sticky-note"
-  code={`<StickyNote color="yellow" theme="ink">Ink theme</StickyNote>
-<StickyNote color="yellow" theme="crayon">Crayon theme</StickyNote>`}
->
-  <div className="flex gap-3">
-    <StickyNote color="yellow" theme="ink">
-      Ink theme
-    </StickyNote>
-    <StickyNote color="yellow" theme="crayon">
-      Crayon theme
-    </StickyNote>
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 StickyNote is a presentational container with no built-in semantics beyond its children. If the note is interactive, place real controls inside it instead of making the whole note a clickable surface.
@@ -115,9 +131,7 @@ StickyNote is a presentational container with no built-in semantics beyond its c
 ## Examples
 
 ```tsx
-import { StickyNote } from '@/components/crumble/ui/sticky-note'
+import { StickyNote } from "@/components/crumble/ui/sticky-note";
 
-<StickyNote title="Remember">
-  Pick up milk on the way home.
-</StickyNote>
+<StickyNote title="Remember">Pick up milk on the way home.</StickyNote>;
 ```

@@ -69,13 +69,30 @@ import { Badge } from "@/registry/new-york/ui/badge";
 
 ## Installation
 
-<InstallTabs slug="table" />
+<InstallTabs slug="table" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "theme",
+      type: '"pencil" | "ink" | "crayon"',
+      description: "Overrides the global Crumble theme for all rows.",
+    },
+    {
+      prop: "stroke",
+      type: "string",
+      description: "CSS color for row separator strokes.",
+    },
+    {
+      prop: "strokeMuted",
+      type: "string",
+      description: "CSS color for muted strokes.",
+    },
+    { prop: "fill", type: "string", description: "CSS color for rough fills." },
+  ]}
+/>
 
 ## Notes
 
@@ -88,7 +105,14 @@ Table is best for genuinely tabular relationships, not just layout. Use clear he
 ## Examples
 
 ```tsx
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/crumble/ui/table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/crumble/ui/table";
 
 <Table>
   <TableHeader>
@@ -105,5 +129,5 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
       <TableCell>Admin</TableCell>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

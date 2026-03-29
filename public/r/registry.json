@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "crumble",
-  "homepage": "https://crumble.dev",
+  "homepage": "https://bydefaulthuman.fun",
   "items": [
     {
       "name": "font-display",
@@ -32,7 +32,7 @@
       },
       "dependencies": ["roughjs", "tw-animate-css"],
       "registryDependencies": [
-        "http://localhost:3000/r/font-display.json",
+        "https://www.bydefaulthuman.fun/r/font-display.json",
         "utils"
       ],
       "cssVars": {
@@ -118,7 +118,9 @@
       "title": "useRough",
       "description": "Core Rough.js SVG drawing hook — drawRect, drawLine, drawCircle, drawPath, getOptions, theme-aware.",
       "dependencies": ["roughjs"],
-      "registryDependencies": ["http://localhost:3000/r/rough-lib.json"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
+      ],
       "files": [
         {
           "path": "registry/new-york/hooks/use-rough.ts",
@@ -134,9 +136,9 @@
       "description": "Hand-drawn curved arrow SVG primitive.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -154,9 +156,9 @@
       "description": "Hand-drawn circle SVG primitive.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -174,9 +176,9 @@
       "description": "Hand-drawn text annotation — underline, box, circle, highlight, strike-through, bracket.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -194,9 +196,9 @@
       "description": "Hand-drawn horizontal or vertical line primitive.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -214,9 +216,9 @@
       "description": "Hand-drawn SVG path primitive for arbitrary d strings.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -234,9 +236,9 @@
       "description": "Hand-drawn rectangle wrapper with optional children.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -254,8 +256,8 @@
       "description": "Inline rough callout annotation — box, circle, underline, bracket, arrow-label types.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/rough-lib.json",
-        "http://localhost:3000/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
         "utils"
       ],
       "files": [
@@ -273,9 +275,9 @@
       "description": "Hand-drawn button with hover redraw animation. Supports default, ghost, and destructive variants.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -293,9 +295,9 @@
       "description": "Hand-drawn card with optional stacked paper effect.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -313,9 +315,9 @@
       "description": "Hand-drawn checkbox with tick animation.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -333,9 +335,9 @@
       "description": "Hand-drawn text input — box or underline style with focus and error states.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -353,9 +355,9 @@
       "description": "Hand-drawn tabs with rough active-tab underline indicator.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -373,8 +375,8 @@
       "description": "Hand-drawn curved arrow connecting two DOM elements via refs. Uses common-ancestor positioning — zero scroll listeners, zero redraws on scroll.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/rough-lib.json",
-        "http://localhost:3000/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
         "utils"
       ],
       "files": [
@@ -392,10 +394,10 @@
       "description": "Collapsible sections with rough chevrons and hand-drawn separators.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -412,10 +414,10 @@
       "description": "A hand-drawn circle border around a profile image or initials fallback.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -432,10 +434,10 @@
       "description": "A hand-drawn label badge with rough border and semantic variants.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -452,10 +454,10 @@
       "description": "A hand-drawn bar chart with hachure-filled bars and animated mount.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -472,10 +474,10 @@
       "description": "A hand-drawn color picker with preset swatches and editable hex input.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -492,10 +494,10 @@
       "description": "A searchable hand-drawn select with filtered dropdown and keyboard navigation.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -512,10 +514,10 @@
       "description": "A modal dialog using the native browser dialog element with a rough-drawn border that redraws fresh on every open.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -533,8 +535,8 @@
       "dependencies": ["react-dom", "roughjs"],
       "registryDependencies": [
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -551,10 +553,10 @@
       "description": "A hand-drawn dropzone that becomes more expressive when a file is dragged over it.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -571,10 +573,10 @@
       "description": "A hand-drawn line chart with Catmull-Rom curves and animated draw-on.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -591,10 +593,10 @@
       "description": "A hand-drawn lined paper container with ruled lines and a red margin.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -611,10 +613,10 @@
       "description": "A hand-drawn number input with rough increment and decrement buttons.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -631,10 +633,10 @@
       "description": "A row of hand-drawn single-character boxes for one-time passwords.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -651,10 +653,10 @@
       "description": "A hand-drawn pie or donut chart with hachure-filled slices and d3-shape arc math.",
       "dependencies": ["roughjs", "d3-shape"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -671,10 +673,10 @@
       "description": "A hand-drawn progress bar with animated hachure fill.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -691,9 +693,9 @@
       "description": "Hand-drawn radio buttons with a filled inner circle when selected.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/rough-lib.json",
-        "http://localhost:3000/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
         "utils"
       ],
       "files": [
@@ -711,10 +713,10 @@
       "description": "A hand-drawn star rating with hover fill and hachure.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -731,10 +733,10 @@
       "description": "Draw rough freehand scribbles over content for emphasis, redaction, or playful UI effects.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -751,9 +753,9 @@
       "description": "A hand-drawn select dropdown with a rough chevron indicator.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -771,10 +773,10 @@
       "description": "A hand-drawn horizontal or vertical divider line.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -791,9 +793,9 @@
       "description": "A hand-drawn range slider with a sketchy track and circle thumb.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/rough-lib.json",
-        "http://localhost:3000/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
         "utils"
       ],
       "files": [
@@ -811,10 +813,10 @@
       "description": "An inline mini chart that drops naturally into text and table cells.",
       "dependencies": ["roughjs", "d3-shape", "d3-scale"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -831,10 +833,10 @@
       "description": "A hand-drawn card preset for dashboard metrics with an optional trend arrow.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -851,10 +853,10 @@
       "description": "A hand-drawn sticky note with a folded corner and five color variants.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -871,10 +873,10 @@
       "description": "A data table where row separators are hand-drawn rough lines instead of CSS borders.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -891,9 +893,9 @@
       "description": "A hand-drawn textarea with optional auto-grow and resize support.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -911,10 +913,10 @@
       "description": "A vertical event list with rough circle nodes and connecting lines.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
@@ -931,9 +933,9 @@
       "description": "A hand-drawn toggle switch with a sliding circle thumb.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
         "utils"
       ],
       "files": [
@@ -951,16 +953,249 @@
       "description": "A hand-drawn callout that appears on hover with a rough polygon arrow.",
       "dependencies": ["roughjs"],
       "registryDependencies": [
-        "http://localhost:3000/r/use-rough.json",
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
         "utils",
-        "http://localhost:3000/r/crumble-theme.json",
-        "http://localhost:3000/r/rough-lib.json"
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json"
       ],
       "files": [
         {
           "path": "registry/new-york/ui/tooltip.tsx",
           "type": "registry:ui",
           "target": "components/crumble/ui/tooltip.tsx"
+        }
+      ]
+    },
+    {
+      "name": "activity-feed",
+      "type": "registry:block",
+      "title": "Activity Feed",
+      "description": "A block for displaying a list of recent activities with rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/avatar.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/badge.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/timeline.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/ActivityFeedBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/activity-feed.tsx"
+        }
+      ]
+    },
+    {
+      "name": "feedback-form",
+      "type": "registry:block",
+      "title": "Feedback Form",
+      "description": "A block for collecting user feedback with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/input.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/checkbox.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/textarea.json",
+        "https://www.bydefaulthuman.fun/r/rating.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/FeedbackFormBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/feedback-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "onboarding-stepper",
+      "type": "registry:block",
+      "title": "Onboarding Stepper",
+      "description": "A block for guiding users through an onboarding process with rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/progress.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/timeline.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/OnboardingStepperBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/onboarding-stepper.tsx"
+        }
+      ]
+    },
+    {
+      "name": "feedback-form",
+      "type": "registry:block",
+      "title": "Feedback Form",
+      "description": "A block for collecting user feedback with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/input.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/checkbox.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/textarea.json",
+        "https://www.bydefaulthuman.fun/r/rating.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/FeedbackFormBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/feedback-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "metrics-comparison",
+      "type": "registry:block",
+      "title": "Metrics Comparison",
+      "description": "A block for comparing key metrics with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/line-chart.json",
+        "https://www.bydefaulthuman.fun/r/bar-chart.json",
+        "https://www.bydefaulthuman.fun/r/stat-card.json",
+        "https://www.bydefaulthuman.fun/r/tabs.json",
+        "https://www.bydefaulthuman.fun/r/card.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/MetricsComparisonBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/metrics-comparison.tsx"
+        }
+      ]
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:block",
+      "title": "Notification Center",
+      "description": "A block for displaying notifications with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/avatar.json",
+        "https://www.bydefaulthuman.fun/r/badge.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/seperator.json",
+        "https://www.bydefaulthuman.fun/r/toggle.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/NotificationCenterBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/notification-center.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pricing",
+      "type": "registry:block",
+      "title": "Pricing",
+      "description": "A block for displaying pricing information with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+
+        "https://www.bydefaulthuman.fun/r/badge.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/seperator.json",
+        "https://www.bydefaulthuman.fun/r/rough-highlight.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/NotificationCenterBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/notification-center.tsx"
+        }
+      ]
+    },
+    {
+      "name": "profile-card",
+      "type": "registry:block",
+      "title": "Profile Card",
+      "description": "A block for displaying a user's profile information with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/avatar.json",
+        "https://www.bydefaulthuman.fun/r/badge.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/tooltip.json",
+        "https://www.bydefaulthuman.fun/r/rough-line.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/ProfileCardBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/profile-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kanban",
+      "type": "registry:block",
+      "title": "Kanban Board",
+      "description": "A block for displaying a kanban board with a rough styling.",
+      "dependencies": ["roughjs"],
+      "registryDependencies": [
+        "https://www.bydefaulthuman.fun/r/use-rough.json",
+        "utils",
+        "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+        "https://www.bydefaulthuman.fun/r/rough-lib.json",
+        "https://www.bydefaulthuman.fun/r/avatar.json",
+        "https://www.bydefaulthuman.fun/r/badge.json",
+        "https://www.bydefaulthuman.fun/r/button.json",
+        "https://www.bydefaulthuman.fun/r/card.json",
+        "https://www.bydefaulthuman.fun/r/textarea.json",
+        "https://www.bydefaulthuman.fun/r/tooltip.json",
+        "https://www.bydefaulthuman.fun/r/input.json",
+        "https://www.bydefaulthuman.fun/r/sticky-note.json",
+        "https://www.bydefaulthuman.fun/r/select.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/KanbanColumnBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/crumble/blocks/kanban-column.tsx"
         }
       ]
     }

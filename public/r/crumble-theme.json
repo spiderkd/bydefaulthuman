@@ -8,7 +8,7 @@
     "tw-animate-css"
   ],
   "registryDependencies": [
-    "http://localhost:3000/r/font-display.json",
+    "https://www.bydefaulthuman.fun/r/font-display.json",
     "utils"
   ],
   "cssVars": {

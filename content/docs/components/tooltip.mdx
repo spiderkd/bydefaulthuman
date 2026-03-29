@@ -24,19 +24,59 @@ import { Button } from "@/registry/new-york/ui/button";
 
 ## Installation
 
-<InstallTabs slug="tooltip" />
+<InstallTabs slug="tooltip" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
-  { prop: 'className', type: "string", default: "\"relative inline-flex\"", description: "Additional Tailwind classes applied to the component." },
-  { prop: 'content', type: "ReactNode", default: undefined, description: "Content rendered inside the overlay.", required: true },
-  { prop: 'delayMs', type: "number", default: "400", description: "Delay before the tooltip opens, in milliseconds." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'side', type: "TooltipSide", default: "\"top\"", description: "Preferred side or placement." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+      required: true,
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: '"relative inline-flex"',
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "content",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the overlay.",
+      required: true,
+    },
+    {
+      prop: "delayMs",
+      type: "number",
+      default: "400",
+      description: "Delay before the tooltip opens, in milliseconds.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "side",
+      type: "TooltipSide",
+      default: '"top"',
+      description: "Preferred side or placement.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Sides
 
@@ -76,33 +116,6 @@ import { Button } from "@/registry/new-york/ui/button";
   </Tooltip>
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="tooltip"
-  code={`<Tooltip content="Pencil tooltip" theme="pencil"><Button size="sm" theme="pencil">Pencil</Button></Tooltip>
-<Tooltip content="Ink tooltip" theme="ink"><Button size="sm" theme="ink">Ink</Button></Tooltip>
-<Tooltip content="Crayon tooltip" theme="crayon"><Button size="sm" theme="crayon">Crayon</Button></Tooltip>`}
->
-  <div className="flex flex-wrap gap-3">
-    <Tooltip content="Pencil tooltip" theme="pencil">
-      <Button size="sm" theme="pencil">
-        Pencil
-      </Button>
-    </Tooltip>
-    <Tooltip content="Ink tooltip" theme="ink">
-      <Button size="sm" theme="ink">
-        Ink
-      </Button>
-    </Tooltip>
-    <Tooltip content="Crayon tooltip" theme="crayon">
-      <Button size="sm" theme="crayon">
-        Crayon
-      </Button>
-    </Tooltip>
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 Tooltip content is supplemental, not primary. Do not put critical instructions only inside the tooltip, because hover-only disclosure is easy to miss on touch devices and with keyboard navigation.
@@ -110,9 +123,9 @@ Tooltip content is supplemental, not primary. Do not put critical instructions o
 ## Examples
 
 ```tsx
-import { Tooltip } from '@/components/crumble/ui/tooltip'
+import { Tooltip } from "@/components/crumble/ui/tooltip";
 
 <Tooltip content="Save your work">
   <Button>Save</Button>
-</Tooltip>
+</Tooltip>;
 ```

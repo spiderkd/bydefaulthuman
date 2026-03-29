@@ -33,12 +33,12 @@ return (
 
 >
 
-  <CalloutDemo duration={1200} />
+  <CalloutDemo duration={1200} labelTrue />
 </PreviewContainer>
 
 ## Installation
 
-<InstallTabs slug="callout-arrow" />
+<InstallTabs slug="callout-arrow" peerDeps={["roughjs"]} />
 
 ## Props
 
@@ -120,7 +120,7 @@ Adjust the `curvature` prop to change the arc. Positive values bow one way, nega
   componentName="callout-arrow"
   code={`<CalloutArrow fromRef={f} toRef={t} curvature={-100} label="Inverse" />`}
 >
-  <CalloutDemo curvature={-80} label="Inverse Curve" />
+  <CalloutDemo curvature={-80} label="Inverse Curve" labelTrue={false} />
 </PreviewContainer>
 
 ### Color
@@ -131,7 +131,11 @@ The arrow and label inherit the current text color by default, but you can pass 
   componentName="callout-arrow"
   code={`<CalloutArrow color="oklch(0.6 0.22 25)" label="Vibrant" />`}
 >
-  <CalloutDemo color="oklch(0.6 0.22 25)" label="Custom Color" />
+  <CalloutDemo
+    color="oklch(0.6 0.22 25)"
+    label="Custom Color"
+    labelTrue={false}
+  />
 </PreviewContainer>
 
 ## Accessibility

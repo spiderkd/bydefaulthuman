@@ -49,17 +49,46 @@ return (
 
 ## Installation
 
-<InstallTabs slug="drawer" />
+<InstallTabs slug="drawer" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
-  { prop: 'onOpenChange', type: "(open: boolean) => void", default: undefined, description: "Callback fired when the open state changes." },
-  { prop: 'open', type: "boolean", default: undefined, description: "Controlled open state.", required: true },
-  { prop: 'side', type: "DrawerSide", default: "\"right\"", description: "Preferred side or placement." },
-  { prop: 'theme', type: "CrumbleTheme", default: "\"pencil\"", description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+      required: true,
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean) => void",
+      default: undefined,
+      description: "Callback fired when the open state changes.",
+    },
+    {
+      prop: "open",
+      type: "boolean",
+      default: undefined,
+      description: "Controlled open state.",
+      required: true,
+    },
+    {
+      prop: "side",
+      type: "DrawerSide",
+      default: '"right"',
+      description: "Preferred side or placement.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: '"pencil"',
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Sides
 
@@ -83,17 +112,6 @@ Control width (left/right) or height (top/bottom) with the `size` prop — any C
 <DrawerContent size="40vw">...</DrawerContent>
 ```
 
-## Themes
-
-<PreviewContainer
-  componentName="drawer"
-  code={`<Drawer open={open} onOpenChange={setOpen} theme="crayon">
-  <DrawerContent>...</DrawerContent>
-</Drawer>`}
->
-  <DrawerDemo theme="crayon" />
-</PreviewContainer>
-
 ## Accessibility
 
 Drawer is still a modal surface, even when it slides from an edge. Keep a clear dismiss action visible and avoid putting essential background context behind it that cannot be reached by keyboard users.
@@ -101,7 +119,7 @@ Drawer is still a modal surface, even when it slides from an edge. Keep a clear 
 ## Examples
 
 ```tsx
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -109,27 +127,28 @@ import {
   DrawerTitle,
   DrawerBody,
   DrawerFooter,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 
 function Demo() {
-const [open, setOpen] = useState(false)
-return (
-
-<>
-<Button onClick={() => setOpen(true)}>Open drawer</Button>
-<Drawer open={open} onOpenChange={setOpen}>
-<DrawerContent>
-<DrawerHeader>
-<DrawerTitle>Settings</DrawerTitle>
-</DrawerHeader>
-<DrawerBody>Content goes here.</DrawerBody>
-<DrawerFooter>
-<Button variant="ghost" onClick={() => setOpen(false)}>Close</Button>
-</DrawerFooter>
-</DrawerContent>
-</Drawer>
-</>
-)
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open drawer</Button>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Settings</DrawerTitle>
+          </DrawerHeader>
+          <DrawerBody>Content goes here.</DrawerBody>
+          <DrawerFooter>
+            <Button variant="ghost" onClick={() => setOpen(false)}>
+              Close
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
 }
 ```

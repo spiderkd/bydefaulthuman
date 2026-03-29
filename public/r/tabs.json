@@ -7,9 +7,9 @@
     "roughjs"
   ],
   "registryDependencies": [
-    "http://localhost:3000/r/use-rough.json",
-    "http://localhost:3000/r/crumble-theme.json",
-    "http://localhost:3000/r/rough-lib.json",
+    "https://www.bydefaulthuman.fun/r/use-rough.json",
+    "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+    "https://www.bydefaulthuman.fun/r/rough-lib.json",
     "utils"
   ],
   "files": [

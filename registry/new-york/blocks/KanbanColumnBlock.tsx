@@ -1,255 +1,538 @@
-// "use client";
-
-// import { StatCard } from "@/registry/new-york/ui/stat-card";
-// import { Sparkline } from "@/registry/new-york/ui/sparkline";
-// import { BarChart } from "@/registry/new-york/ui/bar-chart";
-// import { Card } from "@/registry/new-york/ui/card";
-
-// const sparkRows = [
-//   {
-//     label: "Revenue",
-//     data: [18, 22, 19, 30, 28, 35, 32, 42, 38, 50],
-//     color: "oklch(0.62 0.18 55)",
-//     type: "area" as const,
-//     last: "$50k",
-//   },
-//   {
-//     label: "Users",
-//     data: [120, 135, 128, 160, 155, 172, 168, 190],
-//     color: "oklch(0.55 0.18 260)",
-//     type: "line" as const,
-//     last: "190",
-//   },
-//   {
-//     label: "Churn",
-//     data: [4.2, 3.8, 4.5, 3.2, 2.9, 3.1, 2.7, 2.4],
-//     color: "oklch(0.63 0.22 25)",
-//     type: "bar" as const,
-//     last: "2.4%",
-//   },
-// ];
-
-// const barData = [
-//   { label: "Mon", value: 42 },
-//   { label: "Tue", value: 68 },
-//   { label: "Wed", value: 55 },
-//   { label: "Thu", value: 91 },
-//   { label: "Fri", value: 73 },
-//   { label: "Sat", value: 38 },
-// ];
-
-// export function DashboardBlock() {
-//   return (
-//     <div className="flex flex-col gap-6 w-full">
-//       {/* Stat cards row */}
-//       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-//         <StatCard
-//           label="Revenue"
-//           value="$48,200"
-//           trend="up"
-//           trendLabel="+12% this month"
-//           description="vs last month"
-//         />
-//         <StatCard
-//           label="Active Users"
-//           value="3,840"
-//           trend="up"
-//           trendLabel="+7%"
-//           description="vs last month"
-//         />
-//         <StatCard
-//           label="Churn Rate"
-//           value="2.4%"
-//           trend="down"
-//           trendLabel="-0.8%"
-//           description="vs last month"
-//         />
-//         <StatCard
-//           label="Sessions"
-//           value="21.5k"
-//           trend="flat"
-//           trendLabel="no change"
-//           description="vs last month"
-//         />
-//       </div>
-
-//       {/* Sparklines + Bar chart row */}
-//       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-//         <Card padding={20} style={{ overflow: "visible" }}>
-//           <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground/60">
-//             Trends
-//           </p>
-//           <div className="flex flex-col gap-3">
-//             {sparkRows.map((row) => (
-//               <div key={row.label} className="flex items-center gap-3">
-//                 <span className="w-16 shrink-0 text-xs text-muted-foreground">
-//                   {row.label}
-//                 </span>
-//                 <div className="flex-1">
-//                   <Sparkline
-//                     data={row.data}
-//                     color={row.color}
-//                     type={row.type}
-//                     height={28}
-//                   />
-//                 </div>
-//                 <span className="w-10 text-right text-xs font-medium tabular-nums">
-//                   {row.last}
-//                 </span>
-//               </div>
-//             ))}
-//           </div>
-//         </Card>
-
-//         <Card padding={20} style={{ overflow: "visible" }}>
-//           <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground/60">
-//             Weekly Visitors
-//           </p>
-//           <BarChart data={barData} color="oklch(0.62 0.18 55)" height={120} />
-//         </Card>
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { Avatar } from "@/components/crumble/ui/avatar";
+import { Badge } from "@/components/crumble/ui/badge";
+import { Button } from "@/components/crumble/ui/button";
+import { Card } from "@/components/crumble/ui/card";
+import { Input } from "@/components/crumble/ui/input";
+import { Select } from "@/components/crumble/ui/select";
 import {
-  Timeline,
-  TimelineItem,
-  type TimelineStatus,
-} from "@/registry/new-york/ui/timeline";
-import { Avatar } from "@/registry/new-york/ui/avatar";
-import { Badge } from "@/registry/new-york/ui/badge";
-import { Card } from "@/registry/new-york/ui/card";
+  StickyNote,
+  type StickyNoteColor,
+} from "@/components/crumble/ui/sticky-note";
+import { Textarea } from "@/components/crumble/ui/textarea";
+import { Tooltip } from "@/components/crumble/ui/tooltip";
 
-interface FeedEvent {
-  user: string;
-  fallback: string;
-  action: string;
-  target: string;
-  time: string;
-  tag: string;
-  tagVariant: "default" | "success" | "warning" | "destructive" | "outline";
+export interface KanbanTask {
+  assigneeFallback?: string;
+  description?: string;
+  id: string;
+  priority: "high" | "medium" | "low";
+  tag?: string;
+  title: string;
 }
 
-const EVENTS: FeedEvent[] = [
+export interface KanbanColumn {
+  color: StickyNoteColor;
+  id: string;
+  label: string;
+  tasks: KanbanTask[];
+}
+
+interface NewTaskDraft {
+  assigneeFallback: string;
+  description: string;
+  priority: KanbanTask["priority"];
+  tag: string;
+  title: string;
+}
+
+interface EditingTaskState {
+  columnId: string;
+  taskId: string;
+  value: string;
+}
+
+export interface KanbanColumnBlockProps {
+  addTaskLabel?: string;
+  emptyStateLabel?: string;
+  initialColumns?: KanbanColumn[];
+  onBoardChange?: (columns: KanbanColumn[]) => void;
+  priorityFilterLabel?: string;
+  searchPlaceholder?: string;
+  title?: string;
+}
+
+const DEFAULT_COLUMNS: KanbanColumn[] = [
   {
-    user: "Alice Chen",
-    fallback: "AC",
-    action: "merged pull request",
-    target: "feat/rough-tooltip",
-    time: "2 min ago",
-    tag: "merge",
-    tagVariant: "success",
+    id: "todo",
+    label: "To Do",
+    color: "yellow",
+    tasks: [
+      {
+        id: "task-1",
+        title: "Audit empty states",
+        description: "Check docs pages that still use placeholder copy.",
+        priority: "high",
+        assigneeFallback: "GL",
+        tag: "design",
+      },
+      {
+        id: "task-2",
+        title: "Ship rough drawer docs",
+        description: "Document the open and close patterns.",
+        priority: "medium",
+        assigneeFallback: "AC",
+        tag: "docs",
+      },
+    ],
   },
   {
-    user: "Bob Marsh",
-    fallback: "BM",
-    action: "opened issue",
-    target: "Button hover flicker on Safari",
-    time: "14 min ago",
-    tag: "bug",
-    tagVariant: "destructive",
+    id: "doing",
+    label: "In Progress",
+    color: "blue",
+    tasks: [
+      {
+        id: "task-3",
+        title: "Replace direct rough calls",
+        description: "Move remaining components to useRough helpers.",
+        priority: "high",
+        assigneeFallback: "DP",
+        tag: "eng",
+      },
+    ],
   },
   {
-    user: "Carol Dana",
-    fallback: "CD",
-    action: "commented on",
-    target: "StatCard trend arrow alignment",
-    time: "1 hr ago",
-    tag: "comment",
-    tagVariant: "outline",
-  },
-  {
-    user: "Dev Patel",
-    fallback: "DP",
-    action: "deployed",
-    target: "production v0.4.2",
-    time: "3 hr ago",
-    tag: "deploy",
-    tagVariant: "warning",
+    id: "done",
+    label: "Done",
+    color: "green",
+    tasks: [
+      {
+        id: "task-4",
+        title: "Polish preview container",
+        description:
+          "Align install command copy with the current registry path.",
+        priority: "low",
+        assigneeFallback: "BM",
+        tag: "site",
+      },
+    ],
   },
 ];
 
-export function ActivityFeedBlock() {
-  const [activeIdx, setActiveIdx] = useState(-1);
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+function createEmptyDraft(): NewTaskDraft {
+  return {
+    title: "",
+    description: "",
+    assigneeFallback: "",
+    tag: "",
+    priority: "medium",
+  };
+}
 
-  const runAnimation = () => {
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-    setActiveIdx(-1);
-    EVENTS.forEach((_, i) => {
-      const t = setTimeout(() => setActiveIdx(i), (i + 1) * 700);
-      timersRef.current.push(t);
+export function KanbanColumnBlock({
+  addTaskLabel = "+ Add task",
+  emptyStateLabel = "No tasks match the current filters.",
+  initialColumns = DEFAULT_COLUMNS,
+  onBoardChange,
+  priorityFilterLabel = "Priority",
+  searchPlaceholder = "Search tasks...",
+  title = "Sprint board",
+}: KanbanColumnBlockProps) {
+  const [columns, setColumns] = useState(initialColumns);
+  const [search, setSearch] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<
+    "all" | KanbanTask["priority"]
+  >("all");
+  const [openFormColumnId, setOpenFormColumnId] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, NewTaskDraft>>({});
+  const [editingTask, setEditingTask] = useState<EditingTaskState | null>(null);
+
+  useEffect(() => {
+    setColumns(initialColumns);
+  }, [initialColumns]);
+
+  const updateBoard = (
+    updater: (current: KanbanColumn[]) => KanbanColumn[],
+  ) => {
+    setColumns((current) => {
+      const next = updater(current);
+      onBoardChange?.(next);
+      return next;
     });
   };
 
-  useEffect(() => {
-    runAnimation();
-    return () => timersRef.current.forEach(clearTimeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const getDraft = (columnId: string) => drafts[columnId] ?? createEmptyDraft();
 
-  const getStatus = (i: number): TimelineStatus => {
-    if (i < activeIdx) return "complete";
-    if (i === activeIdx) return "active";
-    return "pending";
+  const isVisibleTask = (task: KanbanTask) => {
+    const matchesPriority =
+      priorityFilter === "all" || task.priority === priorityFilter;
+    const query = search.trim().toLowerCase();
+    if (!matchesPriority) return false;
+    if (!query) return true;
+    return [task.title, task.description, task.tag, task.assigneeFallback]
+      .filter(Boolean)
+      .some((value) => String(value).toLowerCase().includes(query));
+  };
+
+  const moveTask = (
+    taskId: string,
+    fromColumnId: string,
+    toColumnId: string,
+  ) => {
+    if (fromColumnId === toColumnId) return;
+
+    updateBoard((current) => {
+      let movedTask: KanbanTask | undefined;
+      const removed = current.map((column) => {
+        if (column.id !== fromColumnId) return column;
+        const nextTasks = column.tasks.filter((task) => {
+          if (task.id === taskId) {
+            movedTask = task;
+            return false;
+          }
+          return true;
+        });
+        return { ...column, tasks: nextTasks };
+      });
+
+      if (!movedTask) return current;
+
+      return removed.map((column) =>
+        column.id === toColumnId
+          ? { ...column, tasks: [...column.tasks, movedTask as KanbanTask] }
+          : column,
+      );
+    });
+  };
+
+  const submitDraft = (columnId: string) => {
+    const draft = getDraft(columnId);
+    if (!draft.title.trim()) return;
+
+    const task: KanbanTask = {
+      id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      title: draft.title.trim(),
+      description: draft.description.trim() || undefined,
+      assigneeFallback: draft.assigneeFallback.trim() || undefined,
+      tag: draft.tag.trim() || undefined,
+      priority: draft.priority,
+    };
+
+    updateBoard((current) =>
+      current.map((column) =>
+        column.id === columnId
+          ? { ...column, tasks: [...column.tasks, task] }
+          : column,
+      ),
+    );
+
+    setDrafts((current) => ({ ...current, [columnId]: createEmptyDraft() }));
+    setOpenFormColumnId(null);
+  };
+
+  const commitEdit = () => {
+    if (!editingTask) return;
+    const value = editingTask.value.trim();
+    if (!value) {
+      setEditingTask(null);
+      return;
+    }
+
+    updateBoard((current) =>
+      current.map((column) =>
+        column.id === editingTask.columnId
+          ? {
+              ...column,
+              tasks: column.tasks.map((task) =>
+                task.id === editingTask.taskId
+                  ? { ...task, title: value }
+                  : task,
+              ),
+            }
+          : column,
+      ),
+    );
+    setEditingTask(null);
   };
 
   return (
-    <Card
-      padding={24}
-      style={{ overflow: "visible" }}
-      className="w-full max-w-md"
-    >
-      <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm font-semibold">Activity Feed</p>
-        <Badge variant="outline" animateOnHover>
-          Live
-        </Badge>
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-lg font-semibold">{title}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            className="w-56"
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={searchPlaceholder}
+            value={search}
+          />
+          <Select
+            onChange={(value) =>
+              setPriorityFilter(value as "all" | KanbanTask["priority"])
+            }
+            options={[
+              { value: "all", label: `${priorityFilterLabel}: all` },
+              { value: "high", label: `${priorityFilterLabel}: high` },
+              { value: "medium", label: `${priorityFilterLabel}: medium` },
+              { value: "low", label: `${priorityFilterLabel}: low` },
+            ]}
+            value={priorityFilter}
+          />
+        </div>
       </div>
 
-      <Timeline>
-        {EVENTS.map((event, i) => (
-          <TimelineItem
-            key={event.target}
-            status={getStatus(i)}
-            isLast={i === EVENTS.length - 1}
-            title={
-              <span className="flex items-center gap-2 flex-wrap">
-                <Avatar fallback={event.fallback} size={22} />
-                <span className="text-xs font-medium">{event.user}</span>
-                <span className="text-xs text-muted-foreground">
-                  {event.action}
-                </span>
-                <span className="text-xs font-medium truncate max-w-[120px]">
-                  {event.target}
-                </span>
-              </span>
-            }
-            description={
-              <span className="flex items-center gap-2 mt-1">
-                <Badge variant={event.tagVariant} className="text-[10px]">
-                  {event.tag}
-                </Badge>
-                <span className="text-[10px] text-muted-foreground">
-                  {event.time}
-                </span>
-              </span>
-            }
-          />
-        ))}
-      </Timeline>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {columns.map((column, columnIndex) => {
+          const draft = getDraft(column.id);
+          const visibleTasks = column.tasks.filter(isVisibleTask);
 
-      <button
-        onClick={runAnimation}
-        className="mt-4 self-start rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
-      >
-        Replay ↺
-      </button>
-    </Card>
+          return (
+            <Card key={column.id} padding={18} style={{ overflow: "visible" }}>
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold">{column.label}</p>
+                  <Badge variant="outline">{visibleTasks.length}</Badge>
+                </div>
+                <Button
+                  onClick={() =>
+                    setOpenFormColumnId((current) =>
+                      current === column.id ? null : column.id,
+                    )
+                  }
+                  size="sm"
+                  variant="ghost"
+                >
+                  {addTaskLabel}
+                </Button>
+              </div>
+
+              {openFormColumnId === column.id ? (
+                <div className="mb-4 flex flex-col gap-3">
+                  <Input
+                    label="Title"
+                    onChange={(event) =>
+                      setDrafts((current) => ({
+                        ...current,
+                        [column.id]: { ...draft, title: event.target.value },
+                      }))
+                    }
+                    value={draft.title}
+                  />
+                  <Textarea
+                    autoGrow
+                    label="Description"
+                    onChange={(event) =>
+                      setDrafts((current) => ({
+                        ...current,
+                        [column.id]: {
+                          ...draft,
+                          description: event.target.value,
+                        },
+                      }))
+                    }
+                    value={draft.description}
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      label="Assignee"
+                      maxLength={2}
+                      onChange={(event) =>
+                        setDrafts((current) => ({
+                          ...current,
+                          [column.id]: {
+                            ...draft,
+                            assigneeFallback: event.target.value.toUpperCase(),
+                          },
+                        }))
+                      }
+                      value={draft.assigneeFallback}
+                    />
+                    <Input
+                      label="Tag"
+                      onChange={(event) =>
+                        setDrafts((current) => ({
+                          ...current,
+                          [column.id]: { ...draft, tag: event.target.value },
+                        }))
+                      }
+                      value={draft.tag}
+                    />
+                  </div>
+                  <Select
+                    onChange={(value) =>
+                      setDrafts((current) => ({
+                        ...current,
+                        [column.id]: {
+                          ...draft,
+                          priority: value as KanbanTask["priority"],
+                        },
+                      }))
+                    }
+                    options={[
+                      { value: "high", label: "High priority" },
+                      { value: "medium", label: "Medium priority" },
+                      { value: "low", label: "Low priority" },
+                    ]}
+                    value={draft.priority}
+                  />
+                  <div className="flex gap-2">
+                    <Button onClick={() => submitDraft(column.id)} size="sm">
+                      Save task
+                    </Button>
+                    <Button
+                      onClick={() => setOpenFormColumnId(null)}
+                      size="sm"
+                      variant="ghost"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="flex flex-col gap-3">
+                {visibleTasks.map((task, taskIndex) => {
+                  const isEditing =
+                    editingTask?.columnId === column.id &&
+                    editingTask.taskId === task.id;
+
+                  return (
+                    <StickyNote
+                      key={task.id}
+                      className="group w-full"
+                      color={column.color}
+                      rotate={(columnIndex + taskIndex) % 2 === 0 ? -1 : 1}
+                      title={
+                        isEditing ? (
+                          <Input
+                            autoFocus
+                            className="w-full"
+                            onBlur={commitEdit}
+                            onChange={(event) =>
+                              setEditingTask((current) =>
+                                current
+                                  ? { ...current, value: event.target.value }
+                                  : current,
+                              )
+                            }
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                commitEdit();
+                              }
+                              if (event.key === "Escape") {
+                                setEditingTask(null);
+                              }
+                            }}
+                            value={editingTask?.value ?? ""}
+                          />
+                        ) : (
+                          <button
+                            className="text-left text-sm font-semibold"
+                            onClick={() =>
+                              setEditingTask({
+                                columnId: column.id,
+                                taskId: task.id,
+                                value: task.title,
+                              })
+                            }
+                            type="button"
+                          >
+                            {task.title}
+                          </button>
+                        )
+                      }
+                    >
+                      <div className="space-y-3">
+                        {task.description ? (
+                          <p className="text-xs leading-5 text-foreground/80">
+                            {task.description}
+                          </p>
+                        ) : null}
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge
+                            variant={
+                              task.priority === "high"
+                                ? "destructive"
+                                : task.priority === "medium"
+                                  ? "warning"
+                                  : "outline"
+                            }
+                          >
+                            {task.priority}
+                          </Badge>
+                          {task.tag ? (
+                            <Badge variant="outline">{task.tag}</Badge>
+                          ) : null}
+                          {task.assigneeFallback ? (
+                            <Avatar
+                              fallback={task.assigneeFallback}
+                              size={24}
+                            />
+                          ) : null}
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                          {columns
+                            .filter(
+                              (targetColumn) => targetColumn.id !== column.id,
+                            )
+                            .map((targetColumn) => (
+                              <Tooltip
+                                key={targetColumn.id}
+                                content={`Move to ${targetColumn.label}`}
+                              >
+                                <span>
+                                  <Button
+                                    onClick={() =>
+                                      moveTask(
+                                        task.id,
+                                        column.id,
+                                        targetColumn.id,
+                                      )
+                                    }
+                                    size="sm"
+                                    variant="ghost"
+                                  >
+                                    {targetColumn.label}
+                                  </Button>
+                                </span>
+                              </Tooltip>
+                            ))}
+                          <Tooltip content="Delete task">
+                            <span>
+                              <Button
+                                onClick={() =>
+                                  updateBoard((current) =>
+                                    current.map((currentColumn) =>
+                                      currentColumn.id === column.id
+                                        ? {
+                                            ...currentColumn,
+                                            tasks: currentColumn.tasks.filter(
+                                              (currentTask) =>
+                                                currentTask.id !== task.id,
+                                            ),
+                                          }
+                                        : currentColumn,
+                                    ),
+                                  )
+                                }
+                                size="sm"
+                                variant="ghost"
+                              >
+                                Delete
+                              </Button>
+                            </span>
+                          </Tooltip>
+                        </div>
+                      </div>
+                    </StickyNote>
+                  );
+                })}
+
+                {visibleTasks.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {emptyStateLabel}
+                  </p>
+                ) : null}
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
   );
 }

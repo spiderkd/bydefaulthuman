@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "onboarding-stepper",
+  "title": "Onboarding Stepper",
+  "description": "A block for guiding users through an onboarding process with rough styling.",
+  "dependencies": [
+    "roughjs"
+  ],
+  "registryDependencies": [
+    "https://www.bydefaulthuman.fun/r/use-rough.json",
+    "utils",
+    "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+    "https://www.bydefaulthuman.fun/r/rough-lib.json",
+    "https://www.bydefaulthuman.fun/r/button.json",
+    "https://www.bydefaulthuman.fun/r/progress.json",
+    "https://www.bydefaulthuman.fun/r/card.json",
+    "https://www.bydefaulthuman.fun/r/timeline.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/OnboardingStepperBlock.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Button } from \"@/components/crumble/ui/button\";\nimport { Card } from \"@/components/crumble/ui/card\";\nimport { Progress } from \"@/components/crumble/ui/progress\";\nimport {\n  Timeline,\n  TimelineItem,\n  type TimelineStatus,\n} from \"@/components/crumble/ui/timeline\";\n\nexport interface OnboardingStep {\n  description: string;\n  title: string;\n}\n\nexport interface OnboardingStepperBlockProps {\n  onComplete?: () => void;\n  onStepChange?: (stepIndex: number) => void;\n  steps?: OnboardingStep[];\n  title?: string;\n}\n\nconst DEFAULT_STEPS: OnboardingStep[] = [\n  {\n    title: \"Create your account\",\n    description: \"Enter your email and set a password.\",\n  },\n  {\n    title: \"Pick a theme\",\n    description: \"Choose between pencil, ink, or crayon.\",\n  },\n  {\n    title: \"Install components\",\n    description: \"Run the CLI to copy components into your project.\",\n  },\n  {\n    title: \"You're all set!\",\n    description: \"Start building with Crumble.\",\n  },\n];\n\nfunction getStepStatus(stepIndex: number, currentStep: number): TimelineStatus {\n  if (stepIndex < currentStep) return \"complete\";\n  if (stepIndex === currentStep) return \"active\";\n  return \"pending\";\n}\n\nexport function OnboardingStepperBlock({\n  onComplete,\n  onStepChange,\n  steps = DEFAULT_STEPS,\n  title = \"Get started\",\n}: OnboardingStepperBlockProps) {\n  const [currentStep, setCurrentStep] = useState(0);\n  const safeMaxIndex = Math.max(steps.length - 1, 0);\n  const progress = safeMaxIndex === 0 ? 100 : Math.round((currentStep / safeMaxIndex) * 100);\n  const isFirst = currentStep === 0;\n  const isLast = currentStep >= safeMaxIndex;\n\n  const goToStep = (nextStep: number) => {\n    setCurrentStep(nextStep);\n    onStepChange?.(nextStep);\n  };\n\n  return (\n    <Card padding={28} style={{ overflow: \"visible\" }} className=\"w-full max-w-sm\">\n      <p className=\"mb-5 text-sm font-semibold\">{title}</p>\n\n      <Progress\n        className=\"mb-6 w-full\"\n        formatValue={(value) => `${value}%`}\n        label=\"Setup progress\"\n        showValue\n        value={progress}\n      />\n\n      <Timeline>\n        {steps.map((step, index) => (\n          <TimelineItem\n            key={step.title}\n            description={step.description}\n            isLast={index === steps.length - 1}\n            status={getStepStatus(index, currentStep)}\n            title={step.title}\n          />\n        ))}\n      </Timeline>\n\n      <div className=\"mt-6 flex justify-between gap-3\">\n        <Button\n          disabled={isFirst}\n          onClick={() => goToStep(Math.max(0, currentStep - 1))}\n          size=\"sm\"\n          variant=\"ghost\"\n        >\n          Back\n        </Button>\n        <Button\n          onClick={() => {\n            if (isLast) {\n              onComplete?.();\n              return;\n            }\n            goToStep(Math.min(safeMaxIndex, currentStep + 1));\n          }}\n          size=\"sm\"\n        >\n          {isLast ? \"Done\" : \"Next\"}\n        </Button>\n      </div>\n    </Card>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/crumble/blocks/onboarding-stepper.tsx"
+    }
+  ],
+  "type": "registry:block"
+}

@@ -17,13 +17,109 @@ import { TimelineDemo } from "@/components/demos/TimelineDemo";
 
 ## Installation
 
-<InstallTabs slug="timeline" />
+<InstallTabs slug="timeline" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+#### Timeline
+
+<PropsTable
+  rows={[
+    {
+      prop: "theme",
+      type: '"pencil" | "ink" | "crayon"',
+      description: "Overrides the global Crumble theme for all items.",
+    },
+    {
+      prop: "stroke",
+      type: "string",
+      description: "CSS color for rough strokes.",
+    },
+    {
+      prop: "strokeMuted",
+      type: "string",
+      description: "CSS color for muted strokes (connector lines).",
+    },
+    { prop: "fill", type: "string", description: "CSS color for rough fills." },
+  ]}
+/>
+#### TimelineItem
+<PropsTable
+  rows={[
+    {
+      prop: "title",
+      type: "ReactNode",
+      required: true,
+      description: "Primary label for this timeline entry.",
+    },
+    {
+      prop: "status",
+      type: '"complete" | "active" | "pending"',
+      default: '"pending"',
+      description:
+        "Controls the node appearance — filled circle for complete, outlined with dot for active, empty for pending.",
+    },
+    {
+      prop: "description",
+      type: "ReactNode",
+      description: "Secondary text rendered below the title.",
+    },
+    {
+      prop: "time",
+      type: "ReactNode",
+      description: "Timestamp or label rendered to the right of the title.",
+    },
+    {
+      prop: "isLast",
+      type: "boolean",
+      default: "false",
+      description:
+        "Suppresses the connector line below this item. Set on the final entry.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      description: "Stable ID for seeding the rough node and line drawings.",
+    },
+  ]}
+/>
+
+---
+
+## Static Example
+
+<PreviewContainer
+  componentName="timeline"
+  code={`import { Timeline, TimelineItem } from '@/components/crumble/ui/timeline'
+
+<Timeline>
+  <TimelineItem title="Order placed"     status="complete" time="9:00 AM" />
+  <TimelineItem title="Processing"       status="complete" time="9:15 AM" />
+  <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" />
+  <TimelineItem title="Delivered"        status="pending"  isLast />
+</Timeline>`}
+>
+  <div className="w-full max-w-xs">
+    <Timeline>
+      <TimelineItem title="Order placed"     status="complete" time="9:00 AM"  description="Payment confirmed." />
+      <TimelineItem title="Processing"       status="complete" time="9:15 AM"  description="Items picked and packed." />
+      <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" description="Your driver is on the way." />
+      <TimelineItem title="Delivered"        status="pending"  isLast />
+    </Timeline>
+  </div>
+</PreviewContainer>
+
+## Statuses
+
+- `complete` — filled hachure circle with a tick
+- `active` — outlined circle with filled inner dot
+- `pending` — empty outlined circle
+
+## Accessibility
+
+Timeline is primarily visual, so the text inside each item should still make sense when read linearly. Include timestamps or status text directly in the item copy when chronology matters.
+
+## Examples
 
 The demo above auto-plays on mount and exposes a **Replay** button. It drives
 status changes through a plain `setTimeout` stagger — no extra dependencies
@@ -119,66 +215,4 @@ export function TimelineDemo() {
     </div>
   );
 }
-```
-
----
-
-## Static Example
-
-<PreviewContainer
-  componentName="timeline"
-  code={`import { Timeline, TimelineItem } from '@/components/crumble/ui/timeline'
-
-<Timeline>
-  <TimelineItem title="Order placed"     status="complete" time="9:00 AM" />
-  <TimelineItem title="Processing"       status="complete" time="9:15 AM" />
-  <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" />
-  <TimelineItem title="Delivered"        status="pending"  isLast />
-</Timeline>`}
->
-  <div className="w-full max-w-xs">
-    <Timeline>
-      <TimelineItem title="Order placed"     status="complete" time="9:00 AM"  description="Payment confirmed." />
-      <TimelineItem title="Processing"       status="complete" time="9:15 AM"  description="Items picked and packed." />
-      <TimelineItem title="Out for delivery" status="active"   time="11:30 AM" description="Your driver is on the way." />
-      <TimelineItem title="Delivered"        status="pending"  isLast />
-    </Timeline>
-  </div>
-</PreviewContainer>
-
-
-
-## Statuses
-
-- `complete` — filled hachure circle with a tick
-- `active` — outlined circle with filled inner dot
-- `pending` — empty outlined circle
-
-## Themes
-
-<PreviewContainer
-  componentName="timeline"
-  code={`<Timeline theme="crayon">
-  <TimelineItem title="Step one"   status="complete" />
-  <TimelineItem title="Step two"   status="active" />
-  <TimelineItem title="Step three" status="pending" isLast />
-</Timeline>`}
->
-  <div className="w-full max-w-xs">
-    <Timeline theme="crayon">
-      <TimelineItem title="Step one" status="complete" />
-      <TimelineItem title="Step two" status="active" />
-      <TimelineItem title="Step three" status="pending" isLast />
-    </Timeline>
-  </div>
-</PreviewContainer>
-
-## Accessibility
-
-Timeline is primarily visual, so the text inside each item should still make sense when read linearly. Include timestamps or status text directly in the item copy when chronology matters.
-
-## Examples
-
-```tsx
-
 ```

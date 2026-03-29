@@ -5,6 +5,7 @@ description: A notification panel combining Card, Avatar, Badge, Toggle, and Sep
 
 import { NotificationCenterBlockDemo } from "@/components/block/demos/NotificationCenterBlockDemo";
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { PropsTable } from "@/components/mdx/PropsTable";
 
 <PreviewContainer
@@ -18,26 +19,56 @@ import { PropsTable } from "@/components/mdx/PropsTable";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/card.json
-npx shadcn add https://crumble.dev/r/avatar.json
-npx shadcn add https://crumble.dev/r/badge.json
-npx shadcn add https://crumble.dev/r/toggle.json
-npx shadcn add https://crumble.dev/r/separator.json
-npx shadcn add https://crumble.dev/r/button.json
-```
+<InstallTabs slug="notification-center" peerDeps={["rough-notation"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'markAllReadLabel', type: "string", default: undefined, description: "Action label for marking notifications as read." },
-  { prop: 'muteLabel', type: "string", default: undefined, description: "Label for the mute toggle." },
-  { prop: 'notifications', type: "Notification[]", default: undefined, description: "Notifications rendered by the block." },
-  { prop: 'onDismiss', type: "(id: Notification[\"id\"]) => void", default: undefined, description: "Callback fired when a notification is dismissed." },
-  { prop: 'onMarkAllRead', type: "() => void", default: undefined, description: "Callback fired when all notifications are marked read." },
-  { prop: 'onMuteChange', type: "(muted: boolean) => void", default: undefined, description: "Callback fired when the mute state changes." },
-  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "markAllReadLabel",
+      type: "string",
+      default: undefined,
+      description: "Action label for marking notifications as read.",
+    },
+    {
+      prop: "muteLabel",
+      type: "string",
+      default: undefined,
+      description: "Label for the mute toggle.",
+    },
+    {
+      prop: "notifications",
+      type: "Notification[]",
+      default: undefined,
+      description: "Notifications rendered by the block.",
+    },
+    {
+      prop: "onDismiss",
+      type: '(id: Notification["id"]) => void',
+      default: undefined,
+      description: "Callback fired when a notification is dismissed.",
+    },
+    {
+      prop: "onMarkAllRead",
+      type: "() => void",
+      default: undefined,
+      description: "Callback fired when all notifications are marked read.",
+    },
+    {
+      prop: "onMuteChange",
+      type: "(muted: boolean) => void",
+      default: undefined,
+      description: "Callback fired when the mute state changes.",
+    },
+    {
+      prop: "title",
+      type: "string",
+      default: undefined,
+      description: "Block heading text.",
+    },
+  ]}
+/>
 
 ## Accessibility
 
@@ -46,7 +77,7 @@ This block is composed from accessible Crumble components. Preserve visible labe
 ## Examples
 
 ```tsx
-import { NotificationCenterBlock } from '@/components/block/NotificationCenterBlock'
+import { NotificationCenterBlock } from "@/components/block/NotificationCenterBlock";
 
-<NotificationCenterBlock />
+<NotificationCenterBlock />;
 ```

@@ -3,10 +3,10 @@ title: File Upload
 description: A hand-drawn dropzone that becomes more expressive when a file is dragged over it.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { InstallTabs } from "@/components/mdx/InstallTabs";
-import { FileUpload } from "@/registry/new-york/ui/file-upload"
+import { FileUpload } from "@/registry/new-york/ui/file-upload";
 
 <PreviewContainer
   componentName="file-upload"
@@ -21,20 +21,63 @@ import { FileUpload } from "@/registry/new-york/ui/file-upload"
 
 ## Installation
 
-<InstallTabs slug="file-upload" />
+<InstallTabs slug="file-upload" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'accept', type: "string", default: undefined, description: "Accepted file types." },
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'multiple', type: "boolean", default: "false", description: "Allows handling multiple values or files." },
-  { prop: 'onChange', type: "(files: FileList) => void", default: undefined, description: "Callback fired when the value changes." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "accept",
+      type: "string",
+      default: undefined,
+      description: "Accepted file types.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables interaction.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allows handling multiple values or files.",
+    },
+    {
+      prop: "onChange",
+      type: "(files: FileList) => void",
+      default: undefined,
+      description: "Callback fired when the value changes.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## With hint and accept
 
@@ -66,16 +109,7 @@ import { FileUpload } from "@/registry/new-york/ui/file-upload"
   </div>
 </PreviewContainer>
 
-## Themes
 
-<PreviewContainer
-  componentName="file-upload"
-  code={`<FileUpload theme="crayon" label="Drop here" />`}
->
-  <div className="w-full max-w-sm">
-    <FileUpload theme="crayon" label="Drop here" />
-  </div>
-</PreviewContainer>
 
 ## Accessibility
 
@@ -84,7 +118,7 @@ FileUpload still uses a native file input under the custom dropzone, so browser 
 ## Examples
 
 ```tsx
-import { FileUpload } from '@/components/crumble/ui/file-upload'
+import { FileUpload } from "@/components/crumble/ui/file-upload";
 
-<FileUpload />
+<FileUpload />;
 ```

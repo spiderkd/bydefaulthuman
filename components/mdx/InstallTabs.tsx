@@ -386,7 +386,7 @@ export function InstallTabs({ files, peerDeps = [], slug }: InstallTabsProps) {
   const [activeTop, setActiveTop] = useState<"cli" | "manual">("cli");
   const [activePm, setActivePm] = useState<PackageManager>("npm");
 
-  const registryUrl = `https://crumble.dev/r/${slug}.json`;
+  const registryUrl = `https://bydefaulthuman.fun/r/${slug}.json`;
 
   return (
     <div className="my-4 w-full space-y-4">

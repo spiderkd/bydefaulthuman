@@ -6,6 +6,7 @@ description: A multi-step onboarding wizard with a hand-drawn progress bar and t
 import { OnboardingStepperBlockDemo } from "@/components/block/demos/OnboardingStepperBlockDemo";
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 
 <PreviewContainer
   componentName="progress"
@@ -18,21 +19,38 @@ import { PropsTable } from "@/components/mdx/PropsTable";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/progress.json
-npx shadcn add https://crumble.dev/r/timeline.json
-npx shadcn add https://crumble.dev/r/button.json
-npx shadcn add https://crumble.dev/r/card.json
-```
+<InstallTabs slug="onboarding-stepper" peerDeps={["rough-notation"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'onComplete', type: "() => void", default: undefined, description: "Callback fired when the final step completes." },
-  { prop: 'onStepChange', type: "(stepIndex: number) => void", default: undefined, description: "Callback fired when the active step changes." },
-  { prop: 'steps', type: "OnboardingStep[]", default: undefined, description: "Stepper steps rendered in order." },
-  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "onComplete",
+      type: "() => void",
+      default: undefined,
+      description: "Callback fired when the final step completes.",
+    },
+    {
+      prop: "onStepChange",
+      type: "(stepIndex: number) => void",
+      default: undefined,
+      description: "Callback fired when the active step changes.",
+    },
+    {
+      prop: "steps",
+      type: "OnboardingStep[]",
+      default: undefined,
+      description: "Stepper steps rendered in order.",
+    },
+    {
+      prop: "title",
+      type: "string",
+      default: undefined,
+      description: "Block heading text.",
+    },
+  ]}
+/>
 
 ## Accessibility
 
@@ -41,7 +59,7 @@ This block is composed from accessible Crumble components. Preserve visible labe
 ## Examples
 
 ```tsx
-import { OnboardingStepperBlock } from '@/components/block/OnboardingStepperBlock'
+import { OnboardingStepperBlock } from "@/components/block/OnboardingStepperBlock";
 
-<OnboardingStepperBlock />
+<OnboardingStepperBlock />;
 ```

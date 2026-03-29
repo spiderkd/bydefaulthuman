@@ -7,7 +7,7 @@
     "roughjs"
   ],
   "registryDependencies": [
-    "http://localhost:3000/r/rough-lib.json"
+    "https://www.bydefaulthuman.fun/r/rough-lib.json"
   ],
   "files": [
     {

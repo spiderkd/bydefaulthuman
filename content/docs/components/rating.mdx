@@ -19,22 +19,75 @@ import { Rating } from "@/registry/new-york/ui/rating";
 
 ## Installation
 
-<InstallTabs slug="rating" />
+<InstallTabs slug="rating" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'defaultValue', type: "number", default: "0", description: "Initial uncontrolled value." },
-  { prop: 'disabled', type: "boolean", default: undefined, description: "Disables interaction." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'max', type: "number", default: "5", description: "Upper bound for the value." },
-  { prop: 'onChange', type: "(value: number) => void", default: undefined, description: "Callback fired when the value changes." },
-  { prop: 'size', type: "number", default: "24", description: "Controls the visual size of the component." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "number", default: undefined, description: "Controlled value for the component." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "defaultValue",
+      type: "number",
+      default: "0",
+      description: "Initial uncontrolled value.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: undefined,
+      description: "Disables interaction.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "max",
+      type: "number",
+      default: "5",
+      description: "Upper bound for the value.",
+    },
+    {
+      prop: "onChange",
+      type: "(value: number) => void",
+      default: undefined,
+      description: "Callback fired when the value changes.",
+    },
+    {
+      prop: "size",
+      type: "number",
+      default: "24",
+      description: "Controls the visual size of the component.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "number",
+      default: undefined,
+      description: "Controlled value for the component.",
+    },
+  ]}
+/>
 
 ## Sizes
 
@@ -66,21 +119,6 @@ import { Rating } from "@/registry/new-york/ui/rating";
   <Rating defaultValue={2} disabled />
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="rating"
-  code={`<Rating defaultValue={3} theme="pencil" />
-<Rating defaultValue={3} theme="ink" />
-<Rating defaultValue={3} theme="crayon" />`}
->
-  <div className="flex flex-col gap-3">
-    <Rating defaultValue={3} theme="pencil" />
-    <Rating defaultValue={3} theme="ink" />
-    <Rating defaultValue={3} theme="crayon" />
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 Rating uses button elements for each star, so keyboard focus still works. Pair the stars with a visible label or nearby text so the scale meaning is clear before a user selects a value.
@@ -88,7 +126,7 @@ Rating uses button elements for each star, so keyboard focus still works. Pair t
 ## Examples
 
 ```tsx
-import { Rating } from '@/components/crumble/ui/rating'
+import { Rating } from "@/components/crumble/ui/rating";
 
-<Rating defaultValue={3} />
+<Rating defaultValue={3} />;
 ```

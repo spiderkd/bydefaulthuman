@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "metrics-comparison",
+  "title": "Metrics Comparison",
+  "description": "A block for comparing key metrics with a rough styling.",
+  "dependencies": [
+    "roughjs"
+  ],
+  "registryDependencies": [
+    "https://www.bydefaulthuman.fun/r/use-rough.json",
+    "utils",
+    "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+    "https://www.bydefaulthuman.fun/r/rough-lib.json",
+    "https://www.bydefaulthuman.fun/r/line-chart.json",
+    "https://www.bydefaulthuman.fun/r/bar-chart.json",
+    "https://www.bydefaulthuman.fun/r/stat-card.json",
+    "https://www.bydefaulthuman.fun/r/tabs.json",
+    "https://www.bydefaulthuman.fun/r/card.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/MetricsComparisonBlock.tsx",
+      "content": "\"use client\";\n\nimport { Card } from \"@/components/crumble/ui/card\";\nimport { LineChart } from \"@/components/crumble/ui/line-chart\";\nimport { PieChart } from \"@/components/crumble/ui/pie-chart\";\nimport { StatCard } from \"@/components/crumble/ui/stat-card\";\nimport { Tabs, TabsContent, TabsList, TabsTrigger } from \"@/components/crumble/ui/tabs\";\n\nexport interface DashboardStat {\n  description?: string;\n  label: string;\n  trend: \"up\" | \"down\" | \"flat\";\n  trendLabel: string;\n  value: string;\n}\n\nexport interface LineSeries {\n  color?: string;\n  data: number[];\n  id: string;\n  label: string;\n}\n\nexport interface PieSlice {\n  color?: string;\n  label: string;\n  value: number;\n}\n\nexport interface MetricsComparisonBlockProps {\n  lineLabels?: string[];\n  lineSeries?: LineSeries[];\n  pieData?: PieSlice[];\n  stats?: DashboardStat[];\n  tab1Label?: string;\n  tab2Label?: string;\n  title?: string;\n}\n\nconst DEFAULT_STATS: DashboardStat[] = [\n  {\n    label: \"Revenue\",\n    value: \"$84k\",\n    trend: \"up\",\n    trendLabel: \"+11%\",\n    description: \"month over month\",\n  },\n  {\n    label: \"Costs\",\n    value: \"$29k\",\n    trend: \"down\",\n    trendLabel: \"-4%\",\n    description: \"month over month\",\n  },\n  {\n    label: \"Conversion\",\n    value: \"6.8%\",\n    trend: \"up\",\n    trendLabel: \"+0.9%\",\n    description: \"vs prior period\",\n  },\n  {\n    label: \"Bounce\",\n    value: \"18%\",\n    trend: \"flat\",\n    trendLabel: \"stable\",\n    description: \"vs prior period\",\n  },\n];\n\nconst DEFAULT_LINE_SERIES: LineSeries[] = [\n  {\n    id: \"revenue\",\n    label: \"Revenue\",\n    data: [24, 29, 31, 39, 41, 48, 55, 63],\n    color: \"oklch(0.62 0.18 55)\",\n  },\n  {\n    id: \"cost\",\n    label: \"Cost\",\n    data: [18, 19, 21, 24, 22, 23, 25, 29],\n    color: \"oklch(0.55 0.18 260)\",\n  },\n];\n\nconst DEFAULT_LINE_LABELS = [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\"];\n\nconst DEFAULT_PIE_DATA: PieSlice[] = [\n  { label: \"Organic\", value: 38, color: \"oklch(0.62 0.18 55)\" },\n  { label: \"Referral\", value: 24, color: \"oklch(0.62 0.16 145)\" },\n  { label: \"Direct\", value: 21, color: \"oklch(0.55 0.18 260)\" },\n  { label: \"Paid\", value: 17, color: \"oklch(0.63 0.22 25)\" },\n];\n\nexport function MetricsComparisonBlock({\n  lineLabels = DEFAULT_LINE_LABELS,\n  lineSeries = DEFAULT_LINE_SERIES,\n  pieData = DEFAULT_PIE_DATA,\n  stats = DEFAULT_STATS,\n  tab1Label = \"Revenue vs Cost\",\n  tab2Label = \"Traffic sources\",\n  title = \"Metrics comparison\",\n}: MetricsComparisonBlockProps) {\n  return (\n    <div className=\"flex w-full flex-col gap-6\">\n      <div className=\"grid grid-cols-2 gap-4 sm:grid-cols-4\">\n        {stats.map((stat) => (\n          <StatCard\n            key={stat.label}\n            description={stat.description}\n            label={stat.label}\n            trend={stat.trend}\n            trendLabel={stat.trendLabel}\n            value={stat.value}\n          />\n        ))}\n      </div>\n\n      <Card padding={20} style={{ overflow: \"visible\" }}>\n        <div className=\"mb-4\">\n          <p className=\"text-sm font-semibold\">{title}</p>\n        </div>\n        <Tabs defaultValue=\"line\">\n          <TabsList>\n            <TabsTrigger value=\"line\">{tab1Label}</TabsTrigger>\n            <TabsTrigger value=\"pie\">{tab2Label}</TabsTrigger>\n          </TabsList>\n          <TabsContent value=\"line\">\n            <LineChart height={280} labels={lineLabels} series={lineSeries} />\n          </TabsContent>\n          <TabsContent value=\"pie\">\n            <PieChart data={pieData} donut height={320} />\n          </TabsContent>\n        </Tabs>\n      </Card>\n    </div>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/crumble/blocks/metrics-comparison.tsx"
+    }
+  ],
+  "type": "registry:block"
+}

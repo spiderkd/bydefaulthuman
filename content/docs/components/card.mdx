@@ -34,18 +34,52 @@ import {
 
 ## Installation
 
-<InstallTabs slug="card" />
+<InstallTabs slug="card" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'padding', type: "number", default: "20", description: "Adds padding around the component content." },
-  { prop: 'stacked', type: "boolean", default: "false", description: "Controls the `stacked` behavior." },
-  { prop: 'style', type: "CSSProperties", default: undefined, description: "Controls the `style` behavior." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+      required: true,
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "padding",
+      type: "number",
+      default: "20",
+      description: "Adds padding around the component content.",
+    },
+    {
+      prop: "stacked",
+      type: "boolean",
+      default: "false",
+      description: "Controls the `stacked` behavior.",
+    },
+    {
+      prop: "style",
+      type: "CSSProperties",
+      default: undefined,
+      description: "Controls the `style` behavior.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Stacked effect
 
@@ -108,27 +142,37 @@ import {
   </Card>
 </PreviewContainer>
 
-## Themes
+## With Image
 
 <PreviewContainer
   componentName="card"
-  code={`<Card theme="pencil" padding={16}><p className="text-sm">Pencil</p></Card>
-<Card theme="ink"    padding={16}><p className="text-sm">Ink</p></Card>
-<Card theme="crayon" padding={16}><p className="text-sm">Crayon</p></Card>`}
+  code={`<Card stacked padding={16}>
+          <div className="relative"> 
+            <div className="rotate-[-1.5deg] bg-white p-2 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" alt="Polaroid" className="h-40 w-full object-cover" />
+            </div>
+           <p className="mt-3 text-xs text-muted-foreground">
+              Team moments, 2025
+           </p>
+          </div>
+    </Card>`}
 >
-  <div className="flex flex-wrap gap-3">
-    <Card theme="pencil" padding={16}>
-      <p className="text-sm">Pencil</p>
-    </Card>
-    <Card theme="ink" padding={16}>
-      <p className="text-sm">Ink</p>
-    </Card>
-    <Card theme="crayon" padding={16}>
-      <p className="text-sm">Crayon</p>
-    </Card>
-  </div>
+  <Card stacked padding={16}>
+    {" "}
+    <div className="relative">
+      {" "}
+      <div className="rotate-[-1.5deg] bg-white p-2 shadow-sm">
+        {" "}
+        <img
+          src="https://cdn.cosmos.so/a53591ef-78c0-4f0e-8ba8-45cd5becd052?format=jpeg"
+          alt="Polaroid"
+          className="h-40 w-full object-cover"
+        />{" "}
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">moments, 2025</p>
+    </div>
+  </Card>
 </PreviewContainer>
-
 ## Accessibility
 
 This component preserves the semantics of the underlying native elements where applicable. Provide visible labels and nearby text when the sketch styling is only decorative reinforcement.
@@ -136,10 +180,10 @@ This component preserves the semantics of the underlying native elements where a
 ## Examples
 
 ```tsx
-import { Card } from '@/components/crumble/ui/card'
+import { Card } from "@/components/crumble/ui/card";
 
 <Card padding={20}>
   <p className="font-medium">Card title</p>
   <p className="mt-1 text-sm text-muted-foreground">Some content here.</p>
-</Card>
+</Card>;
 ```

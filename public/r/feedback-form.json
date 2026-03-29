@@ -1,0 +1,30 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "feedback-form",
+  "title": "Feedback Form",
+  "description": "A block for collecting user feedback with a rough styling.",
+  "dependencies": [
+    "roughjs"
+  ],
+  "registryDependencies": [
+    "https://www.bydefaulthuman.fun/r/use-rough.json",
+    "utils",
+    "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+    "https://www.bydefaulthuman.fun/r/rough-lib.json",
+    "https://www.bydefaulthuman.fun/r/input.json",
+    "https://www.bydefaulthuman.fun/r/button.json",
+    "https://www.bydefaulthuman.fun/r/checkbox.json",
+    "https://www.bydefaulthuman.fun/r/card.json",
+    "https://www.bydefaulthuman.fun/r/textarea.json",
+    "https://www.bydefaulthuman.fun/r/rating.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/FeedbackFormBlock.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Button } from \"@/components/crumble/ui/button\";\nimport { Card } from \"@/components/crumble/ui/card\";\nimport { Checkbox } from \"@/components/crumble/ui/checkbox\";\nimport { Input } from \"@/components/crumble/ui/input\";\nimport { Rating } from \"@/components/crumble/ui/rating\";\nimport { Textarea } from \"@/components/crumble/ui/textarea\";\n\nexport interface FeedbackData {\n  email: string;\n  message: string;\n  rating: number;\n  subscribe: boolean;\n}\n\nexport interface FeedbackFormBlockProps {\n  emailLabel?: string;\n  emailPlaceholder?: string;\n  messageLabel?: string;\n  messagePlaceholder?: string;\n  onSubmit?: (data: FeedbackData) => void | Promise<void>;\n  ratingLabel?: string;\n  ratingLabels?: string[];\n  submitLabel?: string;\n  subscribeLabel?: string;\n  successBody?: string;\n  successTitle?: string;\n  title?: string;\n}\n\nconst DEFAULT_RATING_LABELS = [\"\", \"Poor\", \"Fair\", \"Good\", \"Great\", \"Excellent\"];\n\nexport function FeedbackFormBlock({\n  emailLabel = \"Email\",\n  emailPlaceholder = \"name@example.com\",\n  messageLabel = \"Tell us more\",\n  messagePlaceholder = \"What worked well? What felt rough?\",\n  onSubmit,\n  ratingLabel = \"How would you rate your experience?\",\n  ratingLabels = DEFAULT_RATING_LABELS,\n  submitLabel = \"Send feedback\",\n  subscribeLabel = \"Keep me updated on new components\",\n  successBody = \"Your note is in. We will use it to shape the next round of improvements.\",\n  successTitle = \"Thanks for the feedback!\",\n  title = \"Share your feedback\",\n}: FeedbackFormBlockProps) {\n  const [rating, setRating] = useState(0);\n  const [message, setMessage] = useState(\"\");\n  const [email, setEmail] = useState(\"\");\n  const [subscribe, setSubscribe] = useState(false);\n  const [submitted, setSubmitted] = useState(false);\n  const [submitting, setSubmitting] = useState(false);\n\n  if (submitted) {\n    return (\n      <Card padding={24} style={{ overflow: \"visible\" }} className=\"w-full max-w-md\">\n        <div className=\"flex flex-col gap-2\">\n          <p className=\"text-lg font-semibold\">{successTitle}</p>\n          <p className=\"text-sm leading-6 text-muted-foreground\">{successBody}</p>\n        </div>\n      </Card>\n    );\n  }\n\n  return (\n    <Card padding={24} style={{ overflow: \"visible\" }} className=\"w-full max-w-md\">\n      <form\n        className=\"flex flex-col gap-4\"\n        onSubmit={async (event) => {\n          event.preventDefault();\n          setSubmitting(true);\n          try {\n            await onSubmit?.({ email, message, rating, subscribe });\n            setSubmitted(true);\n          } finally {\n            setSubmitting(false);\n          }\n        }}\n      >\n        <p className=\"text-lg font-semibold\">{title}</p>\n\n        <div className=\"flex flex-col gap-2\">\n          <Rating label={ratingLabel} onChange={setRating} value={rating} />\n          <span className=\"text-xs text-muted-foreground\">\n            {ratingLabels[rating] ?? \"\"}\n          </span>\n        </div>\n\n        <Textarea\n          autoGrow\n          label={messageLabel}\n          onChange={(event) => setMessage(event.target.value)}\n          placeholder={messagePlaceholder}\n          value={message}\n        />\n\n        <Input\n          label={emailLabel}\n          onChange={(event) => setEmail(event.target.value)}\n          placeholder={emailPlaceholder}\n          type=\"email\"\n          value={email}\n        />\n\n        <Checkbox checked={subscribe} label={subscribeLabel} onChange={setSubscribe} />\n\n        <Button disabled={submitting} type=\"submit\">\n          {submitting ? \"Sending...\" : submitLabel}\n        </Button>\n      </form>\n    </Card>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/crumble/blocks/feedback-form.tsx"
+    }
+  ],
+  "type": "registry:block"
+}

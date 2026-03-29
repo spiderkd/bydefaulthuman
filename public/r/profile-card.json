@@ -1,0 +1,30 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "profile-card",
+  "title": "Profile Card",
+  "description": "A block for displaying a user's profile information with a rough styling.",
+  "dependencies": [
+    "roughjs"
+  ],
+  "registryDependencies": [
+    "https://www.bydefaulthuman.fun/r/use-rough.json",
+    "utils",
+    "https://www.bydefaulthuman.fun/r/crumble-theme.json",
+    "https://www.bydefaulthuman.fun/r/rough-lib.json",
+    "https://www.bydefaulthuman.fun/r/avatar.json",
+    "https://www.bydefaulthuman.fun/r/badge.json",
+    "https://www.bydefaulthuman.fun/r/button.json",
+    "https://www.bydefaulthuman.fun/r/card.json",
+    "https://www.bydefaulthuman.fun/r/tooltip.json",
+    "https://www.bydefaulthuman.fun/r/rough-line.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/ProfileCardBlock.tsx",
+      "content": "\"use client\";\n\nimport { RoughLine } from \"@/components/primitives/rough-line\";\nimport { Avatar, AvatarGroup } from \"@/components/crumble/ui/avatar\";\nimport { Badge } from \"@/components/crumble/ui/badge\";\nimport { Button } from \"@/components/crumble/ui/button\";\nimport { Card } from \"@/components/crumble/ui/card\";\nimport { Tooltip } from \"@/components/crumble/ui/tooltip\";\n\nexport interface MutualFollower {\n  fallback: string;\n  src?: string;\n}\n\nexport interface ProfileCardBlockProps {\n  avatarFallback?: string;\n  avatarSrc?: string;\n  bio?: string;\n  followers?: number;\n  following?: number;\n  messageLabel?: string;\n  mutualFollowers?: MutualFollower[];\n  mutualFollowersLabel?: string;\n  name?: string;\n  onFollow?: (following: boolean) => void;\n  onMessage?: () => void;\n  role?: string;\n  username?: string;\n}\n\nconst DEFAULT_MUTUAL_FOLLOWERS: MutualFollower[] = [\n  { fallback: \"AC\" },\n  { fallback: \"BM\" },\n  { fallback: \"CD\" },\n  { fallback: \"DP\" },\n];\n\nexport function ProfileCardBlock({\n  avatarFallback = \"GL\",\n  avatarSrc,\n  bio = \"Designing systems that feel playful without losing the sharp edges needed for production.\",\n  followers = 1420,\n  following = 318,\n  messageLabel = \"Message\",\n  mutualFollowers = DEFAULT_MUTUAL_FOLLOWERS,\n  mutualFollowersLabel = \"Mutual followers\",\n  name = \"Grace Liu\",\n  onFollow,\n  onMessage,\n  role = \"Design Engineer\",\n  username = \"@graceliu\",\n}: ProfileCardBlockProps) {\n  return (\n    <Card padding={24} style={{ overflow: \"visible\" }} className=\"w-full max-w-sm\">\n      <div className=\"flex flex-col gap-5\">\n        <div className=\"flex items-start justify-between gap-4\">\n          <div className=\"flex items-center gap-4\">\n            <Avatar fallback={avatarFallback} size={64} src={avatarSrc} />\n            <div>\n              <p className=\"text-lg font-semibold\">{name}</p>\n              <p className=\"text-sm text-muted-foreground\">{username}</p>\n              <div className=\"mt-2\">\n                <Badge variant=\"outline\">{role}</Badge>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <p className=\"text-sm leading-6 text-muted-foreground\">{bio}</p>\n\n        <RoughLine className=\"opacity-50\" />\n\n        <div className=\"grid grid-cols-2 gap-3 text-center\">\n          <div>\n            <p className=\"text-lg font-semibold tabular-nums\">{followers}</p>\n            <p className=\"text-xs uppercase tracking-[0.15em] text-muted-foreground/70\">\n              Followers\n            </p>\n          </div>\n          <div>\n            <p className=\"text-lg font-semibold tabular-nums\">{following}</p>\n            <p className=\"text-xs uppercase tracking-[0.15em] text-muted-foreground/70\">\n              Following\n            </p>\n          </div>\n        </div>\n\n        <div className=\"flex items-center justify-between gap-3\">\n          <div className=\"flex flex-col gap-2\">\n            <p className=\"text-[11px] font-medium uppercase tracking-[0.15em] text-muted-foreground/60\">\n              {mutualFollowersLabel}\n            </p>\n            <AvatarGroup\n              avatars={mutualFollowers.map((follower) => ({\n                fallback: follower.fallback,\n                src: follower.src,\n              }))}\n              size={28}\n            />\n          </div>\n          <div className=\"flex items-center gap-2\">\n            <Button onClick={() => onFollow?.(true)} size=\"sm\" variant=\"default\">\n              Follow\n            </Button>\n            <Tooltip content={messageLabel}>\n              <span>\n                <Button onClick={() => onMessage?.()} size=\"sm\" variant=\"ghost\">\n                  {messageLabel}\n                </Button>\n              </span>\n            </Tooltip>\n          </div>\n        </div>\n      </div>\n    </Card>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/crumble/blocks/profile-card.tsx"
+    }
+  ],
+  "type": "registry:block"
+}

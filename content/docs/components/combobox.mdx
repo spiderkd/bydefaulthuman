@@ -3,10 +3,10 @@ title: Combobox
 description: A searchable hand-drawn select with filtered dropdown and keyboard navigation.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { InstallTabs } from "@/components/mdx/InstallTabs";
-import { Combobox } from "@/registry/new-york/ui/combobox"
+import { Combobox } from "@/registry/new-york/ui/combobox";
 
 <PreviewContainer
   componentName="combobox"
@@ -39,25 +39,95 @@ import { Combobox } from "@/registry/new-york/ui/combobox"
 
 ## Installation
 
-<InstallTabs slug="combobox" />
+<InstallTabs slug="combobox" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'defaultValue', type: "string", default: "\"\"", description: "Initial uncontrolled value." },
-  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
-  { prop: 'error', type: "string", default: undefined, description: "Error message shown below the component." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'onBlur', type: "() => void", default: undefined, description: "Optional callback for component events." },
-  { prop: 'onChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the value changes." },
-  { prop: 'onFocus', type: "() => void", default: undefined, description: "Optional callback for component events." },
-  { prop: 'options', type: "ComboboxOption[]", default: undefined, description: "Options rendered by the component.", required: true },
-  { prop: 'placeholder', type: "string", default: "\"Search...\"", description: "Placeholder text shown before a value is entered or selected." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "string", default: undefined, description: "Controlled value for the component." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      default: '""',
+      description: "Initial uncontrolled value.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables interaction.",
+    },
+    {
+      prop: "error",
+      type: "string",
+      default: undefined,
+      description: "Error message shown below the component.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "onBlur",
+      type: "() => void",
+      default: undefined,
+      description: "Optional callback for component events.",
+    },
+    {
+      prop: "onChange",
+      type: "(value: string) => void",
+      default: undefined,
+      description: "Callback fired when the value changes.",
+    },
+    {
+      prop: "onFocus",
+      type: "() => void",
+      default: undefined,
+      description: "Optional callback for component events.",
+    },
+    {
+      prop: "options",
+      type: "ComboboxOption[]",
+      default: undefined,
+      description: "Options rendered by the component.",
+      required: true,
+    },
+    {
+      prop: "placeholder",
+      type: "string",
+      default: '"Search..."',
+      description:
+        "Placeholder text shown before a value is entered or selected.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      default: undefined,
+      description: "Controlled value for the component.",
+    },
+  ]}
+/>
 
 ## With disabled options
 
@@ -78,8 +148,8 @@ import { Combobox } from "@/registry/new-york/ui/combobox"
       label="Plan"
       placeholder="Select a plan..."
       options={[
-        { value: "free",       label: "Free" },
-        { value: "pro",        label: "Pro" },
+        { value: "free", label: "Free" },
+        { value: "pro", label: "Pro" },
         { value: "enterprise", label: "Enterprise", disabled: true },
       ]}
     />
@@ -117,7 +187,7 @@ Combobox combines text filtering with option selection, so labels and placeholde
 ## Examples
 
 ```tsx
-import { Combobox } from '@/components/crumble/ui/combobox'
+import { Combobox } from "@/components/crumble/ui/combobox";
 
 <Combobox
   label="Framework"
@@ -128,5 +198,5 @@ import { Combobox } from '@/components/crumble/ui/combobox'
     { value: "astro", label: "Astro" },
     { value: "svelte", label: "SvelteKit" },
   ]}
-/>
+/>;
 ```

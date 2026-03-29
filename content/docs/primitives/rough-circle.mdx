@@ -6,6 +6,7 @@ description: Hand-drawn circle primitive for badges and controls.
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { RoughCircle } from "@/components/primitives/rough-circle";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 
 <PreviewContainer
   componentName="rough-circle"
@@ -18,19 +19,57 @@ import { RoughCircle } from "@/components/primitives/rough-circle";
 
 ## Installation
 
-Primitives are bundled with any Crumble component install. To use standalone, copy `components/primitives/rough-circle.tsx` into your project.
+<InstallTabs slug="rough-circle" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component." },
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'diameter', type: "number", default: undefined, description: "Sets the circle diameter in pixels.", required: true },
-  { prop: 'fill', type: "string", default: undefined, description: "Overrides the fill color." },
-  { prop: 'id', type: "string", default: undefined, description: "Controls the `id` behavior." },
-  { prop: 'stroke', type: "string", default: undefined, description: "Overrides the stroke color." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "diameter",
+      type: "number",
+      default: undefined,
+      description: "Sets the circle diameter in pixels.",
+      required: true,
+    },
+    {
+      prop: "fill",
+      type: "string",
+      default: undefined,
+      description: "Overrides the fill color.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description: "Controls the `id` behavior.",
+    },
+    {
+      prop: "stroke",
+      type: "string",
+      default: undefined,
+      description: "Overrides the stroke color.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Accessibility
 
@@ -39,7 +78,7 @@ This primitive is primarily presentational. Keep the underlying content semantic
 ## Examples
 
 ```tsx
-import { RoughCircle } from '@/components/crumble/primitives/rough-circle'
+import { RoughCircle } from "@/components/crumble/primitives/rough-circle";
 
-<RoughCircle diameter={72}>A</RoughCircle>
+<RoughCircle diameter={72}>A</RoughCircle>;
 ```

@@ -1,42 +1,68 @@
 ---
-title: color-picker
-description: A hand-drawn label badge with rough border and semantic variants.
+title: Color Picker
+description: A hand-drawn color picker with rough-styled swatches and hex input.
+---
+
 ---
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { InstallTabs } from "@/components/mdx/InstallTabs";
-import ColorPickerDemo from "@/components/demos/colorPickerDemo.tsx";
+import { ColorPicker } from "@/registry/new-york/ui/color-picker";
+import ColorPickerDemo from "@/components/demos/colorPickerDemo";
 
 <PreviewContainer
-  componentName="color-picker"
-  code={`import { ColorPicker } from '@/components/crumble/ui/color-picker'
+componentName="color-picker"
+code={`import { ColorPicker } from '@/components/crumble/ui/color-picker'
 
-<Badge>Default</Badge>`}
+<ColorPicker
+label="Stroke Color"
+defaultValue="#ef4444"
+onChange={(color) => console.log(color)}
+/>`}
+
 >
-<ColorPickerDemo/>
+
+<ColorPickerDemo />
 </PreviewContainer>
 
 ## Installation
 
-<InstallTabs slug="badge" />
+<InstallTabs slug="color-picker" peerDeps={["roughjs"]} />
 
 ## Props
 
 <PropsTable
   rows={[
     {
-      prop: "animateOnHover",
-      type: "boolean",
-      default: "true",
-      description: "Redraws the sketch lines on hover.",
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label displayed above the picker.",
     },
     {
-      prop: "children",
-      type: "ReactNode",
+      prop: "defaultValue",
+      type: "string",
+      default: '"#3b82f6"',
+      description: "Initial selected color (uncontrolled mode).",
+    },
+    {
+      prop: "value",
+      type: "string",
       default: undefined,
-      description: "Content rendered inside the component.",
-      required: true,
+      description: "Controlled value of the selected color.",
+    },
+    {
+      prop: "onChange",
+      type: "(color: string) => void",
+      default: undefined,
+      description: "Callback fired when a color is selected or typed.",
+    },
+    {
+      prop: "swatches",
+      type: "string[]",
+      default: "preset palette",
+      description: "Array of color swatches displayed in the grid.",
     },
     {
       prop: "className",
@@ -47,7 +73,7 @@ import ColorPickerDemo from "@/components/demos/colorPickerDemo.tsx";
     {
       prop: "id",
       type: "string",
-      default: undefined,
+      default: '"color-picker"',
       description:
         "Optional stable id used for sketch seeding and accessibility.",
     },
@@ -58,10 +84,66 @@ import ColorPickerDemo from "@/components/demos/colorPickerDemo.tsx";
       description: "Overrides the global Crumble theme for this instance.",
     },
     {
-      prop: "variant",
-      type: "BadgeVariant",
-      default: '"default"',
-      description: "Controls the `variant` behavior.",
+      prop: "fill",
+      type: "string",
+      default: undefined,
+      description: "Custom fill color for rough elements.",
+    },
+    {
+      prop: "stroke",
+      type: "string",
+      default: undefined,
+      description: "Custom stroke color for rough elements.",
+    },
+    {
+      prop: "strokeMuted",
+      type: "string",
+      default: undefined,
+      description: "Muted stroke color (used for borders).",
     },
   ]}
 />
+
+## Custom swatches
+
+<PreviewContainer
+componentName="color-picker"
+code={`<ColorPicker
+  swatches={['#000000', '#ffff42', '#ff0000']}
+/>`}
+
+>
+
+<ColorPicker swatches={["#000000", "#ffff42", "#ff0000"]} /> </PreviewContainer>
+
+## Custom stroke and fill
+
+<PreviewContainer
+componentName="color-picker"
+code={`<ColorPicker
+  stroke="oklch(0.6 0.18 260)"
+  fill="oklch(0.96 0.04 240)"
+/>`}
+
+>
+
+<ColorPicker
+ stroke="oklch(0.6 0.18 260)"
+ fill="oklch(0.96 0.04 240)"
+/> </PreviewContainer>
+
+## Accessibility
+
+This component preserves semantic input behavior. Ensure labels are provided when used in forms and that color selection is not the only means of conveying meaning.
+
+## Examples
+
+```tsx
+import { ColorPicker } from "@/components/crumble/ui/color-picker";
+
+<ColorPicker
+  label="Pick a color"
+  defaultValue="#3b82f6"
+  onChange={(color) => console.log(color)}
+/>;
+```

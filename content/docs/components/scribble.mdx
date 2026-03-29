@@ -5,6 +5,8 @@ description: Draw rough freehand scribbles over content for emphasis, redaction,
 
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { Scribble } from "@/registry/new-york/ui/scribble";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
+import { PropsTable } from "@/components/mdx/PropsTable";
 
 <PreviewContainer
   componentName="scribble"
@@ -18,6 +20,75 @@ import { Scribble } from "@/registry/new-york/ui/scribble";
     <span className="text-base font-medium">Scribbled text</span>
   </Scribble>
 </PreviewContainer>
+
+## Installation
+
+<InstallTabs slug="scribble" peerDeps={["roughjs"]} />
+
+## Props
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: "—",
+      description: "Content over which the scribble is drawn.",
+    },
+    {
+      prop: "type",
+      type: '"redact" | "scrawl" | "circle" | "blob"',
+      default: '"scrawl"',
+      description:
+        "Defines the scribble style: redaction block, cross-out scrawl, circle emphasis, or organic blob.",
+    },
+    {
+      prop: "color",
+      type: "string",
+      default: '"currentColor"',
+      description: "Color used for stroke and fill of the scribble.",
+    },
+    {
+      prop: "opacity",
+      type: "number",
+      default: "0.85",
+      description:
+        "Controls transparency of the scribble overlay (affects fill and stroke).",
+    },
+    {
+      prop: "padding",
+      type: "number",
+      default: "4",
+      description: "Extra spacing around the content for drawing the scribble.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: "—",
+      description:
+        "Visual style variant (e.g., roughness, stroke width) passed to the rough renderer.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: "auto-generated",
+      description:
+        "Optional stable identifier used to generate deterministic scribble shapes.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: "—",
+      description: "Additional CSS classes applied to the wrapper.",
+    },
+    {
+      prop: "style",
+      type: "CSSProperties",
+      default: "—",
+      description: "Inline styles applied to the wrapper element.",
+    },
+  ]}
+/>
 
 ## Types
 
@@ -96,29 +167,6 @@ import { Scribble } from "@/registry/new-york/ui/scribble";
   </Scribble>
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="scribble"
-  code={`<div className="flex flex-wrap gap-8">
-  <Scribble theme="pencil"><span>Pencil</span></Scribble>
-  <Scribble theme="ink"><span>Ink</span></Scribble>
-  <Scribble theme="crayon"><span>Crayon</span></Scribble>
-</div>`}
->
-  <div className="flex flex-wrap gap-8">
-    <Scribble theme="pencil">
-      <span>Pencil</span>
-    </Scribble>
-    <Scribble theme="ink">
-      <span>Ink</span>
-    </Scribble>
-    <Scribble theme="crayon">
-      <span>Crayon</span>
-    </Scribble>
-  </div>
-</PreviewContainer>
-
 ## In a Paragraph
 
 <PreviewContainer
@@ -140,9 +188,9 @@ Scribble is decorative and its SVG should not be the only place meaning lives. K
 ## Examples
 
 ```tsx
-import { Scribble } from "@/components/scribble"
+import { Scribble } from "@/components/scribble";
 
 <Scribble>
   <span className="text-base font-medium">Scribbled text</span>
-</Scribble>
+</Scribble>;
 ```

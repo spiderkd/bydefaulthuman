@@ -35,20 +35,64 @@ import { RadioGroup } from "@/registry/new-york/ui/radio";
 
 ## Installation
 
-<InstallTabs slug="radio" />
+<InstallTabs slug="radio" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'defaultValue', type: "string", default: undefined, description: "Initial uncontrolled value." },
-  { prop: 'name', type: "string", default: undefined, description: "Controls the `name` behavior.", required: true },
-  { prop: 'onChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the value changes." },
-  { prop: 'options', type: "RadioOption[]", default: undefined, description: "Options rendered by the component.", required: true },
-  { prop: 'orientation', type: "\"vertical\" | \"horizontal\"", default: "\"vertical\"", description: "Controls the component layout direction." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "string", default: undefined, description: "Controlled value for the component." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      default: undefined,
+      description: "Initial uncontrolled value.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      default: undefined,
+      description: "Controls the `name` behavior.",
+      required: true,
+    },
+    {
+      prop: "onChange",
+      type: "(value: string) => void",
+      default: undefined,
+      description: "Callback fired when the value changes.",
+    },
+    {
+      prop: "options",
+      type: "RadioOption[]",
+      default: undefined,
+      description: "Options rendered by the component.",
+      required: true,
+    },
+    {
+      prop: "orientation",
+      type: '"vertical" | "horizontal"',
+      default: '"vertical"',
+      description: "Controls the component layout direction.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      default: undefined,
+      description: "Controlled value for the component.",
+    },
+  ]}
+/>
 
 ## Horizontal layout
 
@@ -104,31 +148,6 @@ import { RadioGroup } from "@/registry/new-york/ui/radio";
   />
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="radio"
-  code={`<RadioGroup
-  name="theme-demo"
-  theme="crayon"
-  defaultValue="b"
-  options={[
-    { value: 'a', label: 'Option A' },
-    { value: 'b', label: 'Option B' },
-  ]}
-/>`}
->
-  <RadioGroup
-    name="theme-demo"
-    theme="crayon"
-    defaultValue="b"
-    options={[
-      { value: "a", label: "Option A" },
-      { value: "b", label: "Option B" },
-    ]}
-  />
-</PreviewContainer>
-
 ## Accessibility
 
 RadioGroup renders native radio inputs, so arrow-key navigation and form behavior follow browser conventions. Use a shared `name` and a visible group label when the choice set needs extra context.
@@ -136,15 +155,15 @@ RadioGroup renders native radio inputs, so arrow-key navigation and form behavio
 ## Examples
 
 ```tsx
-import { RadioGroup } from '@/components/crumble/ui/radio'
+import { RadioGroup } from "@/components/crumble/ui/radio";
 
 <RadioGroup
   name="plan"
   defaultValue="monthly"
   options={[
-    { value: 'monthly',  label: 'Monthly' },
-    { value: 'yearly',   label: 'Yearly' },
-    { value: 'lifetime', label: 'Lifetime' },
+    { value: "monthly", label: "Monthly" },
+    { value: "yearly", label: "Yearly" },
+    { value: "lifetime", label: "Lifetime" },
   ]}
-/>
+/>;
 ```

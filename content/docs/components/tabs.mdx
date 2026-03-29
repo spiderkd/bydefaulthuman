@@ -42,17 +42,44 @@ import {
 
 ## Installation
 
-<InstallTabs slug="tabs" />
+<InstallTabs slug="tabs" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
-  { prop: 'defaultValue', type: "string", default: "\"\"", description: "Initial uncontrolled value." },
-  { prop: 'onValueChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the active value changes." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "string", default: undefined, description: "Controlled value for the component." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnHover",
+      type: "boolean",
+      default: "true",
+      description: "Redraws the sketch lines on hover.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      default: '""',
+      description: "Initial uncontrolled value.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value: string) => void",
+      default: undefined,
+      description: "Callback fired when the active value changes.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      default: undefined,
+      description: "Controlled value for the component.",
+    },
+  ]}
+/>
 
 ## With disabled tab
 
@@ -85,33 +112,6 @@ import {
   </Tabs>
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="tabs"
-  code={`<Tabs defaultValue="a" theme="crayon">
-  <TabsList>
-    <TabsTrigger value="a">Alpha</TabsTrigger>
-    <TabsTrigger value="b">Beta</TabsTrigger>
-  </TabsList>
-  <TabsContent value="a">Alpha</TabsContent>
-  <TabsContent value="b">Beta</TabsContent>
-</Tabs>`}
->
-  <Tabs defaultValue="a" theme="crayon">
-    <TabsList>
-      <TabsTrigger value="a">Alpha</TabsTrigger>
-      <TabsTrigger value="b">Beta</TabsTrigger>
-    </TabsList>
-    <TabsContent value="a">
-      <p className="text-sm text-muted-foreground">Alpha content</p>
-    </TabsContent>
-    <TabsContent value="b">
-      <p className="text-sm text-muted-foreground">Beta content</p>
-    </TabsContent>
-  </Tabs>
-</PreviewContainer>
-
 ## Accessibility
 
 Tabs uses semantic tab roles and only renders the active panel content. Make each trigger label short and descriptive so screen-reader users can understand the panel switch without extra context.
@@ -119,7 +119,12 @@ Tabs uses semantic tab roles and only renders the active panel content. Make eac
 ## Examples
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/crumble/ui/tabs'
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/crumble/ui/tabs";
 
 <Tabs defaultValue="account">
   <TabsList>
@@ -128,5 +133,5 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/crumble/u
   </TabsList>
   <TabsContent value="account">Account settings</TabsContent>
   <TabsContent value="password">Change your password</TabsContent>
-</Tabs>
+</Tabs>;
 ```

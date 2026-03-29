@@ -6,6 +6,7 @@ description: A live event timeline combining Timeline, Avatar, and Badge with an
 import { ActivityFeedBlockDemo } from "@/components/block/demos/ActivityFeedBlockDemo";
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 
 <PreviewContainer
   componentName="timeline"
@@ -18,24 +19,44 @@ import { PropsTable } from "@/components/mdx/PropsTable";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/timeline.json
-npx shadcn add https://crumble.dev/r/avatar.json
-npx shadcn add https://crumble.dev/r/badge.json
-npx shadcn add https://crumble.dev/r/button.json
-npx shadcn add https://crumble.dev/r/card.json
-```
+<InstallTabs slug="activity-feed" peerDeps={["rough-notation"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animate', type: "boolean", default: undefined, description: "Enables entry animation." },
-  { prop: 'animationStaggerMs', type: "number", default: undefined, description: "Delay between animated items." },
-  { prop: 'events', type: "FeedEvent[]", default: undefined, description: "Events rendered in the feed." },
-  { prop: 'onEventClick', type: "(event: FeedEvent) => void", default: undefined, description: "Callback fired when an event is selected." },
-  { prop: 'title', type: "string", default: undefined, description: "Block heading text." },
-]} />
-
+<PropsTable
+  rows={[
+    {
+      prop: "animate",
+      type: "boolean",
+      default: undefined,
+      description: "Enables entry animation.",
+    },
+    {
+      prop: "animationStaggerMs",
+      type: "number",
+      default: undefined,
+      description: "Delay between animated items.",
+    },
+    {
+      prop: "events",
+      type: "FeedEvent[]",
+      default: undefined,
+      description: "Events rendered in the feed.",
+    },
+    {
+      prop: "onEventClick",
+      type: "(event: FeedEvent) => void",
+      default: undefined,
+      description: "Callback fired when an event is selected.",
+    },
+    {
+      prop: "title",
+      type: "string",
+      default: undefined,
+      description: "Block heading text.",
+    },
+  ]}
+/>
 
 ## Without animation
 
@@ -50,7 +71,7 @@ This block is composed from accessible Crumble components. Preserve visible labe
 ## Examples
 
 ```tsx
-import { ActivityFeedBlock } from '@/components/block/ActivityFeedBlock'
+import { ActivityFeedBlock } from "@/components/block/ActivityFeedBlock";
 
-<ActivityFeedBlock />
+<ActivityFeedBlock />;
 ```

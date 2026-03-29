@@ -17,6 +17,7 @@ import { Button } from '@/components/crumble/ui/button'
 function Demo() {
 const [open, setOpen] = useState(false)
 return (
+
 <>
 <Button onClick={() => setOpen(true)}>Open dialog</Button>
 <Dialog open={open} onOpenChange={setOpen}>
@@ -42,44 +43,40 @@ return (
 
 ## Installation
 
-<InstallTabs slug="dialog" />
+<InstallTabs slug="dialog" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'children', type: "ReactNode", default: undefined, description: "Content rendered inside the component.", required: true },
-  { prop: 'onOpenChange', type: "(open: boolean) => void", default: undefined, description: "Callback fired when the open state changes." },
-  { prop: 'open', type: "boolean", default: undefined, description: "Controlled open state.", required: true },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
-
-## Sizes
-
-The `size` prop controls the max-width of the panel: `sm`, `md` (default), `lg`, `xl`.
-
-<PreviewContainer
-  componentName="dialog"
-  code={`<Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent open={open} size="lg">
-    ...
-  </DialogContent>
-</Dialog>`}
->
-  <DialogSizesDemo />
-</PreviewContainer>
-
-## Themes
-
-<PreviewContainer
-  componentName="dialog"
-  code={`<Dialog open={open} onOpenChange={setOpen} theme="crayon">
-  <DialogContent open={open}>
-    ...
-  </DialogContent>
-</Dialog>`}
->
-  <DialogDemo theme="crayon" />
-</PreviewContainer>
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: undefined,
+      description: "Content rendered inside the component.",
+      required: true,
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean) => void",
+      default: undefined,
+      description: "Callback fired when the open state changes.",
+    },
+    {
+      prop: "open",
+      type: "boolean",
+      default: undefined,
+      description: "Controlled open state.",
+      required: true,
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Notes
 
@@ -92,28 +89,37 @@ Dialog should be used for short, interruptive tasks rather than long document la
 ## Examples
 
 ```tsx
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/crumble/ui/dialog'
-import { Button } from '@/components/crumble/ui/button'
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/crumble/ui/dialog";
+import { Button } from "@/components/crumble/ui/button";
 
 function Demo() {
-const [open, setOpen] = useState(false)
-return (
-<>
-<Button onClick={() => setOpen(true)}>Open dialog</Button>
-<Dialog open={open} onOpenChange={setOpen}>
-<DialogContent open={open}>
-<DialogHeader>
-<DialogTitle>Confirm action</DialogTitle>
-<DialogDescription>This cannot be undone.</DialogDescription>
-</DialogHeader>
-<DialogFooter>
-<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-<Button onClick={() => setOpen(false)}>Confirm</Button>
-</DialogFooter>
-</DialogContent>
-</Dialog>
-</>
-)
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open dialog</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent open={open}>
+          <DialogHeader>
+            <DialogTitle>Confirm action</DialogTitle>
+            <DialogDescription>This cannot be undone.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Confirm</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
 ```

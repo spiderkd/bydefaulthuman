@@ -5,6 +5,7 @@ description: A social profile card combining Avatar, Badge, Button, AvatarGroup,
 
 import { ProfileCardBlockDemo } from "@/components/block/demos/ProfileCardBlockDemo";
 import { PreviewContainer } from "@/components/preview/PreviewContainer";
+import { InstallTabs } from "@/components/mdx/InstallTabs";
 import { PropsTable } from "@/components/mdx/PropsTable";
 
 <PreviewContainer
@@ -18,31 +19,91 @@ import { PropsTable } from "@/components/mdx/PropsTable";
 
 ## Installation
 
-```bash
-npx shadcn add https://crumble.dev/r/avatar.json
-npx shadcn add https://crumble.dev/r/badge.json
-npx shadcn add https://crumble.dev/r/button.json
-npx shadcn add https://crumble.dev/r/tooltip.json
-npx shadcn add https://crumble.dev/r/card.json
-```
-
+<InstallTabs slug="profile-card" peerDeps={["rough-notation"]} />
 ## Props
 
-<PropsTable rows={[
-  { prop: 'avatarFallback', type: "string", default: undefined, description: "Fallback initials for the avatar." },
-  { prop: 'avatarSrc', type: "string", default: undefined, description: "Avatar image URL." },
-  { prop: 'bio', type: "string", default: undefined, description: "Profile bio text." },
-  { prop: 'followers', type: "number", default: undefined, description: "Follower count." },
-  { prop: 'following', type: "number", default: undefined, description: "Following count." },
-  { prop: 'messageLabel', type: "string", default: undefined, description: "Textarea label." },
-  { prop: 'mutualFollowers', type: "MutualFollower[]", default: undefined, description: "Avatars rendered in the mutual followers group." },
-  { prop: 'mutualFollowersLabel', type: "string", default: undefined, description: "Label above the avatar group." },
-  { prop: 'name', type: "string", default: undefined, description: "Display name." },
-  { prop: 'onFollow', type: "(following: boolean) => void", default: undefined, description: "Callback fired when follow is clicked." },
-  { prop: 'onMessage', type: "() => void", default: undefined, description: "Callback fired when message is clicked." },
-  { prop: 'role', type: "string", default: undefined, description: "Role badge text." },
-  { prop: 'username', type: "string", default: undefined, description: "Secondary handle text." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "avatarFallback",
+      type: "string",
+      default: undefined,
+      description: "Fallback initials for the avatar.",
+    },
+    {
+      prop: "avatarSrc",
+      type: "string",
+      default: undefined,
+      description: "Avatar image URL.",
+    },
+    {
+      prop: "bio",
+      type: "string",
+      default: undefined,
+      description: "Profile bio text.",
+    },
+    {
+      prop: "followers",
+      type: "number",
+      default: undefined,
+      description: "Follower count.",
+    },
+    {
+      prop: "following",
+      type: "number",
+      default: undefined,
+      description: "Following count.",
+    },
+    {
+      prop: "messageLabel",
+      type: "string",
+      default: undefined,
+      description: "Textarea label.",
+    },
+    {
+      prop: "mutualFollowers",
+      type: "MutualFollower[]",
+      default: undefined,
+      description: "Avatars rendered in the mutual followers group.",
+    },
+    {
+      prop: "mutualFollowersLabel",
+      type: "string",
+      default: undefined,
+      description: "Label above the avatar group.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      default: undefined,
+      description: "Display name.",
+    },
+    {
+      prop: "onFollow",
+      type: "(following: boolean) => void",
+      default: undefined,
+      description: "Callback fired when follow is clicked.",
+    },
+    {
+      prop: "onMessage",
+      type: "() => void",
+      default: undefined,
+      description: "Callback fired when message is clicked.",
+    },
+    {
+      prop: "role",
+      type: "string",
+      default: undefined,
+      description: "Role badge text.",
+    },
+    {
+      prop: "username",
+      type: "string",
+      default: undefined,
+      description: "Secondary handle text.",
+    },
+  ]}
+/>
 
 ## Accessibility
 
@@ -51,7 +112,7 @@ This block is composed from accessible Crumble components. Preserve visible labe
 ## Examples
 
 ```tsx
-import { ProfileCardBlock } from '@/components/block/ProfileCardBlock'
+import { ProfileCardBlock } from "@/components/block/ProfileCardBlock";
 
-<ProfileCardBlock />
+<ProfileCardBlock />;
 ```

@@ -19,20 +19,65 @@ import { StatCard } from "@/registry/new-york/ui/stat-card";
 
 ## Installation
 
-<InstallTabs slug="stat-card" />
+<InstallTabs slug="stat-card" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
-  { prop: 'description', type: "ReactNode", default: undefined, description: "Secondary descriptive content." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component.", required: true },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'trend', type: "TrendDirection", default: "== \"flat\") return;", description: "Trend direction shown alongside the value." },
-  { prop: 'trendLabel', type: "string", default: undefined, description: "Short text shown next to the trend indicator." },
-  { prop: 'value', type: "ReactNode", default: undefined, description: "Controlled value for the component.", required: true },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnHover",
+      type: "boolean",
+      default: "true",
+      description: "Redraws the sketch lines on hover.",
+    },
+    {
+      prop: "description",
+      type: "ReactNode",
+      default: undefined,
+      description: "Secondary descriptive content.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+      required: true,
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "trend",
+      type: "TrendDirection",
+      default: '== "flat") return;',
+      description: "Trend direction shown alongside the value.",
+    },
+    {
+      prop: "trendLabel",
+      type: "string",
+      default: undefined,
+      description: "Short text shown next to the trend indicator.",
+    },
+    {
+      prop: "value",
+      type: "ReactNode",
+      default: undefined,
+      description: "Controlled value for the component.",
+      required: true,
+    },
+  ]}
+/>
 
 ## Trends
 
@@ -82,7 +127,12 @@ StatCard is a presentational summary container with no landmark role by default.
 ## Examples
 
 ```tsx
-import { StatCard } from '@/components/crumble/ui/stat-card'
+import { StatCard } from "@/components/crumble/ui/stat-card";
 
-<StatCard label="Revenue" value="$12,400" trend="up" trendLabel="+8% this week" />
+<StatCard
+  label="Revenue"
+  value="$12,400"
+  trend="up"
+  trendLabel="+8% this week"
+/>;
 ```

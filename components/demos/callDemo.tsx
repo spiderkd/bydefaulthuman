@@ -118,6 +118,7 @@ interface CalloutDemoProps {
   label?: string;
   color?: string;
   duration?: number;
+  labelTrue?: boolean;
 }
 
 export function CalloutDemo({
@@ -125,6 +126,7 @@ export function CalloutDemo({
   label = "Check this out",
   duration,
   color,
+  labelTrue = true,
 }: CalloutDemoProps) {
   const fromRef = useRef<HTMLDivElement>(null);
   const toRef = useRef<HTMLDivElement>(null);
@@ -143,7 +145,7 @@ export function CalloutDemo({
         ref={fromRef}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        Annotation Start
+        {labelTrue && "Annotation Start"}
       </div>
 
       <div

@@ -18,20 +18,112 @@ import { ProgressStorageDemo } from "@/components/demos/progress-demo";
 
 ## Installation
 
-<InstallTabs slug="progress" />
+<InstallTabs slug="progress" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'max', type: "number", default: "100", description: "Upper bound for the value." },
-  { prop: 'showValue', type: "boolean", default: "false", description: "Shows the current numeric value in the UI." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "number", default: "0", description: "Controlled value for the component." },
-  { prop: 'formatValue', type: "(value: number, max: number) => string", default: undefined, description: "Formats the displayed numeric value." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "max",
+      type: "number",
+      default: "100",
+      description: "Upper bound for the value.",
+    },
+    {
+      prop: "showValue",
+      type: "boolean",
+      default: "false",
+      description: "Shows the current numeric value in the UI.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "number",
+      default: "0",
+      description: "Controlled value for the component.",
+    },
+    {
+      prop: "formatValue",
+      type: "(value: number, max: number) => string",
+      default: undefined,
+      description: "Formats the displayed numeric value.",
+    },
+  ]}
+/>
+
+---
+
+## Static Example
+
+<PreviewContainer
+  componentName="progress"
+  code={`import { Progress } from '@/components/crumble/ui/progress'
+
+<Progress value={60} />`}
+>
+  <div className="w-full max-w-sm">
+    <Progress value={60} />
+  </div>
+</PreviewContainer>
+
+## With label and value
+
+<PreviewContainer
+  componentName="progress"
+  code={`<Progress label="Uploading" value={72} showValue />`}
+>
+  <div className="w-full max-w-sm">
+    <Progress label="Uploading" value={72} showValue />
+  </div>
+</PreviewContainer>
+
+## Custom format
+
+Use `formatValue` to control how the displayed value is rendered. Pass it from a client component to avoid the server/client serialization boundary.
+
+<PreviewContainer
+  componentName="progress"
+  code={`<Progress
+  label="Storage"
+  value={3.2}
+  max={5}
+  showValue
+  formatValue={(v) => \`\${v.toFixed(1)} GB\`}
+/>`}
+>
+  <ProgressStorageDemo />
+</PreviewContainer>
+
+## Accessibility
+
+Progress exposes the value visually, but you should still provide a meaningful `label` when the progress represents a task or upload state. Keep the value text enabled when the percentage itself matters.
+
+## Examples
 
 The demo auto-plays on mount using `requestAnimationFrame` with a cubic ease-out
 curve, so the fill decelerates naturally as it approaches 100 %. Hit **Replay ↺**
@@ -91,74 +183,4 @@ export function ProgressDemo() {
     </div>
   );
 }
-```
-
----
-
-## Static Example
-
-<PreviewContainer
-  componentName="progress"
-  code={`import { Progress } from '@/components/crumble/ui/progress'
-
-<Progress value={60} />`}
->
-  <div className="w-full max-w-sm">
-    <Progress value={60} />
-  </div>
-</PreviewContainer>
-
-
-
-## With label and value
-
-<PreviewContainer
-  componentName="progress"
-  code={`<Progress label="Uploading" value={72} showValue />`}
->
-  <div className="w-full max-w-sm">
-    <Progress label="Uploading" value={72} showValue />
-  </div>
-</PreviewContainer>
-
-## Custom format
-
-Use `formatValue` to control how the displayed value is rendered. Pass it from a client component to avoid the server/client serialization boundary.
-
-<PreviewContainer
-  componentName="progress"
-  code={`<Progress
-  label="Storage"
-  value={3.2}
-  max={5}
-  showValue
-  formatValue={(v) => \`\${v.toFixed(1)} GB\`}
-/>`}
->
-  <ProgressStorageDemo />
-</PreviewContainer>
-
-## Themes
-
-<PreviewContainer
-  componentName="progress"
-  code={`<Progress label="Pencil" value={55} theme="pencil" />
-<Progress label="Ink"    value={55} theme="ink" />
-<Progress label="Crayon" value={55} theme="crayon" />`}
->
-  <div className="flex w-full max-w-sm flex-col gap-4">
-    <Progress label="Pencil" value={55} theme="pencil" />
-    <Progress label="Ink" value={55} theme="ink" />
-    <Progress label="Crayon" value={55} theme="crayon" />
-  </div>
-</PreviewContainer>
-
-## Accessibility
-
-Progress exposes the value visually, but you should still provide a meaningful `label` when the progress represents a task or upload state. Keep the value text enabled when the percentage itself matters.
-
-## Examples
-
-```tsx
-
 ```

@@ -21,16 +21,38 @@ import { Slider } from "@/registry/new-york/ui/slider";
 
 ## Installation
 
-<InstallTabs slug="slider" />
+<InstallTabs slug="slider" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'formatValue', type: "(value: number) => string", default: undefined, description: "Formats the displayed numeric value." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'showValue', type: "boolean", default: "true", description: "Shows the current numeric value in the UI." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "formatValue",
+      type: "(value: number) => string",
+      default: undefined,
+      description: "Formats the displayed numeric value.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "showValue",
+      type: "boolean",
+      default: "true",
+      description: "Shows the current numeric value in the UI.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Custom range and format
 
@@ -67,7 +89,7 @@ Slider uses a native range input underneath the sketch layers, so pointer and ke
 ## Examples
 
 ```tsx
-import { Slider } from '@/components/crumble/ui/slider'
+import { Slider } from "@/components/crumble/ui/slider";
 
-<Slider label="Volume" defaultValue={40} />
+<Slider label="Volume" defaultValue={40} />;
 ```

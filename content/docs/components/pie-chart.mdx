@@ -38,17 +38,66 @@ import { PieChartSourcesDemo } from "@/components/demos/pie-chart-demo";
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnMount', type: "boolean", default: "true", description: "Animates the component when it first renders." },
-  { prop: 'data', type: "PieChartSlice[]", default: undefined, description: "Data used to render the component.", required: true },
-  { prop: 'donut', type: "boolean", default: "false", description: "Renders the pie chart as a donut." },
-  { prop: 'formatValue', type: "(v: number, total: number) => string", default: "(v", description: "Formats the displayed numeric value." },
-  { prop: 'height', type: "number", default: "260", description: "Sets the rendered height in pixels." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'showLabels', type: "boolean", default: "true", description: "Shows labels directly on the chart." },
-  { prop: 'showLegend', type: "boolean", default: "true", description: "Shows the chart legend." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnMount",
+      type: "boolean",
+      default: "true",
+      description: "Animates the component when it first renders.",
+    },
+    {
+      prop: "data",
+      type: "PieChartSlice[]",
+      default: undefined,
+      description: "Data used to render the component.",
+      required: true,
+    },
+    {
+      prop: "donut",
+      type: "boolean",
+      default: "false",
+      description: "Renders the pie chart as a donut.",
+    },
+    {
+      prop: "formatValue",
+      type: "(v: number, total: number) => string",
+      default: "(v",
+      description: "Formats the displayed numeric value.",
+    },
+    {
+      prop: "height",
+      type: "number",
+      default: "260",
+      description: "Sets the rendered height in pixels.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "showLabels",
+      type: "boolean",
+      default: "true",
+      description: "Shows labels directly on the chart.",
+    },
+    {
+      prop: "showLegend",
+      type: "boolean",
+      default: "true",
+      description: "Shows the chart legend.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Donut variant
 
@@ -116,28 +165,6 @@ import { PieChartSourcesDemo } from "@/components/demos/pie-chart-demo";
   <PieChartSourcesDemo />
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="pie-chart"
-  code={`<PieChart theme="crayon" data={[
-  { label: "Red",   value: 40 },
-  { label: "Blue",  value: 35 },
-  { label: "Green", value: 25 },
-]} />`}
->
-  <div className="w-full max-w-sm">
-    <PieChart
-      theme="crayon"
-      data={[
-        { label: "Red", value: 40 },
-        { label: "Blue", value: 35 },
-        { label: "Green", value: 25 },
-      ]}
-    />
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 PieChart conveys proportion visually, so provide supporting labels or summaries in text when the slice breakdown is important. Avoid relying on color alone to distinguish categories.
@@ -145,13 +172,13 @@ PieChart conveys proportion visually, so provide supporting labels or summaries 
 ## Examples
 
 ```tsx
-import { PieChart } from '@/components/crumble/ui/pie-chart'
+import { PieChart } from "@/components/crumble/ui/pie-chart";
 
 <PieChart
   data={[
-    { label: "Design",      value: 40 },
+    { label: "Design", value: 40 },
     { label: "Engineering", value: 35 },
-    { label: "Marketing",   value: 25 },
+    { label: "Marketing", value: 25 },
   ]}
-/>
+/>;
 ```

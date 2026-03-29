@@ -1,315 +1,3 @@
-// "use client";
-
-// import react, { useEffect, useState, useCallback } from "react";
-// import { Check, Copy, ChevronDown, ChevronRight } from "lucide-react";
-// import { codeToHtml } from "shiki";
-
-// // ─── Types ────────────────────────────────────────────────────────────────────
-
-// interface FileEntry {
-//   target: string;
-//   content: string;
-// }
-
-// interface RegistryJson {
-//   files: FileEntry[];
-// }
-
-// interface ManualTabProps {
-//   slug: string;
-//   peerDeps?: string[];
-//   files?: FileEntry[]; // optional override — skips fetch if provided
-// }
-
-// // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// function getLanguageFromPath(path: string): string {
-//   const ext = path.split(".").pop() ?? "";
-//   const map: Record<string, string> = {
-//     tsx: "tsx",
-//     ts: "typescript",
-//     jsx: "jsx",
-//     js: "javascript",
-//     css: "css",
-//     json: "json",
-//     md: "markdown",
-//     mdx: "mdx",
-//   };
-//   return map[ext] ?? "plaintext";
-// }
-
-// function getFilename(path: string): string {
-//   return path.split("/").pop() ?? path;
-// }
-
-// function buildInstallCommand(deps: string[]): string {
-//   return `npm install ${deps.join(" ")}`;
-// }
-
-// // ─── Sub-components ───────────────────────────────────────────────────────────
-
-// function CopyButton({
-//   text,
-//   className = "",
-// }: {
-//   text: string;
-//   className?: string;
-// }) {
-//   const [copied, setCopied] = useState(false);
-
-//   const handleCopy = useCallback(() => {
-//     void navigator.clipboard.writeText(text);
-//     setCopied(true);
-//     setTimeout(() => setCopied(false), 2000);
-//   }, [text]);
-
-//   return (
-//     <button
-//       aria-label="Copy"
-//       type="button"
-//       onClick={handleCopy}
-//       className={`rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${className}`}
-//     >
-//       {copied ? (
-//         <Check className="h-3.5 w-3.5 text-green-500" />
-//       ) : (
-//         <Copy className="h-3.5 w-3.5" />
-//       )}
-//     </button>
-//   );
-// }
-
-// function DepsSection({ peerDeps, slug }: { peerDeps: string[]; slug: string }) {
-//   // Always include roughjs as a base dep — it's shared across all Crumble components
-//   const allDeps = ["roughjs", ...peerDeps].filter(
-//     (dep, idx, arr) => arr.indexOf(dep) === idx, // deduplicate
-//   );
-
-//   const installCommand = buildInstallCommand(allDeps);
-
-//   return (
-//     <div className="mb-4 rounded-md border border-border p-4">
-//       <div className="flex items-center justify-between gap-4">
-//         <div className="flex flex-wrap gap-2">
-//           {allDeps.map((dep) => (
-//             <code
-//               key={dep}
-//               className="rounded bg-muted px-2 py-0.5 font-mono text-xs text-foreground"
-//             >
-//               {dep}
-//             </code>
-//           ))}
-//         </div>
-//         <CopyButton text={installCommand} />
-//       </div>
-//       <p className="mt-2 text-xs text-muted-foreground">
-//         Copies: <span className="font-mono">{installCommand}</span>
-//       </p>
-//     </div>
-//   );
-// }
-
-// function HighlightedCode({
-//   content,
-//   language,
-// }: {
-//   content: string;
-//   language: string;
-// }) {
-//   const [html, setHtml] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     let cancelled = false;
-//     codeToHtml(content, {
-//       lang: language,
-//       theme: "github",
-//     }).then((result) => {
-//       if (!cancelled) setHtml(result);
-//     });
-//     return () => {
-//       cancelled = true;
-//     };
-//   }, [content, language]);
-
-//   if (html === null) {
-//     // Fallback while shiki loads — plain monospace, no flash
-//     return (
-//       <pre className="overflow-x-auto p-4 bg-white font-mono text-sm text-foreground">
-//         <code>{content}</code>
-//       </pre>
-//     );
-//   }
-
-//   return (
-//     <div
-//       className="overflow-x-auto [&>pre]:p-4 [&>pre]:text-sm [&>pre]:font-mono"
-//       // shiki inlines styles on the <pre> — this wrapper lets us override padding
-//       dangerouslySetInnerHTML={{ __html: html }}
-//     />
-//   );
-// }
-
-// function FileAccordionItem({ file }: { file: FileEntry }) {
-//   const [open, setOpen] = useState(false);
-//   const filename = getFilename(file.target);
-//   const language = getLanguageFromPath(file.target);
-
-//   return (
-//     <div className="border border-border rounded-md overflow-hidden">
-//       {/* Header — always visible */}
-//       <button
-//         type="button"
-//         onClick={() => setOpen((prev) => !prev)}
-//         className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm hover:bg-muted/50 transition-colors"
-//         aria-expanded={open}
-//       >
-//         <div className="flex items-center gap-2">
-//           {open ? (
-//             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-//           ) : (
-//             <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-//           )}
-//           <span className="font-mono font-medium text-foreground">
-//             {filename}
-//           </span>
-//           <span className="font-mono text-xs text-muted-foreground truncate hidden sm:block">
-//             {file.target}
-//           </span>
-//         </div>
-//       </button>
-
-//       {/* Body — only rendered when open (saves shiki work for closed items) */}
-//       {open && (
-//         <div className="border-t border-border">
-//           {/* Full path label + copy button */}
-//           <div className="flex items-center justify-between gap-2 bg-muted/30 px-4 py-2">
-//             <code className="font-mono text-xs text-muted-foreground break-all">
-//               {file.target}
-//             </code>
-//             <CopyButton text={file.content} />
-//           </div>
-
-//           {/* Code block */}
-//           <div className="bg-[#0d1117] max-h-[480px] overflow-y-auto">
-//             <HighlightedCode content={file.content} language={language} />
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// function FilesAccordion({ files }: { files: FileEntry[] }) {
-//   if (files.length === 0) {
-//     return <p className="text-sm text-muted-foreground">No files found.</p>;
-//   }
-
-//   return (
-//     <div className="space-y-2">
-//       {files.map((file) => (
-//         <FileAccordionItem key={file.target} file={file} />
-//       ))}
-//     </div>
-//   );
-// }
-
-// function SkeletonLoader() {
-//   return (
-//     <div className="space-y-2 animate-pulse">
-//       {[1, 2].map((i) => (
-//         <div
-//           key={i}
-//           className="h-11 rounded-md border border-border bg-muted/40"
-//         />
-//       ))}
-//     </div>
-//   );
-// }
-
-// // ─── Main Component ───────────────────────────────────────────────────────────
-
-// export function ManualTab({
-//   slug,
-//   peerDeps = [],
-//   files: filesProp,
-// }: ManualTabProps) {
-//   const [files, setFiles] = useState<FileEntry[]>(filesProp ?? []);
-//   const [loading, setLoading] = useState(!filesProp); // skip loading if prop provided
-//   const [error, setError] = useState<string | null>(null);
-
-//   const registryUrl = `http://localhost:3000/r/${slug}.json`;
-
-//   useEffect(() => {
-//     // If files were passed as prop, skip fetch entirely
-//     if (filesProp) return;
-
-//     let cancelled = false;
-//     setLoading(true);
-//     setError(null);
-
-//     fetch(registryUrl)
-//       .then((res) => {
-//         if (!res.ok) throw new Error(`Failed to fetch registry: ${res.status}`);
-//         return res.json() as Promise<RegistryJson>;
-//       })
-//       .then((data) => {
-//         if (!cancelled) {
-//           setFiles(data.files ?? []);
-//           setLoading(false);
-//         }
-//       })
-//       .catch((err: unknown) => {
-//         if (!cancelled) {
-//           setError(err instanceof Error ? err.message : "Unknown error");
-//           setLoading(false);
-//         }
-//       });
-
-//     return () => {
-//       cancelled = true;
-//     };
-//   }, [slug, filesProp, registryUrl]);
-
-//   return (
-//     <div className="mt-2 space-y-4">
-//       {/* 1. Dependencies — always shown, no loading dependency */}
-//       {peerDeps.length > 0 && (
-//         <div>
-//           <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-//             Dependencies
-//           </p>
-//           <DepsSection peerDeps={peerDeps} slug={slug} />
-//         </div>
-//       )}
-
-//       {/* 2. Files */}
-//       <div>
-//         <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-//           Files
-//         </p>
-
-//         {loading && <SkeletonLoader />}
-
-//         {error && !loading && (
-//           <div className="rounded-md border border-border p-4 text-sm text-muted-foreground">
-//             <p>Could not load files automatically.</p>
-//             <a
-//               href={registryUrl}
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               className="mt-1 inline-block text-foreground underline hover:opacity-70"
-//             >
-//               View registry JSON directly →
-//             </a>
-//           </div>
-//         )}
-
-//         {!loading && !error && <FilesAccordion files={files} />}
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -329,6 +17,7 @@ import {
 export interface FileEntry {
   path: string;
   content: string;
+  target?: string; // optional full path for display, falls back to `path`
 }
 
 interface RegistryJson {
@@ -452,8 +141,6 @@ function DepsSection({ peerDeps }: { peerDeps: string[] }) {
     (dep, idx, arr) => arr.indexOf(dep) === idx,
   );
 
-  const installCommand = `npm install ${allDeps.join(" ")}`;
-
   return (
     <div className="mb-4">
       <p className="mb-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
@@ -479,7 +166,7 @@ function DepsSection({ peerDeps }: { peerDeps: string[] }) {
             {allDeps.map((dep) => (
               <code
                 key={dep}
-                className="rounded-sm bg-muted px-2 py-0.5 font-mono text-xs text-foreground"
+                className=" px-2 py-0.5 font-mono text-xs text-foreground"
               >
                 {dep}
               </code>
@@ -487,13 +174,13 @@ function DepsSection({ peerDeps }: { peerDeps: string[] }) {
           </div>
 
           {/* Combined copy button */}
-          <CopyButton text={installCommand} />
+          {/* <CopyButton text={installCommand} /> */}
         </div>
 
         {/* Install command preview */}
-        <p className="relative mt-2 font-mono text-xs text-muted-foreground">
-          {installCommand}
-        </p>
+        {/* <p className="relative mt-2 font-mono text-xs text-muted-foreground">
+            {installCommand}
+          </p> */}
       </div>
     </div>
   );
@@ -645,7 +332,7 @@ function FileAccordionItem({
           </span>
           {/* Full path — truncated, muted, hidden on mobile */}
           <span className="hidden truncate font-mono text-xs text-muted-foreground sm:block">
-            {file.path}
+            {file.target}
           </span>
         </span>
       </AccordionTrigger>
@@ -654,7 +341,7 @@ function FileAccordionItem({
         {/* Full path label above code */}
         <div className="mb-2 flex items-center justify-between gap-2">
           <code className="break-all font-mono text-xs text-muted-foreground">
-            {file.path}
+            {file.target}
           </code>
           <CopyButton text={file.content} className="shrink-0" />
         </div>
@@ -695,38 +382,68 @@ export function ManualTab({
   const [loading, setLoading] = useState(!filesProp);
   const [error, setError] = useState<string | null>(null);
 
-  const registryUrl = `http://localhost:3000/r/${slug}.json`;
-
+  // Effect 1: filesProp was passed — still fetch the base files
   useEffect(() => {
-    // Prop override — skip fetch entirely
+    if (!filesProp) return;
+
+    let cancelled = false;
+
+    Promise.all(
+      (["rough-lib", "use-rough"] as const).map((s) =>
+        fetch(`${window.location.origin}/r/${s}.json`).then(
+          (r) => r.json() as Promise<RegistryJson>,
+        ),
+      ),
+    )
+      .then((datas) => {
+        if (cancelled) return;
+        const baseFiles = datas.flatMap((d) => d.files ?? []);
+        setFiles([...filesProp, ...baseFiles]);
+      })
+      .catch(() => {
+        if (!cancelled) setFiles(filesProp); // graceful fallback
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filesProp]);
+
+  // Effect 2: no filesProp — fetch component + base files together
+  useEffect(() => {
     if (filesProp) return;
 
     let cancelled = false;
     setLoading(true);
     setError(null);
 
-    fetch(registryUrl)
-      .then((res) => {
+    const fetchRegistry = (s: string) =>
+      fetch(`${window.location.origin}/r/${s}.json`).then((res) => {
         if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
         return res.json() as Promise<RegistryJson>;
-      })
-      .then((data) => {
-        if (!cancelled) {
-          setFiles(data.files ?? []);
-          setLoading(false);
-        }
+      });
+
+    Promise.all([
+      fetchRegistry(slug),
+      fetchRegistry("rough-lib"),
+      fetchRegistry("use-rough"),
+    ])
+      .then(([componentData, ...baseDatas]) => {
+        if (cancelled) return;
+        const baseFiles = baseDatas.flatMap((d) => d.files ?? []);
+        setFiles([...(componentData.files ?? []), ...baseFiles]);
+        setLoading(false);
       })
       .catch((err: unknown) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Unknown error");
-          setLoading(false);
-        }
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : "Unknown error");
+        setLoading(false);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [slug, filesProp, registryUrl]);
+  }, [slug, filesProp]);
 
   return (
     <div className="mt-2 space-y-5">
@@ -745,7 +462,7 @@ export function ManualTab({
           <div className="rounded-sm border border-border px-4 py-3 text-sm text-muted-foreground">
             <p>Could not load files automatically.</p>
             <a
-              href={registryUrl}
+              href={`${window.location.origin}/r/${slug}.json`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-1 inline-block text-foreground underline underline-offset-2 hover:opacity-70"

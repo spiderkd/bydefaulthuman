@@ -3,10 +3,10 @@ title: Notebook
 description: A hand-drawn lined paper container with ruled lines and a red margin.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { InstallTabs } from "@/components/mdx/InstallTabs";
-import { Notebook } from "@/registry/new-york/ui/notebook"
+import { Notebook } from "@/registry/new-york/ui/notebook";
 
 <PreviewContainer
   componentName="notebook"
@@ -27,18 +27,51 @@ import { Notebook } from "@/registry/new-york/ui/notebook"
 
 ## Installation
 
-<InstallTabs slug="notebook" />
+<InstallTabs slug="notebook" peerDeps={["roughjs", "Font-Caveat"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'lineColor', type: "string", default: undefined, description: "Overrides the notebook line color." },
-  { prop: 'lineSpacing', type: "number", default: "24", description: "Controls the spacing between notebook lines." },
-  { prop: 'marginColor', type: "string", default: undefined, description: "Overrides the notebook margin color." },
-  { prop: 'showMargin', type: "boolean", default: "true", description: "Shows the notebook margin line." },
-  { prop: 'theme', type: "CrumbleTheme", default: "== \"ink\"", description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "lineColor",
+      type: "string",
+      default: undefined,
+      description: "Overrides the notebook line color.",
+    },
+    {
+      prop: "lineSpacing",
+      type: "number",
+      default: "24",
+      description: "Controls the spacing between notebook lines.",
+    },
+    {
+      prop: "marginColor",
+      type: "string",
+      default: undefined,
+      description: "Overrides the notebook margin color.",
+    },
+    {
+      prop: "showMargin",
+      type: "boolean",
+      default: "true",
+      description: "Shows the notebook margin line.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: '== "ink"',
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## Without margin
 
@@ -87,23 +120,12 @@ import { Notebook } from "@/registry/new-york/ui/notebook"
   <div className="w-full max-w-sm">
     <Notebook className="rounded-xl shadow-sm" lineSpacing={28}>
       <h3 className="font-semibold">Meeting notes</h3>
-      <p className="text-muted-foreground">Discussed Q3 roadmap and priorities.</p>
-      <p className="text-muted-foreground">Follow up with design team on Monday.</p>
-    </Notebook>
-  </div>
-</PreviewContainer>
-
-## Themes
-
-<PreviewContainer
-  componentName="notebook"
-  code={`<Notebook theme="ink">
-  <p>Ink ruled paper.</p>
-</Notebook>`}
->
-  <div className="w-full max-w-sm">
-    <Notebook theme="ink">
-      <p>Ink ruled paper. The lines are tighter and more precise.</p>
+      <p className="text-muted-foreground">
+        Discussed Q3 roadmap and priorities.
+      </p>
+      <p className="text-muted-foreground">
+        Follow up with design team on Monday.
+      </p>
     </Notebook>
   </div>
 </PreviewContainer>
@@ -115,10 +137,10 @@ Notebook is a decorative layout primitive. The ruled lines and margin are visual
 ## Examples
 
 ```tsx
-import { Notebook } from '@/components/crumble/ui/notebook'
+import { Notebook } from "@/components/crumble/ui/notebook";
 
 <Notebook>
   <p>Dear diary,</p>
   <p>Today I shipped the design system.</p>
-</Notebook>
+</Notebook>;
 ```

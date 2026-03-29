@@ -3,10 +3,10 @@ title: Avatar
 description: A hand-drawn circle border around a profile image or initials fallback.
 ---
 
-import { PreviewContainer } from "@/components/preview/PreviewContainer"
+import { PreviewContainer } from "@/components/preview/PreviewContainer";
 import { PropsTable } from "@/components/mdx/PropsTable";
 import { InstallTabs } from "@/components/mdx/InstallTabs";
-import { Avatar, AvatarGroup } from "@/registry/new-york/ui/avatar"
+import { Avatar, AvatarGroup } from "@/registry/new-york/ui/avatar";
 
 <PreviewContainer
   componentName="avatar"
@@ -19,19 +19,58 @@ import { Avatar, AvatarGroup } from "@/registry/new-york/ui/avatar"
 
 ## Installation
 
-<InstallTabs slug="avatar" />
+<InstallTabs slug="avatar" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'animateOnHover', type: "boolean", default: "true", description: "Redraws the sketch lines on hover." },
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'fallback', type: "string", default: undefined, description: "Fallback initials or text shown when no image is available." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'size', type: "number", default: "40", description: "Controls the visual size of the component." },
-  { prop: 'src', type: "string", default: undefined, description: "Image source URL." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "animateOnHover",
+      type: "boolean",
+      default: "true",
+      description: "Redraws the sketch lines on hover.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "fallback",
+      type: "string",
+      default: undefined,
+      description:
+        "Fallback initials or text shown when no image is available.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "size",
+      type: "number",
+      default: "40",
+      description: "Controls the visual size of the component.",
+    },
+    {
+      prop: "src",
+      type: "string",
+      default: undefined,
+      description: "Image source URL.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## With image
 
@@ -88,21 +127,6 @@ import { Avatar, AvatarGroup } from "@/registry/new-york/ui/avatar"
   />
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="avatar"
-  code={`<Avatar fallback="P" theme="pencil" />
-<Avatar fallback="I" theme="ink" />
-<Avatar fallback="C" theme="crayon" />`}
->
-  <div className="flex gap-3">
-    <Avatar fallback="P" theme="pencil" />
-    <Avatar fallback="I" theme="ink" />
-    <Avatar fallback="C" theme="crayon" />
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 Avatar content remains text-accessible because the fallback initials live in the DOM. If the avatar is interactive, wrap it in a semantic button or link instead of attaching click behavior to a generic div.
@@ -110,7 +134,7 @@ Avatar content remains text-accessible because the fallback initials live in the
 ## Examples
 
 ```tsx
-import { Avatar } from '@/components/crumble/ui/avatar'
+import { Avatar } from "@/components/crumble/ui/avatar";
 
-<Avatar fallback="SC" />
+<Avatar fallback="SC" />;
 ```

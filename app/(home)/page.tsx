@@ -118,7 +118,7 @@ export default function Page() {
           {/* Install snippet */}
           <div className="mt-2 flex items-center gap-3 rounded-lg border border-border/50 bg-secondary/60 px-5 py-2.5 backdrop-blur-sm">
             <code className="font-mono text-[13px] text-muted-foreground">
-              npx shadcn add https://crumble.dev/r/button.json
+              npx shadcn add https://bydefaulthuman.fun/r/button.json
             </code>
           </div>
         </div>

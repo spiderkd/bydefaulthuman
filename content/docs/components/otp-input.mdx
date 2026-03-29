@@ -19,20 +19,63 @@ import { OtpInput } from "@/registry/new-york/ui/otp-input";
 
 ## Installation
 
-<InstallTabs slug="otp-input" />
+<InstallTabs slug="otp-input" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'className', type: "string", default: undefined, description: "Additional Tailwind classes applied to the component." },
-  { prop: 'disabled', type: "boolean", default: "false", description: "Disables interaction." },
-  { prop: 'id', type: "string", default: undefined, description: "Optional stable id used for sketch seeding and accessibility." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'length', type: "number", default: "6", description: "Controls the `length` behavior." },
-  { prop: 'onChange', type: "(value: string) => void", default: undefined, description: "Callback fired when the value changes." },
-  { prop: 'onComplete', type: "(value: string) => void", default: undefined, description: "Optional callback for component events." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      default: undefined,
+      description: "Additional Tailwind classes applied to the component.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables interaction.",
+    },
+    {
+      prop: "id",
+      type: "string",
+      default: undefined,
+      description:
+        "Optional stable id used for sketch seeding and accessibility.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "length",
+      type: "number",
+      default: "6",
+      description: "Controls the `length` behavior.",
+    },
+    {
+      prop: "onChange",
+      type: "(value: string) => void",
+      default: undefined,
+      description: "Callback fired when the value changes.",
+    },
+    {
+      prop: "onComplete",
+      type: "(value: string) => void",
+      default: undefined,
+      description: "Optional callback for component events.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+  ]}
+/>
 
 ## PIN mask
 
@@ -49,21 +92,6 @@ import { OtpInput } from "@/registry/new-york/ui/otp-input";
   <OtpInput length={4} />
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="otp-input"
-  code={`<OtpInput length={4} theme="pencil" />
-<OtpInput length={4} theme="ink" />
-<OtpInput length={4} theme="crayon" />`}
->
-  <div className="flex flex-col gap-4">
-    <OtpInput length={4} theme="pencil" />
-    <OtpInput length={4} theme="ink" />
-    <OtpInput length={4} theme="crayon" />
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 OtpInput splits the code into multiple native inputs while still exposing each digit position to assistive technologies. Provide surrounding instructions so users know what code is expected and where it came from.
@@ -71,7 +99,7 @@ OtpInput splits the code into multiple native inputs while still exposing each d
 ## Examples
 
 ```tsx
-import { OtpInput } from '@/components/crumble/ui/otp-input'
+import { OtpInput } from "@/components/crumble/ui/otp-input";
 
-<OtpInput length={6} />
+<OtpInput length={6} />;
 ```

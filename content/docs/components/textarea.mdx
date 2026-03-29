@@ -21,22 +21,74 @@ import { Textarea } from "@/registry/new-york/ui/textarea";
 
 ## Installation
 
-<InstallTabs slug="textarea" />
+<InstallTabs slug="textarea" peerDeps={["roughjs"]} />
 
 ## Props
 
-<PropsTable rows={[
-  { prop: 'autoGrow', type: "boolean", default: "false", description: "Controls the `autoGrow` behavior." },
-  { prop: 'error', type: "string", default: undefined, description: "Error message shown below the component." },
-  { prop: 'label', type: "string", default: undefined, description: "Optional label text shown with the component." },
-  { prop: 'theme', type: "CrumbleTheme", default: undefined, description: "Overrides the global Crumble theme for this instance." },
-  { prop: 'value', type: "string", default: undefined, description: "Controlled textarea value." },
-  { prop: 'defaultValue', type: "string", default: undefined, description: "Initial uncontrolled value." },
-  { prop: 'placeholder', type: "string", default: undefined, description: "Placeholder text." },
-  { prop: 'rows', type: "number", default: undefined, description: "Visible row count when auto-grow is off." },
-  { prop: 'disabled', type: "boolean", default: undefined, description: "Disables the textarea." },
-  { prop: 'onChange', type: "(event) => void", default: undefined, description: "Change handler." },
-]} />
+<PropsTable
+  rows={[
+    {
+      prop: "autoGrow",
+      type: "boolean",
+      default: "false",
+      description: "Controls the `autoGrow` behavior.",
+    },
+    {
+      prop: "error",
+      type: "string",
+      default: undefined,
+      description: "Error message shown below the component.",
+    },
+    {
+      prop: "label",
+      type: "string",
+      default: undefined,
+      description: "Optional label text shown with the component.",
+    },
+    {
+      prop: "theme",
+      type: "CrumbleTheme",
+      default: undefined,
+      description: "Overrides the global Crumble theme for this instance.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      default: undefined,
+      description: "Controlled textarea value.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      default: undefined,
+      description: "Initial uncontrolled value.",
+    },
+    {
+      prop: "placeholder",
+      type: "string",
+      default: undefined,
+      description: "Placeholder text.",
+    },
+    {
+      prop: "rows",
+      type: "number",
+      default: undefined,
+      description: "Visible row count when auto-grow is off.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: undefined,
+      description: "Disables the textarea.",
+    },
+    {
+      prop: "onChange",
+      type: "(event) => void",
+      default: undefined,
+      description: "Change handler.",
+    },
+  ]}
+/>
 
 ## Auto-grow
 
@@ -77,21 +129,6 @@ The textarea expands as you type. The SVG border tracks the height via `ResizeOb
   </div>
 </PreviewContainer>
 
-## Themes
-
-<PreviewContainer
-  componentName="textarea"
-  code={`<Textarea label="Pencil" placeholder="pencil" theme="pencil" />
-<Textarea label="Ink"    placeholder="ink"    theme="ink" />
-<Textarea label="Crayon" placeholder="crayon" theme="crayon" />`}
->
-  <div className="flex w-full max-w-xs flex-col gap-5">
-    <Textarea label="Pencil" placeholder="pencil" theme="pencil" />
-    <Textarea label="Ink" placeholder="ink" theme="ink" />
-    <Textarea label="Crayon" placeholder="crayon" theme="crayon" />
-  </div>
-</PreviewContainer>
-
 ## Accessibility
 
 Textarea renders a native `textarea` element and keeps the label in the DOM for assistive technologies. When using `autoGrow`, the resizing is visual only and does not change keyboard behavior.
@@ -99,7 +136,7 @@ Textarea renders a native `textarea` element and keeps the label in the DOM for 
 ## Examples
 
 ```tsx
-import { Textarea } from '@/components/crumble/ui/textarea'
+import { Textarea } from "@/components/crumble/ui/textarea";
 
-<Textarea label="Message" placeholder="Write something..." />
+<Textarea label="Message" placeholder="Write something..." />;
 ```
